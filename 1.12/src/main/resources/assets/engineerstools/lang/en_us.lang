@@ -1,0 +1,19 @@
+#
+# Engineer's Tools lang file
+#
+#PARSE_ESCAPES
+#
+#-----------------------------------------------------------------------------------------------------------
+itemGroup.tabengineerstools=Engineer's Tools
+engineerstools.config.title=Engineer's Tools config
+engineerstools.tooltip.hint.extended=§6[§9SHIFT§r More info§6]§r
+engineerstools.tooltip.hint.help=§6[§9CTRL-SHIFT§r Help§6]§r
+#-----------------------------------------------------------------------------------------------------------
+item.engineerstools.crushing_hammer.name=Ore Crushing Hammer
+item.engineerstools.crushing_hammer.help=§6Manual handheld ore crushing hammer.§r Higher yield when manually \
+                                         crafting ore to grit in a crafting table. Has a low durability, and \
+                                         cannot be repaired. Almost no attack damage.
+
+#-----------------------------------------------------------------------------------------------------------
+# EOF
+#-----------------------------------------------------------------------------------------------------------

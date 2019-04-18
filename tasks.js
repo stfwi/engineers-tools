@@ -9,18 +9,18 @@ var tasks = {};
 tasks["update-json"] = function() {
   const root_dir = fs.realpath(fs.dirname(sys.script));
   var update_jsons = {
-    "1.12.2": JSON.parse(fs.readfile(root_dir + "/1.12/meta/update.json")),
-    "1.13.2": JSON.parse(fs.readfile(root_dir + "/1.13/meta/update.json"))
+    "1.12.2": JSON.parse(fs.readfile(root_dir + "/1.12/meta/update.json"))
+    //,"1.13.2": JSON.parse(fs.readfile(root_dir + "/1.13/meta/update.json"))
   };
   var update_json = {
     homepage: "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
     "1.12.2": update_jsons["1.12.2"]["1.12.2"],
-    "1.13.2": update_jsons["1.13.2"]["1.13.2"],
+    //"1.13.2": update_jsons["1.13.2"]["1.13.2"],
     promos: {
       "1.12.2-recommended": update_jsons["1.12.2"]["promos"]["1.12.2-recommended"],
-      "1.12.2-latest": update_jsons["1.12.2"]["promos"]["1.12.2-latest"],
-      "1.13.2-recommended": update_jsons["1.13.2"]["promos"]["1.13.2-recommended"],
-      "1.13.2-latest": update_jsons["1.13.2"]["promos"]["1.13.2-latest"],
+      "1.12.2-latest": update_jsons["1.12.2"]["promos"]["1.12.2-latest"]
+      //,"1.13.2-recommended": update_jsons["1.13.2"]["promos"]["1.13.2-recommended"],
+      //"1.13.2-latest": update_jsons["1.13.2"]["promos"]["1.13.2-latest"],
     }
   }
   fs.mkdir(root_dir + "/meta");

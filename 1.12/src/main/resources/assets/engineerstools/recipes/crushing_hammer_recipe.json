@@ -1,0 +1,36 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:grc",
+      "result": "engineerstools:crushing_hammer"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " BR",
+    " SI",
+    "S  "
+  ],
+  "key": {
+    "S": {
+      "item": "#stickWood",
+      "data": 0
+    },
+    "B": {
+      "item": "#blockIron",
+      "data": 0
+    },
+    "I": {
+      "item": "#ingotIron",
+      "data": 0
+    },
+    "R": {
+      "item": "minecraft:string",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "engineerstools:crushing_hammer",
+    "count": 1
+  }
+}

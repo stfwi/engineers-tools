@@ -1,0 +1,18 @@
+[
+  {
+    "ingredient": { "type": "forge:ore_dict", "ore": "ingotIron" },
+    "name": "ingotIron"
+  },
+  {
+    "ingredient": { "type": "forge:ore_dict", "ore": "blockIron" },
+    "name": "blockIron"
+  },
+  {
+    "ingredient": { "type": "forge:ore_dict", "ore": "stickWood" },
+    "name": "stickWood"
+  },
+  {
+    "ingredient": { "item": "minecraft:diamond", "data": 0 },
+    "name": "itemDiamond"
+  }
+]

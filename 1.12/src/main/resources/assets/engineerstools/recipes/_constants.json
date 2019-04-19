@@ -14,5 +14,9 @@
   {
     "ingredient": { "item": "minecraft:diamond", "data": 0 },
     "name": "itemDiamond"
+  },
+  {
+    "ingredient": { "item": "minecraft:string", "data": 0 },
+    "name": "anyString"
   }
 ]

@@ -10,16 +10,14 @@
 package wile.engineerstools.detail;
 
 import wile.engineerstools.ModEngineersTools;
+import wile.engineerstools.items.*;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import wile.engineerstools.items.ItemCrushingHammer;
-import wile.engineerstools.items.ModItems;
 import javax.annotation.Nullable;
 
 @Config(modid = ModEngineersTools.MODID)
@@ -100,7 +98,7 @@ public class ModConfig
   public static final boolean isOptedOut(final @Nullable Item item)
   {
     if((item == null) || (optout == null)) return true;
-    if((!zmisc.with_experimental) && (item == ModItems.CRUSHING_HAMMER)) return true;
+    if((optout.without_crushing_hammer) && (item == ModItems.CRUSHING_HAMMER)) return true;
     return false;
   }
 

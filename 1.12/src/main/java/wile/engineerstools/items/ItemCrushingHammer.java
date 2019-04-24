@@ -9,7 +9,9 @@
  */
 package wile.engineerstools.items;
 
+import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
@@ -18,8 +20,10 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 import wile.engineerstools.ModEngineersTools;
 
 import java.util.ArrayList;
@@ -61,6 +65,12 @@ public class ItemCrushingHammer extends ItemTools
       setRegistryName(new ResourceLocation(ModEngineersTools.MODID, recipe_name.toLowerCase().replace(" ", "")));
     }
 
+    public CrushingHammerRecipe(String recipe_name, ItemStack grit_stack, Item ore_item)
+    {
+      super(null, grit_stack, ore_item, new ItemStack(ModItems.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
+      setRegistryName(new ResourceLocation(ModEngineersTools.MODID, recipe_name.toLowerCase().replace(" ", "")));
+    }
+
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
     {
       NonNullList<ItemStack> remaining = net.minecraftforge.common.ForgeHooks.defaultRecipeGetRemainingItems(inv);
@@ -78,8 +88,36 @@ public class ItemCrushingHammer extends ItemTools
       return remaining;
     }
 
+
     public static void registerAll(RegistryEvent.Register<IRecipe> event)
     {
+      registerGritRecipes(event.getRegistry());
+      registerGritFurnaceRecipes(event.getRegistry());
+    }
+
+    private static void registerGritRecipe(final IForgeRegistry<IRecipe> registry, final ItemStack grit_stack, String ore_name)
+    {
+      if(grit_stack.getMetadata()==OreDictionary.WILDCARD_VALUE) grit_stack.setItemDamage(0);
+      grit_stack.setCount(num_output_stacks);
+      if(ore_name.contains(":")) {
+        Item ore_item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(ore_name));
+        if(ore_item == null) { ModEngineersTools.logger.error("Item for recipe registration not found: '" + ore_name + "'"); return; }
+        ore_name = ore_name.replaceAll(":", "").toLowerCase();
+        registry.register(new CrushingHammerRecipe(("crushinghammer_" + (ore_name.toLowerCase()) + "_to_"
+          + grit_stack.getItem().getRegistryName().getNamespace() + grit_stack.getItem().getRegistryName().getPath()
+          + (grit_stack.getHasSubtypes() ? ("_m" + ((grit_stack.getMetadata()!=OreDictionary.WILDCARD_VALUE) ? (grit_stack.getMetadata()) : (0) )) : (""))
+          + "_n" + grit_stack.getCount()), grit_stack, ore_item));
+      } else {
+        registry.register(new CrushingHammerRecipe(("crushinghammer_" + (ore_name.toLowerCase()) + "_to_"
+          + grit_stack.getItem().getRegistryName().getNamespace() + grit_stack.getItem().getRegistryName().getPath()
+          + (grit_stack.getHasSubtypes() ? ("_m" + ((grit_stack.getMetadata()!=OreDictionary.WILDCARD_VALUE) ? (grit_stack.getMetadata()) : (0) )) : (""))
+          + "_n" + grit_stack.getCount()), grit_stack, ore_name));
+      }
+    }
+
+    public static void registerGritRecipes(final IForgeRegistry<IRecipe> registry)
+    {
+      boolean gold_grit_registered=false, iron_grit_registered=false;
       int num_crushing_hammer_recipes_registered = 0;
       final String[] grit_preference = grit_preference_order.toLowerCase().trim().split(";");
       for(int i=0; i<grit_preference.length; ++i) grit_preference[i] = grit_preference[i].trim();
@@ -100,18 +138,21 @@ public class ItemCrushingHammer extends ItemTools
             }
           }
         }
+        if(ore_name == "oreIron") iron_grit_registered = true;
+        if(ore_name == "oreGold") gold_grit_registered = true;
         if(preferred_stack.isEmpty()) continue;
-        ItemStack grit_stack = preferred_stack.copy();
-        if(grit_stack.getMetadata()==OreDictionary.WILDCARD_VALUE) grit_stack.setItemDamage(0);
-        grit_stack.setCount(num_output_stacks);
-        event.getRegistry().register(new CrushingHammerRecipe(("crushinghammer_" + ore_name + "_to_"
-          + grit_stack.getItem().getRegistryName().getNamespace() + grit_stack.getItem().getRegistryName().getPath()
-          + (grit_stack.getHasSubtypes() ? ("_m" + ((grit_stack.getMetadata()!=OreDictionary.WILDCARD_VALUE) ? (grit_stack.getMetadata()) : (0) )) : (""))
-          + "_n" + grit_stack.getCount()), grit_stack, ore_name));
+        registerGritRecipe(registry, preferred_stack, ore_name);
         ++num_crushing_hammer_recipes_registered;
       }
+      if(!iron_grit_registered) registerGritRecipe(registry, new ItemStack(ModItems.IRON_GRIT), "minecraft:iron_ore");
+      if(!gold_grit_registered) registerGritRecipe(registry, new ItemStack(ModItems.GOLD_GRIT), "minecraft:gold_ore");
       ModEngineersTools.logger.info("Registered " + num_crushing_hammer_recipes_registered + " ore crashing hammer recipes, priority order: '" + grit_preference_order + "'");
     }
-  }
 
+    public static void registerGritFurnaceRecipes(final IForgeRegistry<IRecipe> registry)
+    {
+      GameRegistry.addSmelting(ModItems.IRON_GRIT, new ItemStack(Items.IRON_INGOT), 0.8f);
+      GameRegistry.addSmelting(ModItems.GOLD_GRIT, new ItemStack(Items.GOLD_INGOT), 1f);
+    }
+  }
 }

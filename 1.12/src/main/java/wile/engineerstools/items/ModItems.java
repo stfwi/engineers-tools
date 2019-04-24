@@ -27,8 +27,16 @@ public class ModItems
   @GameRegistry.ObjectHolder("engineerstools:crushing_hammer")
   public static final ItemCrushingHammer CRUSHING_HAMMER = new ItemCrushingHammer("crushing_hammer");
 
+  @GameRegistry.ObjectHolder("engineerstools:iron_grit")
+  public static final ItemGrit IRON_GRIT = new ItemGrit("iron_grit");
+
+  @GameRegistry.ObjectHolder("engineerstools:gold_grit")
+  public static final ItemGrit GOLD_GRIT = new ItemGrit("gold_grit");
+
   private static final Item modItems[] = {
-    CRUSHING_HAMMER
+    CRUSHING_HAMMER,
+    IRON_GRIT,
+    GOLD_GRIT
   };
 
   private static final ArrayList<Item> registeredItems = new ArrayList<>();

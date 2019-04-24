@@ -10,6 +10,10 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Revision history
 
+                -------------------------------------------------------------------
+    - v1.0.0    [R] Release based on v1.0.0-b3
+                -------------------------------------------------------------------
+
     - v1.0.0-b3 [F] Fixed Crushing hammer experimental config flag, so it's
                     now craftable by default.
 

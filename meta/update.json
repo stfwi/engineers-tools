@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.12.2": {
+    "1.0.1-b1": "[F] Fixed oredict recipe issue (#1), the duplicated grit is now a remaining item in the crafting grid, which makes automation harder.",
     "1.0.0": "[R] Release based on v1.0.0-b3",
     "1.0.0-b3": "[F] Fixed Crushing hammer experimental config flag, so it's now craftable by default.",
     "1.0.0-b2": "[A] Added mod internal iron and gold grit, which is used if no other mod provides iron/gold dust. Can only be smelted to ingots. Hidden in JEI, as the grits of other mods shall be preferred.",
@@ -8,6 +9,6 @@
   },
   "promos": {
     "1.12.2-recommended": "1.0.0",
-    "1.12.2-latest": "1.0.0"
+    "1.12.2-latest": "1.0.1-b1"
   }
 }

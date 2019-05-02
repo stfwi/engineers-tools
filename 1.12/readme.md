@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Revision history
 
+    - v1.0.1-b1 [F] Fixed oredict recipe issue (#1), the duplicated grit is now a
+                    remaining item in the crafting grid, which makes automation harder.
+
                 -------------------------------------------------------------------
     - v1.0.0    [R] Release based on v1.0.0-b3
                 -------------------------------------------------------------------

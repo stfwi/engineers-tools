@@ -22,7 +22,8 @@ The mod has its focus on manual tools:
   in good condition (about Efficiency III), slow when the durability is low
   (Efficiency curve configurable). Repairable with Diamonds.
   - Right-click action: Place torch.
-  - Sneak-right-click action: Cycle Dirt - Farmland - Coarse Dirt - Grass Path.
+  - Sneak-right-click ground: Cycle Dirt - Farmland - Coarse Dirt - Grass Path.
+  - Sneak-right-click: Shaering of Grass, Vines, Sheep, etc.
   - Sneak while breaking a wood log: Tree felling (also higher durability loss).
   Please read the community references/credits below. Crafted with iron axe,
   pickaxe, and shovel, and a diamond.
@@ -76,3 +77,9 @@ commits.
 - [Actually Additions](https://github.com/Ellpeck/ActuallyAdditions): The REDIA
   tool combo-functionality can also be found in the all-in-one tools Ellpeck's
   Actually Additions.
+
+- [Simple Grinder](https://www.curseforge.com/minecraft/mc-mods/simple-grinder) provides
+  a vanilla ore-to-dust device.
+
+- The [Furnus](https://www.curseforge.com/minecraft/mc-mods/furnus) also adds the "Pulvus",
+  an ore grinder with upgrade capabilities.</li>

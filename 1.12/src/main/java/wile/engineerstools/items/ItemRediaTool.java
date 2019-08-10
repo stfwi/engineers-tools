@@ -10,6 +10,12 @@ package wile.engineerstools.items;
 
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.detail.ModAuxiliaries;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
+import net.minecraftforge.common.IShearable;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.BlockDirt.DirtType;
@@ -30,13 +36,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.init.Blocks;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -48,16 +51,18 @@ import java.util.*;
 
 public class ItemRediaTool extends ItemTools
 {
+  private static int enchantability = 5;
   private static int max_damage_ = 2200;
   private static boolean with_torch_placing = true;
   private static boolean with_hoeing = true;
   private static boolean with_tree_felling = true;
-  private static double efficiency_decay[] = {
-      // <10% <20% <30% <40% <50% <60% <70% <80% <90% <100%
-         0.1, 0.8, 0.9, 1.0, 1.0, 1.3, 1.6, 1.8, 2.0, 2.0
-  };
+  private static boolean with_shearing = true;
+  private static double efficiency_decay[] = { 0.1, 0.8, 0.9, 1.0, 1.0, 1.3, 1.6, 1.8, 2.0, 2.0 }; // index: 0% .. 100% durability
+  private static int fortune_decay[] = { 0, 0, 0, 0, 0, 0, 1, 1, 2, 3 }; // index: 0% .. 100% durability
 
-  public static void on_config(boolean without_redia_torchplacing, boolean without_redia_hoeing, boolean without_redia_tree_chopping, int durability, String efficiency_curve)
+  public static void on_config(boolean without_redia_torchplacing, boolean without_redia_hoeing,
+                               boolean without_redia_tree_chopping, int durability, String efficiency_curve,
+                               String fortune_curve)
   {
     with_torch_placing = !without_redia_torchplacing;
     with_hoeing = !without_redia_hoeing;
@@ -68,6 +73,7 @@ public class ItemRediaTool extends ItemTools
             + (with_hoeing?"":"no-") + "hoeing, "
             + (with_tree_felling?"":"no-") + "tree-felling."
     );
+    // Efficiency
     {
       String[] sc = efficiency_curve.replaceAll("^[,0-9]", "").split(",");
       if(sc.length > 0) {
@@ -79,11 +85,26 @@ public class ItemRediaTool extends ItemTools
         while(dc.size() < efficiency_decay.length) dc.add(dc.get(dc.size()-1));
         for(int i=0; i<dc.size(); ++i) efficiency_decay[i] = dc.get(i)/100;
       }
-    }
-    {
       StringBuilder confout = new StringBuilder();
       confout.append("REDIA tool efficiency curve: [");
       for(int i=0; i<efficiency_decay.length; ++i) confout.append(Math.round(efficiency_decay[i]*100)).append(",");
+      confout.deleteCharAt(confout.length()-1).append("]");
+      ModEngineersTools.logger.info(confout.toString());
+    }
+    // Fortune
+    {
+      String[] sc = efficiency_curve.replaceAll("^[,0-9]", "").split(",");
+      if(sc.length > 0) {
+        ArrayList<Integer> dc = new ArrayList<Integer>();
+        for(int i=0; (i<sc.length) && (i<fortune_decay.length); ++i) dc.add(MathHelper.clamp(Integer.parseInt(sc[i]), 0, 3));
+        for(int i=1; i<dc.size(); ++i) {
+          if(dc.get(i) < dc.get(i-1)) dc.set(i, dc.get(i-1));
+        }
+        while(dc.size() < fortune_decay.length) dc.add(dc.get(dc.size()-1));
+      }
+      StringBuilder confout = new StringBuilder();
+      confout.append("REDIA tool fortune curve: [");
+      for(int i=0; i<fortune_decay.length; ++i) confout.append(Math.round(fortune_decay[i])).append(",");
       confout.deleteCharAt(confout.length()-1).append("]");
       ModEngineersTools.logger.info(confout.toString());
     }
@@ -94,7 +115,6 @@ public class ItemRediaTool extends ItemTools
   protected float efficiency = 8.0f;
   protected float attackDamage = 8.0f;
   protected float attackSpeed = -4f;
-  protected int enchantability = 5;
 
   ItemRediaTool(String registryName)
   {
@@ -108,14 +128,6 @@ public class ItemRediaTool extends ItemTools
   @SideOnly(Side.CLIENT)
   public boolean isFull3D()
   { return true; }
-
-  @SideOnly(Side.CLIENT)
-  public void initModel()
-  {
-    ModelResourceLocation rc = new ModelResourceLocation(getRegistryName(),"inventory");
-    ModelBakery.registerItemVariants(this, rc);
-    ModelLoader.setCustomMeshDefinition(this, stack->rc);
-  }
 
   @Override
   @SideOnly(Side.CLIENT)
@@ -214,17 +226,33 @@ public class ItemRediaTool extends ItemTools
   @Override
   public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
   {
+    EnumActionResult rv = EnumActionResult.PASS;
     if(player.isSneaking()) {
+      rv = tryPlantSnipping(player, world, pos, hand, facing, hitX, hitY, hitZ);
+      if(rv != EnumActionResult.PASS) return rv;
       if(facing == EnumFacing.UP) {
-        return tryDigOver(player, world, pos, hand, facing, hitX, hitY, hitZ);
-      } else {
-        return EnumActionResult.PASS;
+        rv = tryDigOver(player, world, pos, hand, facing, hitX, hitY, hitZ);
+        if(rv != EnumActionResult.PASS) return rv;
       }
-    } else if(!player.isSneaking()) {
-      return tryTorchPlacing(player, world, pos, hand, facing, hitX, hitY, hitZ);
     } else {
-      return EnumActionResult.PASS;
+      rv = tryTorchPlacing(player, world, pos, hand, facing, hitX, hitY, hitZ);
+      if(rv != EnumActionResult.PASS) return rv;
     }
+    return rv;
+  }
+
+  @Override
+  public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player)
+  {
+    int fortune = durabilityDependentFortune(stack);
+    Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+    if(fortune > 0) {
+      enchantments.put(Enchantments.FORTUNE, fortune);
+    } else if(enchantments.containsKey(Enchantments.FORTUNE)) {
+      enchantments.remove(Enchantments.FORTUNE);
+    }
+    EnchantmentHelper.setEnchantments(enchantments, stack);
+    return false;
   }
 
   @Override
@@ -239,7 +267,7 @@ public class ItemRediaTool extends ItemTools
       stack.setTagCompound(nbt);
     }
     if(with_tree_felling && (player instanceof EntityPlayer) && (player.isSneaking())) {
-      if(checkTreeFelling(world, state, pos, player)) return true;
+      if(tryTreeFelling(world, state, pos, player)) return true;
     }
     return true;
   }
@@ -271,12 +299,68 @@ public class ItemRediaTool extends ItemTools
     return (float)(
       ((double)efficiency) * ramp_scaler *
       efficiency_decay[
-        (int)MathHelper.clamp((efficiency_decay.length*((double)(getMaxDamage(stack)-getDamage(stack)))/(double)getMaxDamage(stack)),0,efficiency_decay.length-1)
+        (int)MathHelper.clamp(relativeDurability(stack) * efficiency_decay.length,0,efficiency_decay.length-1)
       ]
     );
   }
 
+  @Override
+  public boolean itemInteractionForEntity(ItemStack tool, EntityPlayer player, EntityLivingBase entity, EnumHand hand)
+  {
+    if(entity.world.isRemote) return false;
+    if(tryEntityShearing(tool, player, entity, hand)) return true;
+    return false;
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
+
+  private double relativeDurability(ItemStack stack)
+  { return MathHelper.clamp(((double)(getMaxDamage(stack)-getDamage(stack)))/((double)getMaxDamage(stack)), 0,1.0); }
+
+  private int durabilityDependentFortune(ItemStack stack)
+  { return fortune_decay[MathHelper.clamp((int)(relativeDurability(stack)*fortune_decay.length), 0, fortune_decay.length-1)]; }
+
+  private boolean tryEntityShearing(ItemStack tool, EntityPlayer player, EntityLivingBase entity, EnumHand hand)
+  {
+    if(!(entity instanceof IShearable)) return false;
+    IShearable target = (IShearable)entity;
+    BlockPos pos = new BlockPos(entity.posX, entity.posY, entity.posZ);
+    if(!target.isShearable(tool, entity.world, pos)) return false;
+    List<ItemStack> drops = target.onSheared(tool, entity.world, pos, durabilityDependentFortune(tool));
+    Random rand = new Random();
+    for(ItemStack stack:drops) {
+      EntityItem e = entity.entityDropItem(stack, 1f);
+      e.motionY += rand.nextFloat() * 0.05f;
+      e.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1f;
+      e.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1f;
+    }
+    tool.damageItem(1, entity);
+    return true;
+  }
+
+  private EnumActionResult tryPlantSnipping(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+  {
+    if(!with_shearing) return EnumActionResult.PASS;
+    final IBlockState state = world.getBlockState(pos);
+    if(state.getBlock() instanceof IShearable) {
+      if(((IShearable)state.getBlock()).isShearable(new ItemStack(Items.SHEARS), world, pos)) {
+        final ItemStack tool = player.getHeldItem(hand);
+        if(tool.getItem()==this) {
+          world.playSound(player, pos, SoundEvents.ENTITY_MOOSHROOM_SHEAR, SoundCategory.BLOCKS, 0.8f, 1.1f);
+          if(!world.isRemote) {
+            List<ItemStack> stacks = ((IShearable)state.getBlock()).onSheared(new ItemStack(Items.SHEARS), world, pos, durabilityDependentFortune(tool));
+            world.setBlockToAir(pos);
+            for(ItemStack stack:stacks) {
+              EntityItem ie = new EntityItem(world, pos.getX()+.5, pos.getY()+.5, pos.getZ()+.5, stack);
+              ie.setPickupDelay(3);
+              world.spawnEntity(ie);
+            }
+          }
+        }
+      }
+    }
+    return EnumActionResult.PASS;
+  }
 
   private EnumActionResult tryTorchPlacing(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
   {
@@ -328,7 +412,7 @@ public class ItemRediaTool extends ItemTools
   // Fun algorithm coding ,)
   // -------------------------------------------------------------------------------------------------------------------
 
-  private boolean checkTreeFelling(World world, IBlockState state, BlockPos pos, EntityLivingBase player)
+  private boolean tryTreeFelling(World world, IBlockState state, BlockPos pos, EntityLivingBase player)
   {
     if((!state.isFullBlock()) || (state.getMaterial() != Material.WOOD)) return false;
     if(world.isRemote) return true;

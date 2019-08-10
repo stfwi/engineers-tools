@@ -92,7 +92,16 @@ public class ModConfig
       "factor between 0% and 10% durability, second 10% to 20%, last 90% to 100%."
     })
     @Config.Name("REDIA tool: Dur-Eff curve")
-    public String redia_curve = "10,45,80,95,110,120,140,160,210,220";
+    public String redia_efficiency_curve = "10,45,80,95,110,120,140,160,210,220";
+
+    @Config.Comment({
+      "Defines the fortune depending on the durability. ",
+      "Ten values have to given as integer numbers, (between 0 and 3), " +
+      "and the curve must be rising left-to-right."
+    })
+    @Config.Name("REDIA tool: Dur-Fortune curve")
+    public String redia_fortune_curve = "0,0,0,0,0,0,1,1,2,3";
+
   }
 
   @SuppressWarnings("unused")
@@ -124,7 +133,8 @@ public class ModConfig
   public static final void apply()
   {
     ItemCrushingHammer.on_config("immersiveengineering", tweaks.crushing_hammer_wearoff, 2);
-    ItemRediaTool.on_config(optout.without_redia_torchplacing, optout.without_redia_hoeing, optout.without_redia_tree_chopping, tweaks.redia_durability, tweaks.redia_curve);
+    ItemRediaTool.on_config(optout.without_redia_torchplacing, optout.without_redia_hoeing, optout.without_redia_tree_chopping,
+                           tweaks.redia_durability, tweaks.redia_efficiency_curve, tweaks.redia_fortune_curve);
   }
 
 }

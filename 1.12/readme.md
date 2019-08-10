@@ -10,6 +10,11 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Revision history
 
+    - v1.0.1-b3 [A] REDIA tool: Fortune for high durability (curve configurable).
+                [M] REDIA tool: Enachantable only with Unbreaking with book (would
+                    be OP otherwise).
+                [A] REDIA tool: Right-click: Shear harvesting of Vines, Grass, etc.
+
     - v1.0.1-b2 [A] Added REDIA (REal DIAmond) tool, combining pickaxe, axe and shovel.
                     Right-click: Torch placing. Sneak-right-click: Hoeing dirt - farm land -
                     coarse dirt - grass path - dirt. Sneak while chopping wood logs: Tree

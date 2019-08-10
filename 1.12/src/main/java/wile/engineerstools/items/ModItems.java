@@ -8,7 +8,11 @@
  */
 package wile.engineerstools.items;
 
+import net.minecraft.item.ItemTool;
 import wile.engineerstools.ModEngineersTools;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.event.RegistryEvent;
@@ -47,7 +51,7 @@ public class ModItems
   public static List<Item> getRegisteredItems()
   { return Collections.unmodifiableList(registeredItems); }
 
-  public static final void registerItems(RegistryEvent.Register<Item> event)
+  public static void registerItems(RegistryEvent.Register<Item> event)
   {
     Collections.addAll(registeredItems, modItems);
     for(Item e:registeredItems) event.getRegistry().register(e);
@@ -55,10 +59,23 @@ public class ModItems
   }
 
   @SideOnly(Side.CLIENT)
-  public static final void initModels()
+  public static void registerItemModel(Item item, Object... args)
   {
-    for(Item e:registeredItems) {
-      if(e instanceof ItemTools) ((ItemTools)e).initModel();
+    if(args.length == 0) {
+      if(item instanceof ItemTool) {
+        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
+      } else {
+        ModelResourceLocation rc = new ModelResourceLocation(item.getRegistryName(),"inventory");
+        ModelBakery.registerItemVariants(item, rc);
+        ModelLoader.setCustomMeshDefinition(item, stack->rc);
+      }
+    } else {
+      ModEngineersTools.logger.error("Invalid registerItemModel() args");
     }
   }
+
+  @SideOnly(Side.CLIENT)
+  public static void initModels()
+  { for(Item e:registeredItems) registerItemModel(e); }
+
 }

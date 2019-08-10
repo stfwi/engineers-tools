@@ -9,7 +9,6 @@
 package wile.engineerstools.items;
 
 import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.detail.ModConfig;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.event.RegistryEvent;
@@ -23,9 +22,11 @@ import javax.annotation.Nonnull;
 @SuppressWarnings("unused")
 public class ModItems
 {
-
   @GameRegistry.ObjectHolder("engineerstools:crushing_hammer")
   public static final ItemCrushingHammer CRUSHING_HAMMER = new ItemCrushingHammer("crushing_hammer");
+
+  @GameRegistry.ObjectHolder("engineerstools:redia_tool")
+  public static final ItemRediaTool REDIA_TOOL = new ItemRediaTool("redia_tool");
 
   @GameRegistry.ObjectHolder("engineerstools:iron_grit")
   public static final ItemGrit IRON_GRIT = new ItemGrit("iron_grit");
@@ -35,6 +36,7 @@ public class ModItems
 
   private static final Item modItems[] = {
     CRUSHING_HAMMER,
+    REDIA_TOOL,
     IRON_GRIT,
     GOLD_GRIT
   };
@@ -47,23 +49,9 @@ public class ModItems
 
   public static final void registerItems(RegistryEvent.Register<Item> event)
   {
-    // Config based registry selection
-    int num_registrations_skipped = 0;
-    ArrayList<Item> allItems = new ArrayList<>();
-    Collections.addAll(allItems, modItems);
-    final boolean woor = ModConfig.isWithoutOptOutRegistration();
-    for(Item e:allItems) {
-      if((!woor) || (!ModConfig.isOptedOut(e))) {
-        registeredItems.add(e);
-      } else {
-        ++num_registrations_skipped;
-      }
-    }
+    Collections.addAll(registeredItems, modItems);
     for(Item e:registeredItems) event.getRegistry().register(e);
     ModEngineersTools.logger.info("Registered " + Integer.toString(registeredItems.size()) + " items.");
-    if(num_registrations_skipped > 0) {
-      ModEngineersTools.logger.info("Skipped registration of " + num_registrations_skipped + " items.");
-    }
   }
 
   @SideOnly(Side.CLIENT)

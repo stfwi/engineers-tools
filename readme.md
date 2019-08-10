@@ -17,7 +17,17 @@ Main distribution channel for this mod is CurseForge:
 
 The mod has its focus on manual tools:
 
-- *Ore crushing hammer*: Early game ore-to-grit duplication, as known from
+- *REDIA Tool* (REal DIAmond covered tool): Simple manual multi tool combining
+  pickaxe, axe, and shovel. Reference efficiency: Diamond. Very efficient when
+  in good condition (about Efficiency III), slow when the durability is low
+  (Efficiency curve configurable). Repairable with Diamonds.
+  - Right-click action: Place torch.
+  - Sneak-right-click action: Cycle Dirt - Farmland - Coarse Dirt - Grass Path.
+  - Sneak while breaking a wood log: Tree felling (also higher durability loss).
+  Please read the community references/credits below. Crafted with iron axe,
+  pickaxe, and shovel, and a diamond.
+
+- *Ore Crushing Hammer*: Early game ore-to-grit duplication, as known from
   the IE ore crusher. The hammer is crafted like the Engineers Hammer, except
   that one of the two iron ingots is replaced with an iron block. The tool
   has a comparatively low durability and allowed (by default) to crush 64
@@ -42,7 +52,7 @@ The mod has its focus on manual tools:
     blocks under development to be registered as well.
 
 ----
-## Revision history
+## Version history
 
 Mod versions are tracked in the readme files for individual Minecraft versions, and
 of course in the commits of this repository. Beta and release versions that are
@@ -56,6 +66,13 @@ commits.
 
 ### Community references
 
-- [Immersive Engineering](https://github.com/BluSunrize/ImmersiveEngineering/): Without IE, my
-  little mod here does not make much sense ;). It works without IE, but - honestly - what's
-  an Engineer without her/his machines.
+- [Immersive Engineering](https://github.com/BluSunrize/ImmersiveEngineering/):
+  IE can be seen as a kind of base mod for my small mod, so the items are designed
+  fit into the Immersive Context.
+
+- [Botania](https://botaniamod.net/): The REDIA tool has two features derived from
+  Vazzki's tools, see credits file.
+
+- [Actually Additions](https://github.com/Ellpeck/ActuallyAdditions): The REDIA
+  tool combo-functionality can also be found in the all-in-one tools Ellpeck's
+  Actually Additions.

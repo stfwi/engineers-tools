@@ -10,6 +10,11 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Revision history
 
+    - v1.0.1-b2 [A] Added REDIA (REal DIAmond) tool, combining pickaxe, axe and shovel.
+                    Right-click: Torch placing. Sneak-right-click: Hoeing dirt - farm land -
+                    coarse dirt - grass path - dirt. Sneak while chopping wood logs: Tree
+                    felling.
+
     - v1.0.1-b1 [F] Fixed oredict recipe issue (#1), the duplicated grit is now a
                     remaining item in the crafting grid, which makes automation harder.
 

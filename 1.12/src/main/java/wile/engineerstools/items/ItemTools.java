@@ -30,8 +30,8 @@ public class ItemTools extends Item
     super();
     setRegistryName(ModEngineersTools.MODID, registryName);
     setTranslationKey(ModEngineersTools.MODID + "." + registryName);
+    setCreativeTab(ModEngineersTools.CREATIVE_TAB_ENGINEERSTOOLS);
     setMaxStackSize(64);
-    setCreativeTab(ModEngineersTools.CREATIVE_TAB_engineerstools);
     setHasSubtypes(false);
   }
 

@@ -8,7 +8,6 @@
  */
 package wile.engineerstools;
 
-import net.minecraft.item.crafting.IRecipe;
 import wile.engineerstools.detail.*;
 import wile.engineerstools.items.*;
 import net.minecraft.world.World;
@@ -16,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -117,7 +117,7 @@ public class ModEngineersTools
     { ModItems.initModels(); }
   }
 
-  public static final CreativeTabs CREATIVE_TAB_engineerstools = (new CreativeTabs("tabengineerstools") {
+  public static final CreativeTabs CREATIVE_TAB_ENGINEERSTOOLS = (new CreativeTabs("tabengineerstools") {
     @Override
     @SideOnly(Side.CLIENT)
     public @Nonnull ItemStack createIcon()

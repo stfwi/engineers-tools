@@ -261,12 +261,10 @@ tasks["dist"] = function() {
     // remove empty lines, splitters
     while(readme.length >= end_of_history) readme.pop();
     while((readme.length >0) && (readme[readme.length-1].replace(/[\s-]/g,"")=="")) readme.pop();
-
     const min_indent = readme
       .map(function(s){return s.search(/[^\s]/)})
       .filter(function(e){return e>=0})
       .reduce(function(acc,e){return (e<acc)?e:acc});
-
     if(min_indent > 1) {
       for(var i in readme) { readme[i] = readme[i].substr(min_indent-2); }
     }

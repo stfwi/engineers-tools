@@ -7,7 +7,7 @@
       "mcversion": "${mcversion}",
       "url": "https://github.com/stfwi/engineers-tools/",
       "authorList": ["wile"],
-      "credits": "BluSunrize, malte0811, et al., the Forge Smiths, the Modders of the World.",
+      "credits": "BluSunrize, malte0811, Vazkii, Ellpeck, the Forge Smiths.",
       "logoFile": "assets/engineerstools/logo.png",
       "screenshots": [],
       "useDependencyInformation": false,

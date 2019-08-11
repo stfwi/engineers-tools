@@ -33,6 +33,18 @@ public class ModConfig
     @Config.Name("Without crushing hammer")
     @Config.RequiresMcRestart
     public boolean without_crushing_hammer = false;
+
+    @Config.Comment({ "Disable upward vein chopping of the REDIA tool." })
+    @Config.Name("Without REDIA tree chopping")
+    public boolean without_redia_tree_chopping = false;
+
+    @Config.Comment({ "Disable hoeing function of the REDIA tool." })
+    @Config.Name("Without REDIA hoeing")
+    public boolean without_redia_hoeing = false;
+
+    @Config.Comment({ "Disable torch placing function of the REDIA tool." })
+    @Config.Name("Without REDIA torch placing")
+    public boolean without_redia_torchplacing = false;
   }
 
   @Config.Comment({
@@ -52,11 +64,6 @@ public class ModConfig
     @Config.Name("Without recipes")
     @Config.RequiresMcRestart
     public boolean without_recipes = false;
-
-    @Config.Comment({"Disable registration of opt'ed out items. That is normally not a good idea. Your choice."})
-    @Config.Name("Without opt-out registration")
-    @Config.RequiresMcRestart
-    public boolean without_optout_registration = false;
   }
 
   @Config.Comment({"Tweaks and item behaviour adaptions."})
@@ -71,6 +78,30 @@ public class ModConfig
     @Config.Name("Crushing hammer: Wear-off")
     @Config.RangeInt(min=1, max=32)
     public int crushing_hammer_wearoff = 2;
+
+    @Config.Comment({ "Defines how much durability REDIA tool has." })
+    @Config.Name("REDIA tool: Durability")
+    @Config.RangeInt(min=800, max=3000)
+    public int redia_durability = 2200;
+
+    @Config.Comment({
+      "Defines the efficiency scaling depending on the durability. ",
+      "Ten values have to given in precent, (between 10 and 250), " +
+      "and the curve must be rising left-to-right. 100% corresponds " +
+      "to vanilla diamond tools. The first number specifies the efficiency " +
+      "factor between 0% and 10% durability, second 10% to 20%, last 90% to 100%."
+    })
+    @Config.Name("REDIA tool: Dur-Eff curve")
+    public String redia_efficiency_curve = "10,60,90,100,120,140,170,200,220,230";
+
+    @Config.Comment({
+      "Defines the fortune depending on the durability. ",
+      "Ten values have to given as integer numbers, (between 0 and 3), " +
+      "and the curve must be rising left-to-right."
+    })
+    @Config.Name("REDIA tool: Dur-Fortune curve")
+    public String redia_fortune_curve = "0,0,0,0,0,1,2,2,3,3";
+
   }
 
   @SuppressWarnings("unused")
@@ -89,9 +120,6 @@ public class ModConfig
   public static final void onPostInit(FMLPostInitializationEvent event)
   { apply(); }
 
-  public static final boolean isWithoutOptOutRegistration()
-  { return (zmisc!=null) && (zmisc.without_optout_registration); }
-
   public static final boolean isWithoutRecipes()
   { return (zmisc==null) || (zmisc.without_recipes); }
 
@@ -105,6 +133,8 @@ public class ModConfig
   public static final void apply()
   {
     ItemCrushingHammer.on_config("immersiveengineering", tweaks.crushing_hammer_wearoff, 2);
+    ItemRediaTool.on_config(optout.without_redia_torchplacing, optout.without_redia_hoeing, optout.without_redia_tree_chopping,
+                           tweaks.redia_durability, tweaks.redia_efficiency_curve, tweaks.redia_fortune_curve);
   }
 
 }

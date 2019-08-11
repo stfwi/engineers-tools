@@ -61,13 +61,13 @@ public class ItemCrushingHammer extends ItemTools
 
     public CrushingHammerRecipe(String recipe_name, ItemStack grit_stack, String ore_name)
     {
-      super(null, grit_stack, ore_name, new ItemStack(ModItems.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
+      super(new ResourceLocation(ModEngineersTools.MODID, "hammer_crushing"), grit_stack, ore_name, new ItemStack(ModItems.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
       setRegistryName(new ResourceLocation(ModEngineersTools.MODID, recipe_name.toLowerCase().replace(" ", "")));
     }
 
     public CrushingHammerRecipe(String recipe_name, ItemStack grit_stack, Item ore_item)
     {
-      super(null, grit_stack, ore_item, new ItemStack(ModItems.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
+      super(new ResourceLocation(ModEngineersTools.MODID, "hammer_crushing"), grit_stack, ore_item, new ItemStack(ModItems.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
       setRegistryName(new ResourceLocation(ModEngineersTools.MODID, recipe_name.toLowerCase().replace(" ", "")));
     }
 
@@ -79,12 +79,23 @@ public class ItemCrushingHammer extends ItemTools
       for(int i=0; i<inv.getSizeInventory(); ++i) {
         if(inv.getStackInSlot(i).isItemEqualIgnoreDurability(reference_hammer)) { hammer_position = i; break; }
       }
-      if((hammer_position < 0) || (remaining.size() <= hammer_position)) return remaining;
-      ItemStack used_hammer = inv.getStackInSlot(hammer_position);
-      int durability = used_hammer.getItemDamage() + hammer_wear_off;
-      if(durability >= used_hammer.getMaxDamage()) return remaining;
-      used_hammer.setItemDamage(durability);
-      remaining.set(hammer_position, used_hammer.copy());
+      if((hammer_position >= 0) && (hammer_position < remaining.size())) {
+        ItemStack used_hammer = inv.getStackInSlot(hammer_position);
+        int durability = used_hammer.getItemDamage() + hammer_wear_off;
+        if(durability >= used_hammer.getMaxDamage()) return remaining;
+        used_hammer.setItemDamage(durability);
+        remaining.set(hammer_position, used_hammer.copy());
+      }
+      if(num_output_stacks > 1) {
+        for(int i=0; i<remaining.size(); ++i) {
+          if(remaining.get(i).isEmpty()) {
+            ItemStack stack = getCraftingResult(inv);
+            stack.setCount(num_output_stacks - 1);
+            remaining.set(i, stack);
+            break;
+          }
+        }
+      }
       return remaining;
     }
 
@@ -98,7 +109,7 @@ public class ItemCrushingHammer extends ItemTools
     private static void registerGritRecipe(final IForgeRegistry<IRecipe> registry, final ItemStack grit_stack, String ore_name)
     {
       if(grit_stack.getMetadata()==OreDictionary.WILDCARD_VALUE) grit_stack.setItemDamage(0);
-      grit_stack.setCount(num_output_stacks);
+      grit_stack.setCount(1);
       if(ore_name.contains(":")) {
         Item ore_item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(ore_name));
         if(ore_item == null) { ModEngineersTools.logger.error("Item for recipe registration not found: '" + ore_name + "'"); return; }

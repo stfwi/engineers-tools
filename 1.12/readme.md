@@ -10,6 +10,29 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Revision history
 
+
+                -------------------------------------------------------------------
+    - v1.0.1    [R] Release based on v1.0.1-b3. Release-to-release changes:
+                    * REDIA multi tool added (axe, pickaxe, shove, shears, torch
+                      placing, hoeing, etc.)
+                -------------------------------------------------------------------
+                [F] REDIA tool: Snipping tall grass fixed.
+                [A] REDIA tool: Attack modifiers like a Diamond Axe.
+                [A] REDIA tool: Enchantability improved.
+
+    - v1.0.1-b3 [A] REDIA tool: Fortune for high durability (curve configurable).
+                [M] REDIA tool: Enachantable only with Unbreaking with book (would
+                    be OP otherwise).
+                [A] REDIA tool: Right-click: Shear harvesting of Vines, Grass, etc.
+
+    - v1.0.1-b2 [A] Added REDIA (REal DIAmond) tool, combining pickaxe, axe and shovel.
+                    Right-click: Torch placing. Sneak-right-click: Hoeing dirt - farm land -
+                    coarse dirt - grass path - dirt. Sneak while chopping wood logs: Tree
+                    felling.
+
+    - v1.0.1-b1 [F] Fixed oredict recipe issue (#1), the duplicated grit is now a
+                    remaining item in the crafting grid, which makes automation harder.
+
                 -------------------------------------------------------------------
     - v1.0.0    [R] Release based on v1.0.0-b3
                 -------------------------------------------------------------------

@@ -10,6 +10,16 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Revision history
 
+
+                -------------------------------------------------------------------
+    - v1.0.1    [R] Release based on v1.0.1-b3. Release-to-release changes:
+                    * REDIA multi tool added (axe, pickaxe, shove, shears, torch
+                      placing, hoeing, etc.)
+                -------------------------------------------------------------------
+                [F] REDIA tool: Snipping tall grass fixed.
+                [A] REDIA tool: Attack modifiers like a Diamond Axe.
+                [A] REDIA tool: Enchantability improved.
+
     - v1.0.1-b3 [A] REDIA tool: Fortune for high durability (curve configurable).
                 [M] REDIA tool: Enachantable only with Unbreaking with book (would
                     be OP otherwise).

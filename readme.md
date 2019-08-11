@@ -18,14 +18,16 @@ Main distribution channel for this mod is CurseForge:
 The mod has its focus on manual tools:
 
 - *REDIA Tool* (REal DIAmond covered tool): Simple manual multi tool combining
-  pickaxe, axe, and shovel. Reference efficiency: Diamond. Very efficient when
-  in good condition (about Efficiency III), slow when the durability is low
+  pickaxe, axe, shovel, and shears. Reference efficiency: Diamond. Very efficient
+  when in good condition (about Efficiency III), slow when the durability is low
   (Efficiency curve configurable). Repairable with Diamonds.
+
   - Right-click action: Place torch.
   - Sneak-right-click ground: Cycle Dirt - Farmland - Coarse Dirt - Grass Path.
   - Sneak-right-click: Shaering of Grass, Vines, Sheep, etc.
   - Sneak while breaking a wood log: Tree felling (also higher durability loss).
-  Please read the community references/credits below. Crafted with iron axe,
+
+  *Please read the community references/credits below*. Crafted with iron axe,
   pickaxe, and shovel, and a diamond.
 
 - *Ore Crushing Hammer*: Early game ore-to-grit duplication, as known from

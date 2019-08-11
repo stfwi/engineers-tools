@@ -92,7 +92,7 @@ public class ModConfig
       "factor between 0% and 10% durability, second 10% to 20%, last 90% to 100%."
     })
     @Config.Name("REDIA tool: Dur-Eff curve")
-    public String redia_efficiency_curve = "10,45,80,95,110,120,140,160,210,220";
+    public String redia_efficiency_curve = "10,60,90,100,120,140,170,200,220,230";
 
     @Config.Comment({
       "Defines the fortune depending on the durability. ",
@@ -100,7 +100,7 @@ public class ModConfig
       "and the curve must be rising left-to-right."
     })
     @Config.Name("REDIA tool: Dur-Fortune curve")
-    public String redia_fortune_curve = "0,0,0,0,0,0,1,1,2,3";
+    public String redia_fortune_curve = "0,0,0,0,0,1,2,2,3,3";
 
   }
 

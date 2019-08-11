@@ -62,8 +62,8 @@ public class ModItems
   public static void registerItemModel(Item item, Object... args)
   {
     if(args.length == 0) {
-      if(item instanceof ItemTool) {
-        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
+      if(item instanceof ItemRediaTool) {
+        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
       } else {
         ModelResourceLocation rc = new ModelResourceLocation(item.getRegistryName(),"inventory");
         ModelBakery.registerItemVariants(item, rc);

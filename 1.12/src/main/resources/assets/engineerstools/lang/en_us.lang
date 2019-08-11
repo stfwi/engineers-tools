@@ -17,7 +17,7 @@ item.engineerstools.redia_tool.name=REDIA Tool
 item.engineerstools.redia_tool.help=§6REal DIAmond covered steel multi tool.§r Combines axe, pickaxe, and shovel. \
                                     Very efficient when in good condition, slow when durability is low. Repair with Diamonds.\n\
                                     Right-click: Place torch.\n\
-                                    Sneak-right-click: Hoe Grass/Dirt to Farmland, Coarse Dirt, and Grass Path.\n\
+                                    Sneak-right-click: Hoe Dirt to Farmland, Coarse Dirt, etc; Shear sheep, Vines, Leafs etc.\n\
                                     Sneak while breaking a wood log: Tree felling.
 item.engineerstools.iron_grit.name=Coarse iron grit
 item.engineerstools.iron_grit.help=§6Can be smelted to iron ingots, but is not suitable for advanced material processing.

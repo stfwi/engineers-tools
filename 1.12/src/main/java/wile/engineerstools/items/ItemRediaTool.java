@@ -10,6 +10,8 @@ package wile.engineerstools.items;
 
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.detail.ModAuxiliaries;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.EntityItem;
@@ -49,9 +51,9 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 
-public class ItemRediaTool extends ItemTools
+public class ItemRediaTool extends ItemAxe
 {
-  private static int enchantability = 5;
+  private static int enchantability = 15;
   private static int max_damage_ = 2200;
   private static boolean with_torch_placing = true;
   private static boolean with_hoeing = true;
@@ -111,18 +113,21 @@ public class ItemRediaTool extends ItemTools
   }
 
   // -------------------------------------------------------------------------------------------------------------------
-  protected final ToolMaterial toolMaterial = ToolMaterial.DIAMOND;
-  protected float efficiency = 8.0f;
-  protected float attackDamage = 8.0f;
-  protected float attackSpeed = -4f;
 
   ItemRediaTool(String registryName)
   {
-    super(registryName);
+    super(ToolMaterial.DIAMOND);
+    setRegistryName(ModEngineersTools.MODID, registryName);
+    setTranslationKey(ModEngineersTools.MODID + "." + registryName);
+    setCreativeTab(ModEngineersTools.CREATIVE_TAB_ENGINEERSTOOLS);
+    setMaxStackSize(1);
+    setHasSubtypes(false);
     setHarvestLevel("pickaxe", 3);
     setHarvestLevel("axe", 3);
     setHarvestLevel("shovel", 3);
     setMaxDamage(max_damage_);
+//    this.attackSpeed = -4f;
+//    this.attackDamage = 9;
   }
 
   @SideOnly(Side.CLIENT)
@@ -210,14 +215,41 @@ public class ItemRediaTool extends ItemTools
   { return false; }
 
   @Override
+  @SuppressWarnings("deprecation")
+  public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot slot)
+  {
+    Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(slot);
+    if(slot != EntityEquipmentSlot.MAINHAND) return multimap;
+    multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)this.attackDamage, 0));
+    multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", (double)this.attackSpeed, 0));
+    return multimap;
+  }
+
+  @Override
   public boolean isBookEnchantable(ItemStack tool, ItemStack book)
   { return true; }
+
+  @Override
+  public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
+  {
+    if(enchantment == Enchantments.FORTUNE) return false;
+    if(enchantment == Enchantments.EFFICIENCY) return false;
+    if(enchantment == Enchantments.KNOCKBACK) return true;
+    if(enchantment == Enchantments.LOOTING) return true;
+    if(enchantment == Enchantments.SHARPNESS) return true;
+    if(enchantment == Enchantments.FIRE_ASPECT) return true;
+    return enchantment.type.canEnchantItem(stack.getItem());
+  }
 
   // -------------------------------------------------------------------------------------------------------------------
 
   @Override
   public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
-  { stack.damageItem(2, attacker); return true; }
+  {
+
+    stack.damageItem(2, attacker);
+    return true;
+  }
 
   @Override
   public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
@@ -244,31 +276,26 @@ public class ItemRediaTool extends ItemTools
   @Override
   public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player)
   {
-    int fortune = durabilityDependentFortune(stack);
-    Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-    if(fortune > 0) {
-      enchantments.put(Enchantments.FORTUNE, fortune);
-    } else if(enchantments.containsKey(Enchantments.FORTUNE)) {
-      enchantments.remove(Enchantments.FORTUNE);
-    }
-    EnchantmentHelper.setEnchantments(enchantments, stack);
+    if(!player.world.isRemote) setFortune(stack);
     return false;
   }
 
   @Override
-  public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase player)
+  public boolean onBlockDestroyed(ItemStack tool, World world, IBlockState state, BlockPos pos, EntityLivingBase player)
   {
-    if(world.isRemote) return true;
-    if(state.getBlockHardness(world, pos) != 0.0f) stack.damageItem(1, player);
-    {
-      NBTTagCompound nbt = stack.getTagCompound();
-      if(nbt==null) nbt = new NBTTagCompound();
-      nbt.setInteger("lhbh", state.getBlock().hashCode());
-      stack.setTagCompound(nbt);
+    if(!world.isRemote) {
+      if(state.getBlockHardness(world, pos) != 0.0f) tool.damageItem(1, player);
+      {
+        NBTTagCompound nbt = tool.getTagCompound();
+        if(nbt==null) nbt = new NBTTagCompound();
+        nbt.setInteger("lhbh", state.getBlock().hashCode());
+        tool.setTagCompound(nbt);
+      }
+      if(with_tree_felling && (player instanceof EntityPlayer) && (player.isSneaking())) {
+        if(tryTreeFelling(world, state, pos, player)) return true;
+      }
     }
-    if(with_tree_felling && (player instanceof EntityPlayer) && (player.isSneaking())) {
-      if(tryTreeFelling(world, state, pos, player)) return true;
-    }
+    resetFortune(tool);
     return true;
   }
 
@@ -308,11 +335,36 @@ public class ItemRediaTool extends ItemTools
   public boolean itemInteractionForEntity(ItemStack tool, EntityPlayer player, EntityLivingBase entity, EnumHand hand)
   {
     if(entity.world.isRemote) return false;
-    if(tryEntityShearing(tool, player, entity, hand)) return true;
-    return false;
+    setFortune(player.getHeldItem(hand));
+    boolean handled = false
+      || tryEntityShearing(tool, player, entity, hand)
+      ;
+    resetFortune(player.getHeldItem(hand));
+    return handled;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
+
+  private void setFortune(ItemStack stack)
+  {
+    int fortune = durabilityDependentFortune(stack);
+    Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+    if(fortune > 0) {
+      enchantments.put(Enchantments.FORTUNE, fortune);
+    } else if(enchantments.containsKey(Enchantments.FORTUNE)) {
+      enchantments.remove(Enchantments.FORTUNE);
+    }
+    EnchantmentHelper.setEnchantments(enchantments, stack);
+  }
+
+  private void resetFortune(ItemStack stack)
+  {
+    int fortune = durabilityDependentFortune(stack);
+    if(fortune==0) return;
+    Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+    enchantments.remove(Enchantments.FORTUNE);
+    EnchantmentHelper.setEnchantments(enchantments, stack);
+  }
 
   private double relativeDurability(ItemStack stack)
   { return MathHelper.clamp(((double)(getMaxDamage(stack)-getDamage(stack)))/((double)getMaxDamage(stack)), 0,1.0); }
@@ -347,15 +399,17 @@ public class ItemRediaTool extends ItemTools
         final ItemStack tool = player.getHeldItem(hand);
         if(tool.getItem()==this) {
           world.playSound(player, pos, SoundEvents.ENTITY_MOOSHROOM_SHEAR, SoundCategory.BLOCKS, 0.8f, 1.1f);
+          List<ItemStack> stacks = ((IShearable)state.getBlock()).onSheared(new ItemStack(Items.SHEARS), world, pos, durabilityDependentFortune(tool));
           if(!world.isRemote) {
-            List<ItemStack> stacks = ((IShearable)state.getBlock()).onSheared(new ItemStack(Items.SHEARS), world, pos, durabilityDependentFortune(tool));
-            world.setBlockToAir(pos);
             for(ItemStack stack:stacks) {
               EntityItem ie = new EntityItem(world, pos.getX()+.5, pos.getY()+.5, pos.getZ()+.5, stack);
-              ie.setPickupDelay(3);
+              ie.setDefaultPickupDelay();
               world.spawnEntity(ie);
             }
           }
+          state.getBlock().onBlockHarvested(world, pos, state, player);
+          world.setBlockState(pos, Blocks.AIR.getDefaultState(), 1|2|8); //
+          tool.damageItem(1, player);
         }
       }
     }
@@ -429,9 +483,9 @@ public class ItemRediaTool extends ItemTools
   }
 
   private static final List<Vec3i> hoffsets = ImmutableList.of(
-          new Vec3i( 1,0, 0), new Vec3i( 1,0, 1), new Vec3i( 0,0, 1),
-          new Vec3i(-1,0, 1), new Vec3i(-1,0, 0), new Vec3i(-1,0,-1),
-          new Vec3i( 0,0,-1), new Vec3i( 1,0,-1)
+    new Vec3i( 1,0, 0), new Vec3i( 1,0, 1), new Vec3i( 0,0, 1),
+    new Vec3i(-1,0, 1), new Vec3i(-1,0, 0), new Vec3i(-1,0,-1),
+    new Vec3i( 0,0,-1), new Vec3i( 1,0,-1)
   );
 
   private List<BlockPos> findBlocksAround(final World world, final BlockPos centerPos, final IBlockState leaf_type_state, final Set<BlockPos> checked, int recursion_left)

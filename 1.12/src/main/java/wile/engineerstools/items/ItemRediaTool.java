@@ -114,7 +114,7 @@ public class ItemRediaTool extends ItemAxe
 
   // -------------------------------------------------------------------------------------------------------------------
 
-  ItemRediaTool(String registryName)
+  public ItemRediaTool(String registryName)
   {
     super(ToolMaterial.DIAMOND);
     setRegistryName(ModEngineersTools.MODID, registryName);
@@ -126,8 +126,6 @@ public class ItemRediaTool extends ItemAxe
     setHarvestLevel("axe", 3);
     setHarvestLevel("shovel", 3);
     setMaxDamage(max_damage_);
-//    this.attackSpeed = -4f;
-//    this.attackDamage = 9;
   }
 
   @SideOnly(Side.CLIENT)

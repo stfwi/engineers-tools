@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:grc",
+      "result": "engineerstools:ariadne_coal"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C",
+    "C",
+    "S"
+  ],
+  "key": {
+    "S": {
+      "item": "#stickWood",
+      "data": 0
+    },
+    "C": {
+      "item": "minecraft:coal",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "engineerstools:ariadne_coal",
+    "count": 1
+  }
+}

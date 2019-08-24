@@ -23,6 +23,13 @@ item.engineerstools.iron_grit.name=Coarse iron grit
 item.engineerstools.iron_grit.help=§6Can be smelted to iron ingots, but is not suitable for advanced material processing.
 item.engineerstools.gold_grit.name=Coarse gold grit
 item.engineerstools.gold_grit.help=§6Can be smelted to gold ingots, but is not suitable for advanced material processing.
+item.engineerstools.ariadne_coal.name=Ariadne Coal
+item.engineerstools.ariadne_coal.help=§6Draw orientation arrows to find the way out of your mines.§r\n\
+                                      The arrow direction depends on where you click on the block to draw on.
+#-----------------------------------------------------------------------------------------------------------
+tile.engineerstools.ariadne_coal_x.name=Ariadne Coal
+tile.engineerstools.ariadne_coal_y.name=Ariadne Coal
+tile.engineerstools.ariadne_coal_z.name=Ariadne Coal
 #-----------------------------------------------------------------------------------------------------------
 # EOF
 #-----------------------------------------------------------------------------------------------------------

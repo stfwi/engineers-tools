@@ -12,6 +12,6 @@ package wile.engineerstools.items;
 
 public class ItemGrit extends ItemTools
 {
-  ItemGrit(String registryName)
+  public ItemGrit(String registryName)
   { super(registryName); setMaxStackSize(64); }
 }

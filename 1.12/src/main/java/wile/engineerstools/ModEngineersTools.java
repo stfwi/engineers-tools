@@ -10,6 +10,7 @@ package wile.engineerstools;
 
 import wile.engineerstools.detail.*;
 import wile.engineerstools.items.*;
+import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -105,7 +106,7 @@ public class ModEngineersTools
   {
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> event)
-    { ModItems.registerItems(event); }
+    { ModContent.registerItemBlocks(event); ModContent.registerItems(event); }
 
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
@@ -114,14 +115,18 @@ public class ModEngineersTools
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void registerModels(final ModelRegistryEvent event)
-    { ModItems.initModels(); }
+    { ModContent.initModels(); }
+
+    @SubscribeEvent
+    public static void registerBlocks(final RegistryEvent.Register<Block> event)
+    { ModContent.registerBlocks(event); }
   }
 
   public static final CreativeTabs CREATIVE_TAB_ENGINEERSTOOLS = (new CreativeTabs("tabengineerstools") {
     @Override
     @SideOnly(Side.CLIENT)
     public @Nonnull ItemStack createIcon()
-    { return new ItemStack(ModItems.CRUSHING_HAMMER); }
+    { return new ItemStack(ModContent.CRUSHING_HAMMER); }
   });
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -131,7 +136,7 @@ public class ModEngineersTools
   @Mod.EventBusSubscriber
   public static class PlayerEventHandler
   {
-    @SubscribeEvent
+    //@SubscribeEvent
     public void update(final LivingEvent.LivingUpdateEvent event)
     {
       if(!(event.getEntity() instanceof EntityPlayer)) return;

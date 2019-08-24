@@ -37,6 +37,9 @@ The mod has its focus on manual tools:
   stack of ore before breaking. It's not repairable, so a new one has to be
   crafted - or get an IE Ore Crusher machine ASAP.
 
+- *Ariadne Coal*: A coal pen that allows you to draw arrows on walls, floors
+  and ceilings to find the way out of caves. Build like a "coal sword".
+
 ----
 ### Mod pack integration, forking, back ports, bug reports, testing
 

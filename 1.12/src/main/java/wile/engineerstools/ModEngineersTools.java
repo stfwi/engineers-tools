@@ -32,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 
 
+
 @Mod(
   modid = ModEngineersTools.MODID,
   name = ModEngineersTools.MODNAME,
@@ -99,6 +100,7 @@ public class ModEngineersTools
     proxy.postInit(event);
     if(RecipeCondModSpecific.num_skipped > 0) logger.info("Excluded " + RecipeCondModSpecific.num_skipped + " recipes due to config opt-out.");
     if(ModConfig.zmisc.with_experimental) logger.info("Included experimental features due to mod config.");
+    BlockCategories.reload();
   }
 
   @Mod.EventBusSubscriber

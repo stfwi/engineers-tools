@@ -9,6 +9,7 @@
 package wile.engineerstools.items;
 
 import wile.engineerstools.ModEngineersTools;
+import wile.engineerstools.detail.BlockCategories;
 import wile.engineerstools.detail.ModAuxiliaries;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemAxe;
@@ -44,7 +45,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableList;
 import javax.annotation.Nullable;
@@ -468,14 +468,9 @@ public class ItemRediaTool extends ItemAxe
   {
     if((!state.isFullBlock()) || (state.getMaterial() != Material.WOOD)) return false;
     if(world.isRemote) return true;
-    Item item = Item.getItemFromBlock(state.getBlock());
-    if(item==null) return false;
-    int[] oids = OreDictionary.getOreIDs(new ItemStack(item));
-    for(int i=0; i<oids.length; ++i) {
-      if(OreDictionary.getOreName(oids[i]).matches("^log[A-Z].*$")) {
-        chopTree(world, state, pos, player);
-        return true;
-      }
+    if(BlockCategories.isLog(state)) {
+      chopTree(world, state, pos, player);
+      return true;
     }
     return false;
   }
@@ -493,7 +488,7 @@ public class ItemRediaTool extends ItemAxe
       final BlockPos layer = centerPos.add(0,y,0);
       for(Vec3i v:hoffsets) {
         BlockPos pos = layer.add(v);
-        if((!checked.contains(pos)) && (world.getBlockState(pos).getBlock()==leaf_type_state.getBlock())) {
+        if((!checked.contains(pos)) && BlockCategories.isSameLeaves(leaf_type_state, world.getBlockState(pos))) {
           checked.add(pos);
           to_decay.add(pos);
           if(recursion_left > 0) {
@@ -505,24 +500,9 @@ public class ItemRediaTool extends ItemAxe
     return to_decay;
   }
 
-  private static boolean isSameLog(IBlockState a, IBlockState b)
-  {
-    // very strange  ...
-    if(a.getBlock()!=b.getBlock()) {
-      return false;
-    } else if(a.getBlock() instanceof BlockNewLog) {
-      return a.getValue(BlockNewLog.VARIANT) == b.getValue(BlockNewLog.VARIANT);
-    } else if(a.getBlock() instanceof BlockOldLog) {
-      return a.getValue(BlockOldLog.VARIANT) == b.getValue(BlockOldLog.VARIANT);
-    } else {
-      return false;
-    }
-  }
-
   private void chopTree(World world, IBlockState broken_state, BlockPos startPos, EntityLivingBase player)
   {
-    final Block broken_block = broken_state.getBlock();
-    if(!(broken_block instanceof BlockLog)) return;
+    if(!BlockCategories.isLog(broken_state)) return;
     ItemStack tool = player.getHeldItemMainhand();
     if(tool.getItem() != this) tool = player.getHeldItemOffhand();
     if(tool.getItem() != this) return;
@@ -548,13 +528,13 @@ public class ItemRediaTool extends ItemAxe
         final IBlockState upstate = world.getBlockState(uppos);
         if(!checked.contains(uppos)) {
           checked.add(uppos);
-          if(isSameLog(upstate, broken_state)) {
+          if(BlockCategories.isSameLog(upstate, broken_state)) {
             // Up is log
             upqueue.add(uppos);
             to_break.add(uppos);
             steps_left = 64;
           } else {
-            boolean isleaf = (upstate.getBlock() instanceof BlockLeaves) || (upstate.getBlock().isLeaves(upstate, world, uppos));
+            boolean isleaf = BlockCategories.isLeaves(upstate);
             if(isleaf || world.isAirBlock(uppos) || (upstate.getBlock() instanceof BlockVine)) {
               if(isleaf) to_decay.add(uppos);
               // Up is air, check adjacent for diagonal up (e.g. Accacia)
@@ -564,10 +544,10 @@ public class ItemRediaTool extends ItemAxe
                 checked.add(p);
                 final IBlockState st = world.getBlockState(p);
                 final Block bl = st.getBlock();
-                if(isSameLog(st, broken_state)) {
+                if(BlockCategories.isSameLog(st, broken_state)) {
                   queue.add(p);
                   to_break.add(p);
-                } else if((bl instanceof BlockLeaves) || (bl.isLeaves(st, world, p))) {
+                } else if(BlockCategories.isLeaves(st)) {
                   to_decay.add(p);
                 }
               }
@@ -582,10 +562,10 @@ public class ItemRediaTool extends ItemAxe
           if(p.distanceSq(new BlockPos(startPos.getX(), p.getY(), startPos.getZ())) > (3+cutlevel*cutlevel)) continue;
           final IBlockState st = world.getBlockState(p);
           final Block bl = st.getBlock();
-          if(isSameLog(st, broken_state)) {
+          if(BlockCategories.isSameLog(st, broken_state)) {
             queue.add(p);
             to_break.add(p);
-          } else if((bl instanceof BlockLeaves) || (bl.isLeaves(st, world, p))) {
+          } else if(BlockCategories.isLeaves(st)) {
             to_decay.add(p);
           }
         }
@@ -626,9 +606,13 @@ public class ItemRediaTool extends ItemAxe
     }
     {
       // And now the bill.
-      int dmg = (to_break.size()*3/2)+(to_decay.size()/8) - 1;
+      int dmg = (to_break.size()*6/5)+(to_decay.size()/10)-1;
       if(dmg < 1) dmg = 1;
       tool.damageItem(dmg, player);
+      if(player instanceof EntityPlayer) {
+        float exhaustion = MathHelper.clamp(((float)dmg) / 5, 0.5f, 40f);
+        ((EntityPlayer)player).addExhaustion(exhaustion);
+      }
     }
   }
 }

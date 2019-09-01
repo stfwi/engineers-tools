@@ -10,7 +10,9 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Version history
 
-    ~ v1.0.2-b2 [M]
+    - v1.0.2-b2 [M] Tree felling cross mod compatibility improved.
+                [M] Tree felling durability loss tuned, exhaustion added.
+                [M] Ariadne Coal durability tuned.
 
     - v1.0.2-b1 [A] Ariadne Coal added to draw arrows in caves and mines.
 

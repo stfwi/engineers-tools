@@ -32,7 +32,7 @@ public class ItemAriadneCoal extends ItemTools
   {
     super(registryName);
     setMaxStackSize(1);
-    setMaxDamage(800);
+    setMaxDamage(100);
     setNoRepair();
   }
 

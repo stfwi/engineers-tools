@@ -10,6 +10,8 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Version history
 
+    ~ v1.0.2-b2 [M]
+
     - v1.0.2-b1 [A] Ariadne Coal added to draw arrows in caves and mines.
 
                 -------------------------------------------------------------------

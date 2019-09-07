@@ -610,7 +610,7 @@ public class ItemRediaTool extends ItemAxe
       if(dmg < 1) dmg = 1;
       tool.damageItem(dmg, player);
       if(player instanceof EntityPlayer) {
-        float exhaustion = MathHelper.clamp(((float)dmg) / 5, 0.5f, 40f);
+        float exhaustion = MathHelper.clamp(((float)dmg) / 8, 0.5f, 20f);
         ((EntityPlayer)player).addExhaustion(exhaustion);
       }
     }

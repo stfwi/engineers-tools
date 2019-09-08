@@ -10,7 +10,10 @@ Mod sources for Minecraft version 1.14.4.
 ----
 ## Version history
 
-    ~ v1.0.1-b3   [U] Updated to Forge 1.14.4-28.0.93/20190719-1.14.3.
+    - v1.0.1-b3   [U] Updated to Forge 1.14.4-28.0.100/20190719-1.14.3.
+                  [A] Ariadne Coal (arrow drawing for orientation) added.
+                  [M] REDIA tool exhaustion and item damage adapted to 1.12.
+                  [M] Mod logo fixed.
 
     - v1.0.1-b2   [U] Updated to Forge 1.14.4-28.0.81/20190719-1.14.3,
                   recipe condition processing updated accordingly.

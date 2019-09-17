@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "orientation=0" : { "model": "engineerstools:ariadne_coal_0_model", "x":  90 },
+    "orientation=1" : { "model": "engineerstools:ariadne_coal_7_model", "x":  90 },
+    "orientation=2" : { "model": "engineerstools:ariadne_coal_6_model", "x":  90 },
+    "orientation=3" : { "model": "engineerstools:ariadne_coal_5_model", "x":  90 },
+    "orientation=4" : { "model": "engineerstools:ariadne_coal_4_model", "x":  90 },
+    "orientation=5" : { "model": "engineerstools:ariadne_coal_3_model", "x":  90 },
+    "orientation=6" : { "model": "engineerstools:ariadne_coal_2_model", "x":  90 },
+    "orientation=7" : { "model": "engineerstools:ariadne_coal_1_model", "x":  90 },
+    "orientation=8" : { "model": "engineerstools:ariadne_coal_0_model", "x": 270 },
+    "orientation=9" : { "model": "engineerstools:ariadne_coal_1_model", "x": 270 },
+    "orientation=10": { "model": "engineerstools:ariadne_coal_2_model", "x": 270 },
+    "orientation=11": { "model": "engineerstools:ariadne_coal_3_model", "x": 270 },
+    "orientation=12": { "model": "engineerstools:ariadne_coal_4_model", "x": 270 },
+    "orientation=13": { "model": "engineerstools:ariadne_coal_5_model", "x": 270 },
+    "orientation=14": { "model": "engineerstools:ariadne_coal_6_model", "x": 270 },
+    "orientation=15": { "model": "engineerstools:ariadne_coal_7_model", "x": 270 }
+  }
+}

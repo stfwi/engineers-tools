@@ -30,4 +30,8 @@ src/main/resources/assets/minecraft
 .gimp
 *.xcf
 desktop.ini
+.DS_Store
+Thumbs.db
+forge*changelog.txt
 /*.txt
+mcmodsrepo

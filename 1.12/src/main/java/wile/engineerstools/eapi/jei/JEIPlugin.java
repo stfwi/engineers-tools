@@ -9,7 +9,7 @@
 package wile.engineerstools.eapi.jei;
 
 import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.items.ModItems;
+import wile.engineerstools.ModContent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -32,8 +32,11 @@ public class JEIPlugin implements mezz.jei.api.IModPlugin
   {
     try {
       // Don't show the internal grits in JEI, other mod grits shall be preferred.
-      blacklist(registry, ModItems.IRON_GRIT);
-      blacklist(registry, ModItems.GOLD_GRIT);
+      blacklist(registry, ModContent.IRON_GRIT);
+      blacklist(registry, ModContent.GOLD_GRIT);
+      blacklist(registry, Item.getItemFromBlock(ModContent.ARIADNE_COAL_X));
+      blacklist(registry, Item.getItemFromBlock(ModContent.ARIADNE_COAL_Y));
+      blacklist(registry, Item.getItemFromBlock(ModContent.ARIADNE_COAL_Z));
     } catch(Throwable ex) {
       ModEngineersTools.logger.error("Failed to blacklist an item:" + ex.getMessage());
     }

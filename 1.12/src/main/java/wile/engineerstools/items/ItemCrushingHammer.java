@@ -9,6 +9,8 @@
  */
 package wile.engineerstools.items;
 
+import wile.engineerstools.ModContent;
+import wile.engineerstools.ModEngineersTools;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -24,7 +26,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
-import wile.engineerstools.ModEngineersTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ItemCrushingHammer extends ItemTools
     if(grit_preference_order.isEmpty()) grit_preference_order = "immersiveengineering";
   }
 
-  ItemCrushingHammer(String registryName)
+  public ItemCrushingHammer(String registryName)
   {
     super(registryName);
     setMaxStackSize(1);
@@ -61,20 +62,20 @@ public class ItemCrushingHammer extends ItemTools
 
     public CrushingHammerRecipe(String recipe_name, ItemStack grit_stack, String ore_name)
     {
-      super(new ResourceLocation(ModEngineersTools.MODID, "hammer_crushing"), grit_stack, ore_name, new ItemStack(ModItems.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
+      super(new ResourceLocation(ModEngineersTools.MODID, "hammer_crushing"), grit_stack, ore_name, new ItemStack(ModContent.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
       setRegistryName(new ResourceLocation(ModEngineersTools.MODID, recipe_name.toLowerCase().replace(" ", "")));
     }
 
     public CrushingHammerRecipe(String recipe_name, ItemStack grit_stack, Item ore_item)
     {
-      super(new ResourceLocation(ModEngineersTools.MODID, "hammer_crushing"), grit_stack, ore_item, new ItemStack(ModItems.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
+      super(new ResourceLocation(ModEngineersTools.MODID, "hammer_crushing"), grit_stack, ore_item, new ItemStack(ModContent.CRUSHING_HAMMER, 1, OreDictionary.WILDCARD_VALUE));
       setRegistryName(new ResourceLocation(ModEngineersTools.MODID, recipe_name.toLowerCase().replace(" ", "")));
     }
 
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
     {
       NonNullList<ItemStack> remaining = net.minecraftforge.common.ForgeHooks.defaultRecipeGetRemainingItems(inv);
-      final ItemStack reference_hammer = new ItemStack(ModItems.CRUSHING_HAMMER, 1);
+      final ItemStack reference_hammer = new ItemStack(ModContent.CRUSHING_HAMMER, 1);
       int hammer_position = -1;
       for(int i=0; i<inv.getSizeInventory(); ++i) {
         if(inv.getStackInSlot(i).isItemEqualIgnoreDurability(reference_hammer)) { hammer_position = i; break; }
@@ -98,7 +99,6 @@ public class ItemCrushingHammer extends ItemTools
       }
       return remaining;
     }
-
 
     public static void registerAll(RegistryEvent.Register<IRecipe> event)
     {
@@ -155,15 +155,15 @@ public class ItemCrushingHammer extends ItemTools
         registerGritRecipe(registry, preferred_stack, ore_name);
         ++num_crushing_hammer_recipes_registered;
       }
-      if(!iron_grit_registered) registerGritRecipe(registry, new ItemStack(ModItems.IRON_GRIT), "minecraft:iron_ore");
-      if(!gold_grit_registered) registerGritRecipe(registry, new ItemStack(ModItems.GOLD_GRIT), "minecraft:gold_ore");
+      if(!iron_grit_registered) registerGritRecipe(registry, new ItemStack(ModContent.IRON_GRIT), "minecraft:iron_ore");
+      if(!gold_grit_registered) registerGritRecipe(registry, new ItemStack(ModContent.GOLD_GRIT), "minecraft:gold_ore");
       ModEngineersTools.logger.info("Registered " + num_crushing_hammer_recipes_registered + " ore crashing hammer recipes, priority order: '" + grit_preference_order + "'");
     }
 
     public static void registerGritFurnaceRecipes(final IForgeRegistry<IRecipe> registry)
     {
-      GameRegistry.addSmelting(ModItems.IRON_GRIT, new ItemStack(Items.IRON_INGOT), 0.8f);
-      GameRegistry.addSmelting(ModItems.GOLD_GRIT, new ItemStack(Items.GOLD_INGOT), 1f);
+      GameRegistry.addSmelting(ModContent.IRON_GRIT, new ItemStack(Items.IRON_INGOT), 0.8f);
+      GameRegistry.addSmelting(ModContent.GOLD_GRIT, new ItemStack(Items.GOLD_INGOT), 1f);
     }
   }
 }

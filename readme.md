@@ -5,6 +5,8 @@ A [Minecraft](https://minecraft.net) (Java Edition) mod based on
 [`Forge`](http://www.minecraftforge.net/), adding manual tool items
 for the Engineer's use.
 
+[Screenshots in the documentation readme here](documentation/readme.md).
+
 ### Distribution file download
 
 Main distribution channel for this mod is CurseForge:
@@ -37,6 +39,9 @@ The mod has its focus on manual tools:
   stack of ore before breaking. It's not repairable, so a new one has to be
   crafted - or get an IE Ore Crusher machine ASAP.
 
+- *Ariadne Coal*: A coal pen that allows you to draw arrows on walls, floors
+  and ceilings to find the way out of caves. Build like a "coal sword".
+
 ----
 ### Mod pack integration, forking, back ports, bug reports, testing
 
@@ -65,7 +70,7 @@ commits.
 
   - [1.12](1.12/readme.md)
 
-  - [1.13](1.13/readme.md)
+  - [1.14](1.14/readme.md)
 
 ### Community references
 

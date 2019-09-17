@@ -8,8 +8,21 @@ Mod sources for Minecraft version 1.12.2.
 - Compiled mod distribution channel is curseforge: https://www.curseforge.com/minecraft/mc-mods/engineers-tools/files.
 
 ----
-## Revision history
+## Version history
 
+                -------------------------------------------------------------------
+    - v1.0.2    [R] Release based on v1.0.2-b3. Release-to-release changes:
+                    * Ariadne coal (arrow drawing pen) added.
+                    * REDIA tool fixes and tweaks.
+                -------------------------------------------------------------------
+
+    - v1.0.2-b3 [M] REDIA tool: Slightly reduced tree felling exhaustion.
+
+    - v1.0.2-b2 [M] Tree felling cross mod compatibility improved.
+                [M] Tree felling durability loss tuned, exhaustion added.
+                [M] Ariadne Coal durability tuned.
+
+    - v1.0.2-b1 [A] Ariadne Coal added to draw arrows in caves and mines.
 
                 -------------------------------------------------------------------
     - v1.0.1    [R] Release based on v1.0.1-b3. Release-to-release changes:

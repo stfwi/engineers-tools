@@ -1,6 +1,16 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
+  "promos": {
+    "1.12.2-recommended": "1.0.2",
+    "1.12.2-latest": "1.0.2",
+    "1.14.4-recommended": "",
+    "1.14.4-latest": "1.0.1-b3"
+  },
   "1.12.2": {
+    "1.0.2": "[R] Release based on v1.0.2-b3. Release-to-release changes: * Ariadne coal (arrow drawing pen) added. * REDIA tool fixes and tweaks.",
+    "1.0.2-b3": "[M] REDIA tool: Slightly reduced tree felling exhaustion.",
+    "1.0.2-b2": "[M] Tree felling cross mod compatibility improved.\n[M] Tree felling durability loss tuned, exhaustion added.\n[M] Ariadne Coal durability tuned.",
+    "1.0.2-b1": "[A] Ariadne Coal added to draw arrows in caves and mines.",
     "1.0.1": "[R] Release based on v1.0.1-b3. Release-to-release changes: * REDIA multi tool added (axe, pickaxe, shove, shears, torch placing, hoeing, etc.)\n[F] REDIA tool: Snipping tall grass fixed.\n[A] REDIA tool: Attack modifiers like a Diamond Axe.\n[A] REDIA tool: Enchantability improved.",
     "1.0.1-b3": "[A] REDIA tool: Fortune for high durability (curve configurable).\n[M] REDIA tool: Enachantable only with Unbreaking with book (would be OP otherwise).\n[A] REDIA tool: Right-click: Shear harvesting of Vines, Grass, etc.",
     "1.0.1-b2": "[A] Added REDIA (REal DIAmond) tool, combining pickaxe, axe and shovel. Right-click: Torch placing. Sneak-right-click: Hoeing dirt - farm land - coarse dirt - grass path - dirt. Sneak while chopping wood logs: Tree felling.",
@@ -10,8 +20,9 @@
     "1.0.0-b2": "[A] Added mod internal iron and gold grit, which is used if no other mod provides iron/gold dust. Can only be smelted to ingots. Hidden in JEI, as the grits of other mods shall be preferred.",
     "1.0.0-b1": "[A] Added ore crushing hammer."
   },
-  "promos": {
-    "1.12.2-recommended": "1.0.1",
-    "1.12.2-latest": "1.0.1"
+  "1.14.4": {
+    "1.0.1-b3": "[U] Updated to Forge 1.14.4-28.0.100/20190719-1.14.3.\n[A] Ariadne Coal (arrow drawing for orientation) added.\n[M] REDIA tool exhaustion and item damage adapted to 1.12.\n[M] Mod logo fixed.",
+    "1.0.1-b2": "[U] Updated to Forge 1.14.4-28.0.81/20190719-1.14.3, recipe condition processing updated accordingly.",
+    "1.0.1-b1": "[A] Ported REDIA tool from 1.12.2.\n[A] Ported ore crushing hammer from 1.12.2.\n[A] Ported Coarse Iron/Gold Grit 1.12.2, currently not auto-disabled if other mods provide grits (OreDict replacement unclear yet)."
   }
 }

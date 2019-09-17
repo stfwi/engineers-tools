@@ -11,6 +11,7 @@ package wile.engineerstools.detail;
 import wile.engineerstools.ModEngineersTools;
 import net.minecraft.world.World;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.client.util.ITooltipFlag;
@@ -115,4 +116,8 @@ public class ModAuxiliaries
     public static boolean addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag, boolean addAdvancedTooltipHints)
     { return addInformation(stack.getTranslationKey(), stack.getTranslationKey(), tooltip, flag, addAdvancedTooltipHints); }
   }
+
+  public static final AxisAlignedBB getPixeledAABB(double x0, double y0, double z0, double x1, double y1, double z1)
+  { return new AxisAlignedBB(x0/16.0, y0/16.0, z0/16.0, x1/16.0, y1/16.0, z1/16.0); }
+
 }

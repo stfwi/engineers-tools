@@ -9,6 +9,7 @@
  */
 package wile.engineerstools.detail;
 
+import wile.engineerstools.ModContent;
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.items.*;
 import net.minecraft.item.Item;
@@ -126,7 +127,7 @@ public class ModConfig
   public static final boolean isOptedOut(final @Nullable Item item)
   {
     if((item == null) || (optout == null)) return true;
-    if((optout.without_crushing_hammer) && (item == ModItems.CRUSHING_HAMMER)) return true;
+    if((optout.without_crushing_hammer) && (item == ModContent.CRUSHING_HAMMER)) return true;
     return false;
   }
 

@@ -11,7 +11,7 @@ Mod sources for Minecraft version 1.12.2.
 ## Version history
 
                 -------------------------------------------------------------------
-    ~ v1.0.2    [R] Release based on v1.0.2-b3. Release-to-release changes:
+    - v1.0.2    [R] Release based on v1.0.2-b3. Release-to-release changes:
                     * Ariadne coal (arrow drawing pen) added.
                     * REDIA tool fixes and tweaks.
                 -------------------------------------------------------------------

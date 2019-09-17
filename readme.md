@@ -5,6 +5,8 @@ A [Minecraft](https://minecraft.net) (Java Edition) mod based on
 [`Forge`](http://www.minecraftforge.net/), adding manual tool items
 for the Engineer's use.
 
+[Screenshots in the documentation readme here](documentation/readme.md).
+
 ### Distribution file download
 
 Main distribution channel for this mod is CurseForge:

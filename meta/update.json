@@ -1,12 +1,13 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "promos": {
-    "1.12.2-recommended": "1.0.1",
-    "1.12.2-latest": "1.0.2-b3",
+    "1.12.2-recommended": "1.0.2",
+    "1.12.2-latest": "1.0.2",
     "1.14.4-recommended": "",
     "1.14.4-latest": "1.0.1-b3"
   },
   "1.12.2": {
+    "1.0.2": "[R] Release based on v1.0.2-b3. Release-to-release changes: * Ariadne coal (arrow drawing pen) added. * REDIA tool fixes and tweaks.",
     "1.0.2-b3": "[M] REDIA tool: Slightly reduced tree felling exhaustion.",
     "1.0.2-b2": "[M] Tree felling cross mod compatibility improved.\n[M] Tree felling durability loss tuned, exhaustion added.\n[M] Ariadne Coal durability tuned.",
     "1.0.2-b1": "[A] Ariadne Coal added to draw arrows in caves and mines.",

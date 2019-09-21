@@ -10,7 +10,8 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Version history
 
-    ~ v1.0.3-b1 [A] (wip).
+    - v1.0.3-b1 [A] Added Auto Stim Pack (auto heal a few hearts and Speed Boost
+                    when your health falls below three hearts, usable as Bauble).
 
                 -------------------------------------------------------------------
     - v1.0.2    [R] Release based on v1.0.2-b3. Release-to-release changes:

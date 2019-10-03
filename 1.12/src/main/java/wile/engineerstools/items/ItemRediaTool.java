@@ -30,7 +30,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -61,6 +60,7 @@ public class ItemRediaTool extends ItemAxe
   private static boolean with_shearing = true;
   private static double efficiency_decay[] = { 0.1, 0.8, 0.9, 1.0, 1.0, 1.3, 1.6, 1.8, 2.0, 2.0 }; // index: 0% .. 100% durability
   private static int fortune_decay[] = { 0, 0, 0, 0, 0, 0, 1, 1, 2, 3 }; // index: 0% .. 100% durability
+  private static final int max_block_tracking_hitcount = 5;
 
   public static void on_config(boolean without_redia_torchplacing, boolean without_redia_hoeing,
                                boolean without_redia_tree_chopping, int durability, String efficiency_curve,
@@ -159,30 +159,8 @@ public class ItemRediaTool extends ItemAxe
   }
 
   @Override
-  @SuppressWarnings("deprecation")
-  public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
-  {
-    Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-    if(slot == EntityEquipmentSlot.MAINHAND)  {
-      // That messes up rendering?! Why that?
-      //multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double)this.attackDamage, 0));
-      //multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)this.attackSpeed, 0));
-    }
-    return multimap;
-  }
-
-  @Override
   public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState state)
-  {
-    switch(toolClass) {
-      case "axe":
-      case "pickaxe":
-      case "shovel":
-        return 3; // diamond
-      default:
-        return 2;
-    }
-  }
+  { return 3; } // diamond
 
   @Override
   public Set<String> getToolClasses(ItemStack stack)
@@ -244,7 +222,6 @@ public class ItemRediaTool extends ItemAxe
   @Override
   public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
   {
-
     stack.damageItem(2, attacker);
     return true;
   }
@@ -256,77 +233,45 @@ public class ItemRediaTool extends ItemAxe
   @Override
   public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
   {
-    EnumActionResult rv = EnumActionResult.PASS;
-    if(player.isSneaking()) {
-      rv = tryPlantSnipping(player, world, pos, hand, facing, hitX, hitY, hitZ);
-      if(rv != EnumActionResult.PASS) return rv;
-      if(facing == EnumFacing.UP) {
-        rv = tryDigOver(player, world, pos, hand, facing, hitX, hitY, hitZ);
-        if(rv != EnumActionResult.PASS) return rv;
-      }
-    } else {
-      rv = tryTorchPlacing(player, world, pos, hand, facing, hitX, hitY, hitZ);
-      if(rv != EnumActionResult.PASS) return rv;
-    }
-    return rv;
+    if(player.isSneaking() && tryPlantSnipping(player, world, pos, hand, facing, hitX, hitY, hitZ)) return EnumActionResult.SUCCESS;
+    if(player.isSneaking() && (facing == EnumFacing.UP) && tryDigOver(player, world, pos, hand, facing, hitX, hitY, hitZ)) return EnumActionResult.SUCCESS;
+    if(((!player.isSneaking()) || (facing.getAxis().isHorizontal())) && (tryTorchPlacing(player, world, pos, hand, facing, hitX, hitY, hitZ))) return EnumActionResult.SUCCESS;
+    return EnumActionResult.PASS;
   }
 
   @Override
   public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player)
-  {
-    if(!player.world.isRemote) setFortune(stack);
-    return false;
-  }
+  { return false; } // called directly before onBlockDestroyed(), not when starting to wack the block
+
+  private World a_world = null; // hate doing this, worse performance alternative would be to hook into the global onblockclicked player event.
 
   @Override
   public boolean onBlockDestroyed(ItemStack tool, World world, IBlockState state, BlockPos pos, EntityLivingBase player)
   {
-    if(!world.isRemote) {
-      if(state.getBlockHardness(world, pos) != 0.0f) tool.damageItem(1, player);
-      {
-        NBTTagCompound nbt = tool.getTagCompound();
-        if(nbt==null) nbt = new NBTTagCompound();
-        nbt.setInteger("lhbh", state.getBlock().hashCode());
-        tool.setTagCompound(nbt);
-      }
-      if(with_tree_felling && (player instanceof EntityPlayer) && (player.isSneaking())) {
-        if(tryTreeFelling(world, state, pos, player)) return true;
-      }
-    }
+    a_world = world;
     resetFortune(tool);
+    if(world.isRemote) return true;
+    if(state.getBlockHardness(world, pos) != 0f) tool.damageItem(1, player);
+    if(with_tree_felling && (player instanceof EntityPlayer) && (player.isSneaking())) {
+      if(tryTreeFelling(world, state, pos, player)) return true;
+    }
     return true;
   }
 
   @Override
   public float getDestroySpeed(ItemStack stack, IBlockState state)
   {
-    double ramp_scaler = 1.0;
-    {
-      final int hitcount_max = 5;
-      NBTTagCompound nbt = stack.getTagCompound();
-      if(nbt==null) nbt = new NBTTagCompound();
-      int lasthitblock = nbt.getInteger("lhbh");
-      if(lasthitblock != 0) { // this also means it's on the server (`onBlockDestroyed()`)
-        int hitcount = nbt.getInteger("lhbc");
-        int hit_id = state.getBlock().hashCode();
-        if(lasthitblock==hit_id) {
-          hitcount = Math.min(hitcount+1, hitcount_max);
-        } else {
-          lasthitblock = hit_id;
-          hitcount = 0;
-        }
-        nbt.setInteger("lhbh", lasthitblock);
-        nbt.setInteger("lhbc", hitcount);
-        stack.setTagCompound(nbt);
-        ramp_scaler = 0.5 + 0.5 * ((double)hitcount) / hitcount_max;
-      }
+    float hardness = 0.9f;
+    try {
+      if(a_world != null) hardness = MathHelper.clamp(state.getBlockHardness(a_world, BlockPos.ORIGIN), 0, 2);
+    } catch(Throwable e) {
+      a_world = null;
     }
-    return (float)(
-      ((double)efficiency) * ramp_scaler *
-      efficiency_decay[
-        (int)MathHelper.clamp(relativeDurability(stack) * efficiency_decay.length,0,efficiency_decay.length-1)
-      ]
-    );
+    if(hardness >= 1) {
+      return (float)((double)efficiency * efficiency_decay[(int)MathHelper.clamp(relativeDurability(stack) * efficiency_decay.length,0,efficiency_decay.length-1)]);
+    } else {
+      return efficiency;
+    }
   }
 
   @Override
@@ -388,9 +333,9 @@ public class ItemRediaTool extends ItemAxe
     return true;
   }
 
-  private EnumActionResult tryPlantSnipping(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+  private boolean tryPlantSnipping(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
   {
-    if(!with_shearing) return EnumActionResult.PASS;
+    if(!with_shearing) return false;
     final IBlockState state = world.getBlockState(pos);
     if(state.getBlock() instanceof IShearable) {
       if(((IShearable)state.getBlock()).isShearable(new ItemStack(Items.SHEARS), world, pos)) {
@@ -408,15 +353,16 @@ public class ItemRediaTool extends ItemAxe
           state.getBlock().onBlockHarvested(world, pos, state, player);
           world.setBlockState(pos, Blocks.AIR.getDefaultState(), 1|2|8); //
           tool.damageItem(1, player);
+          return true;
         }
       }
     }
-    return EnumActionResult.PASS;
+    return false;
   }
 
-  private EnumActionResult tryTorchPlacing(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+  private boolean tryTorchPlacing(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
   {
-    if(!with_torch_placing) return EnumActionResult.PASS;
+    if(!with_torch_placing) return false;
     for(int i = 0; i < player.inventory.getSizeInventory(); ++i) {
       ItemStack stack = player.inventory.getStackInSlot(i);
       if((!stack.isEmpty()) && (stack.getItem()== Item.getItemFromBlock(Blocks.TORCH))) {
@@ -424,16 +370,16 @@ public class ItemRediaTool extends ItemAxe
         player.setHeldItem(hand, stack);
         EnumActionResult r = stack.getItem().onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
         player.setHeldItem(hand, tool);
-        return r;
+        return r!=EnumActionResult.PASS;
       }
     }
-    return EnumActionResult.PASS;
+    return false;
   }
 
-  private EnumActionResult tryDigOver(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+  private boolean tryDigOver(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
   {
-    if(!with_hoeing) return EnumActionResult.PASS;
-    if(world.getTileEntity(pos) != null) return EnumActionResult.PASS;
+    if(!with_hoeing) return false;
+    if(world.getTileEntity(pos) != null)  return false;
     final IBlockState state = world.getBlockState(pos);
     IBlockState replaced = state;
     final Block block = state.getBlock();
@@ -454,9 +400,9 @@ public class ItemRediaTool extends ItemAxe
         ItemStack stack = player.getHeldItem(hand);
         if(stack.getItem() == this) stack.damageItem(1, player); // just to ensure, check likely not needed
       }
-      return EnumActionResult.SUCCESS;
+      return true;
     } else {
-      return EnumActionResult.PASS;
+      return false;
     }
   }
 

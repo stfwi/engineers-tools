@@ -21,6 +21,6 @@ public class ClientProxy implements ModEngineersTools.IProxy
   { OBJLoader.INSTANCE.addDomain(ModEngineersTools.MODID); }
 
   @Override
-  public World getWorlClientSide()
+  public World getWorldClientSide()
   { return Minecraft.getMinecraft().world; }
 }

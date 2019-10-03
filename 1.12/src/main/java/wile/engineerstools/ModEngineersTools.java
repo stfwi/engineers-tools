@@ -68,7 +68,7 @@ public class ModEngineersTools
     default void preInit(final FMLPreInitializationEvent e) {}
     default void init(final FMLInitializationEvent e) {}
     default void postInit(final FMLPostInitializationEvent e) {}
-    default World getWorlClientSide() { return null; }
+    default World getWorldClientSide() { return null; }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

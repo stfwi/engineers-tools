@@ -241,7 +241,7 @@ public class ItemRediaTool extends ItemAxe
 
   @Override
   public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player)
-  { return false; } // called directly before onBlockDestroyed(), not when starting to wack the block
+  { if(!player.world.isRemote){setFortune(stack);} return false; }
 
   private World a_world = null; // hate doing this, worse performance alternative would be to hook into the global onblockclicked player event.
 

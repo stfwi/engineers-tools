@@ -10,6 +10,13 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Version history
 
+                -------------------------------------------------------------------
+    - v1.0.3    [R] Release based on v1.0.3-b2. Release-to-release changes:
+                    * Auto Stim Pack added
+                    * REDIA tool tweaks.
+                -------------------------------------------------------------------
+                [F] Fixed REDIA tool fortune calculation issue when breaking blocks.
+
     - v1.0.3-b2 [M] REDIA tool block breaking speed clamped for blocks with low hardness,
                     torch placing on walls also while sneaking.
 

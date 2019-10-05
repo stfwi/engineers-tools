@@ -11,6 +11,19 @@ Mod sources for Minecraft version 1.12.2.
 ## Version history
 
                 -------------------------------------------------------------------
+    - v1.0.3    [R] Release based on v1.0.3-b2. Release-to-release changes:
+                    * Auto Stim Pack added
+                    * REDIA tool tweaks.
+                -------------------------------------------------------------------
+                [F] Fixed REDIA tool fortune calculation issue when breaking blocks.
+
+    - v1.0.3-b2 [M] REDIA tool block breaking speed clamped for blocks with low hardness,
+                    torch placing on walls also while sneaking.
+
+    - v1.0.3-b1 [A] Added Auto Stim Pack (auto heal a few hearts and Speed Boost
+                    when your health falls below three hearts, usable as Bauble).
+
+                -------------------------------------------------------------------
     - v1.0.2    [R] Release based on v1.0.2-b3. Release-to-release changes:
                     * Ariadne coal (arrow drawing pen) added.
                     * REDIA tool fixes and tweaks.

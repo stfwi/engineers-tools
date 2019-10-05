@@ -1,12 +1,16 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.14.4": {
+    "1.0.3-b3": "[U] Updated to Forge 1.14.4-28.1.31/20190719-1.14.3.\n[M] REDIA tool tweaked.",
+    "1.0.3-b2": "[A] Added Auto Stim Pack (auto heal a few hearts and Speed Boost when your health falls below three hearts, usable as Bauble).",
+    "1.0.3-b1": "[U] Updated to Forge 1.14.4-28.1.10/20190719-1.14.3.",
+    "1.0.2-b1": "[U] Updated to Forge 1.14.4-28.0.105/20190719-1.14.3.",
     "1.0.1-b3": "[U] Updated to Forge 1.14.4-28.0.100/20190719-1.14.3.\n[A] Ariadne Coal (arrow drawing for orientation) added.\n[M] REDIA tool exhaustion and item damage adapted to 1.12.\n[M] Mod logo fixed.",
     "1.0.1-b2": "[U] Updated to Forge 1.14.4-28.0.81/20190719-1.14.3, recipe condition processing updated accordingly.",
     "1.0.1-b1": "[A] Ported REDIA tool from 1.12.2.\n[A] Ported ore crushing hammer from 1.12.2.\n[A] Ported Coarse Iron/Gold Grit 1.12.2, currently not auto-disabled if other mods provide grits (OreDict replacement unclear yet)."
   },
   "promos": {
     "1.14.4-recommended": "",
-    "1.14.4-latest": "1.0.1-b3"
+    "1.14.4-latest": "1.0.3-b3"
   }
 }

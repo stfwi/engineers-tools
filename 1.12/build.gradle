@@ -51,10 +51,13 @@ minecraft {
 repositories {
   maven { name = "Progwml6 maven"; url = "https://dvs1.progwml6.com/files/maven/" } // JEI files
   maven { name = "ModMaven"; url = "modmaven.k-4u.nl" } // JEI files, fallback
+  maven { name = "CurseForge"; url = "http://minecraft.curseforge.com/api/maven/" }
+  maven { name = "thiakil"; url = "http://maven.thiakil.com" }
 }
 dependencies {
   deobfProvided "mezz.jei:jei_${version_minecraft}:${version_jei}:api"
   runtime "mezz.jei:jei_${version_minecraft}:${version_jei}"
+  deobfCompile "com.azanor.baubles:Baubles:${version_baubles}"
 }
 
 processResources {

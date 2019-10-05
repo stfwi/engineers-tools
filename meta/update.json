@@ -1,12 +1,15 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "promos": {
-    "1.12.2-recommended": "1.0.2",
-    "1.12.2-latest": "1.0.2",
+    "1.12.2-recommended": "1.0.3",
+    "1.12.2-latest": "1.0.3",
     "1.14.4-recommended": "",
-    "1.14.4-latest": "1.0.1-b3"
+    "1.14.4-latest": "1.0.3-b3"
   },
   "1.12.2": {
+    "1.0.3": "[R] Release based on v1.0.3-b2. Release-to-release changes: * Auto Stim Pack added * REDIA tool tweaks.\n[F] Fixed REDIA tool fortune calculation issue when breaking blocks.",
+    "1.0.3-b2": "[M] REDIA tool block breaking speed clamped for blocks with low hardness, torch placing on walls also while sneaking.",
+    "1.0.3-b1": "[A] Added Auto Stim Pack (auto heal a few hearts and Speed Boost when your health falls below three hearts, usable as Bauble).",
     "1.0.2": "[R] Release based on v1.0.2-b3. Release-to-release changes: * Ariadne coal (arrow drawing pen) added. * REDIA tool fixes and tweaks.",
     "1.0.2-b3": "[M] REDIA tool: Slightly reduced tree felling exhaustion.",
     "1.0.2-b2": "[M] Tree felling cross mod compatibility improved.\n[M] Tree felling durability loss tuned, exhaustion added.\n[M] Ariadne Coal durability tuned.",
@@ -21,6 +24,10 @@
     "1.0.0-b1": "[A] Added ore crushing hammer."
   },
   "1.14.4": {
+    "1.0.3-b3": "[U] Updated to Forge 1.14.4-28.1.31/20190719-1.14.3.\n[M] REDIA tool tweaked.",
+    "1.0.3-b2": "[A] Added Auto Stim Pack (auto heal a few hearts and Speed Boost when your health falls below three hearts, usable as Bauble).",
+    "1.0.3-b1": "[U] Updated to Forge 1.14.4-28.1.10/20190719-1.14.3.",
+    "1.0.2-b1": "[U] Updated to Forge 1.14.4-28.0.105/20190719-1.14.3.",
     "1.0.1-b3": "[U] Updated to Forge 1.14.4-28.0.100/20190719-1.14.3.\n[A] Ariadne Coal (arrow drawing for orientation) added.\n[M] REDIA tool exhaustion and item damage adapted to 1.12.\n[M] Mod logo fixed.",
     "1.0.1-b2": "[U] Updated to Forge 1.14.4-28.0.81/20190719-1.14.3, recipe condition processing updated accordingly.",
     "1.0.1-b1": "[A] Ported REDIA tool from 1.12.2.\n[A] Ported ore crushing hammer from 1.12.2.\n[A] Ported Coarse Iron/Gold Grit 1.12.2, currently not auto-disabled if other mods provide grits (OreDict replacement unclear yet)."

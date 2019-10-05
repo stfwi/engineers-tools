@@ -58,13 +58,16 @@ public class ModContent
   public static final ItemGrit IRON_GRIT = new ItemGrit("iron_grit");
   public static final ItemGrit GOLD_GRIT = new ItemGrit("gold_grit");
   public static final ItemAriadneCoal ARIADNE_COAL = new ItemAriadneCoal("ariadne_coal");
+  public static final ItemStimPack STIMPACK = new ItemStimPack("stimpack");
+
 
   private static final Item modItems[] = {
     CRUSHING_HAMMER,
     REDIA_TOOL,
     IRON_GRIT,
     GOLD_GRIT,
-    ARIADNE_COAL
+    ARIADNE_COAL,
+    STIMPACK
   };
 
   private static final ArrayList<Item> registeredItems = new ArrayList<>();

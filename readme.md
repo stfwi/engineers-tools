@@ -32,15 +32,20 @@ The mod has its focus on manual tools:
   *Please read the community references/credits below*. Crafted with iron axe,
   pickaxe, and shovel, and a diamond.
 
+- *Auto Stim Pack*: May save your life by pushing back a few hearts when your
+  health falls below three hearts. Also gives some small buffs to get out of the
+  present misery. Can also be used as Bauble. Warning: The stim pack pulse
+  injector needs to charge first, so there is a small delay.
+
+- *Ariadne Coal*: A coal pen that allows you to draw arrows on walls, floors
+  and ceilings to find the way out of caves. Build like a "coal sword".
+
 - *Ore Crushing Hammer*: Early game ore-to-grit duplication, as known from
   the IE ore crusher. The hammer is crafted like the Engineers Hammer, except
   that one of the two iron ingots is replaced with an iron block. The tool
   has a comparatively low durability and allowed (by default) to crush 64
   stack of ore before breaking. It's not repairable, so a new one has to be
   crafted - or get an IE Ore Crusher machine ASAP.
-
-- *Ariadne Coal*: A coal pen that allows you to draw arrows on walls, floors
-  and ceilings to find the way out of caves. Build like a "coal sword".
 
 ----
 ### Mod pack integration, forking, back ports, bug reports, testing

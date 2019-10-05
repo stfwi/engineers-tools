@@ -8,6 +8,10 @@
     "name": "blockIron"
   },
   {
+    "ingredient": { "type": "forge:ore_dict", "ore": "nuggetIron" },
+    "name": "nuggetIron"
+  },
+  {
     "ingredient": { "type": "forge:ore_dict", "ore": "stickWood" },
     "name": "stickWood"
   },
@@ -18,5 +22,32 @@
   {
     "ingredient": { "item": "minecraft:string", "data": 0 },
     "name": "anyString"
+  },
+  {
+    "ingredient": { "type": "minecraft:item_nbt", "item": "minecraft:potion", "nbt": { "Potion": "minecraft:water" } },
+    "name": "waterBottle"
+  },
+  {
+    "ingredient": { "item": "minecraft:carpet", "data": 32767 },
+    "name": "anyCarpet"
+  },
+  {
+    "conditions": [
+      { "type": "minecraft:item_exists", "item": "immersiveengineering:material" }
+    ],
+    "ingredient": [
+      { "item": "immersiveengineering:material", "data": 8 },
+      { "item": "immersiveengineering:material", "data": 9 }
+    ],
+    "name": "anyMechanicalComponent"
+  },
+  {
+    "conditions": [
+      { "type": "minecraft:item_exists", "item": "immersiveengineering:material" }
+    ],
+    "ingredient": [
+      { "item": "immersiveengineering:material", "data": 8 }
+    ],
+    "name": "toughFabric"
   }
 ]

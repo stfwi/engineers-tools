@@ -1,0 +1,40 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:grc",
+      "result": "engineerstools:stimpack"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FPI",
+    "FNA",
+    " N "
+  ],
+  "key": {
+    "P": {
+      "item": "#waterBottle",
+      "data": 0
+    },
+    "A": {
+      "item": "minecraft:golden_apple",
+      "data": 0
+    },
+    "F": {
+      "item": "#anyCarpet",
+      "data": 0
+    },
+    "I": {
+      "item": "#ingotIron",
+      "data": 0
+    },
+    "N": {
+      "item": "#nuggetIron",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "engineerstools:stimpack",
+    "count": 1
+  }
+}

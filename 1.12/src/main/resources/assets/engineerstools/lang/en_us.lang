@@ -26,10 +26,16 @@ item.engineerstools.gold_grit.help=§6Can be smelted to gold ingots, but is not 
 item.engineerstools.ariadne_coal.name=Ariadne Coal
 item.engineerstools.ariadne_coal.help=§6Draw orientation arrows to find the way out of your mines.§r\n\
                                       The arrow direction depends on where you click on the block to draw on.
+item.engineerstools.stimpack.name=Auto Stim Pack
+item.engineerstools.stimpack.help=§6Helps when you're in big trouble§r\n\
+                                  ... by pushing a few hearts when health is low. Also gives you a small buff to get out of \
+                                  any present misery. Warning: The injection may have a delay.
 #-----------------------------------------------------------------------------------------------------------
 tile.engineerstools.ariadne_coal_x.name=Ariadne Coal
 tile.engineerstools.ariadne_coal_y.name=Ariadne Coal
 tile.engineerstools.ariadne_coal_z.name=Ariadne Coal
+#-----------------------------------------------------------------------------------------------------------
+engineerstools.subtitle.stimpack_inject=Stim Pack injects
 #-----------------------------------------------------------------------------------------------------------
 # EOF
 #-----------------------------------------------------------------------------------------------------------

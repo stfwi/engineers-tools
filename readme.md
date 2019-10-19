@@ -37,6 +37,9 @@ The mod has its focus on manual tools:
   present misery. Can also be used as Bauble. Warning: The stim pack pulse
   injector needs to charge first, so there is a small delay.
 
+- *Sleeping Bag*: Weatherproof sleeping bag made of tough fabric. Does not need
+  to be placed, and does not change the spawn point of the last bed.
+
 - *Ariadne Coal*: A coal pen that allows you to draw arrows on walls, floors
   and ceilings to find the way out of caves. Build like a "coal sword".
 

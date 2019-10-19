@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.14.4": {
+    "1.0.4-b1": "[U] Updated to Forge 1.14.4-28.1.44/20190719-1.14.3.\n[A] Added Sleeping Bag\n[A] Added zh_cn.lang (scikirbypoke, PR#4).",
     "1.0.3-b3": "[U] Updated to Forge 1.14.4-28.1.31/20190719-1.14.3.\n[M] REDIA tool tweaked.",
     "1.0.3-b2": "[A] Added Auto Stim Pack (auto heal a few hearts and Speed Boost when your health falls below three hearts, usable as Bauble).",
     "1.0.3-b1": "[U] Updated to Forge 1.14.4-28.1.10/20190719-1.14.3.",
@@ -11,6 +12,6 @@
   },
   "promos": {
     "1.14.4-recommended": "",
-    "1.14.4-latest": "1.0.3-b3"
+    "1.14.4-latest": "1.0.4-b1"
   }
 }

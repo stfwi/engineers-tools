@@ -59,6 +59,7 @@ public class ModContent
   public static final ItemGrit GOLD_GRIT = new ItemGrit("gold_grit");
   public static final ItemAriadneCoal ARIADNE_COAL = new ItemAriadneCoal("ariadne_coal");
   public static final ItemStimPack STIMPACK = new ItemStimPack("stimpack");
+  public static final ItemSleepingBag SLEEPING_BAG = new ItemSleepingBag("sleeping_bag");
 
 
   private static final Item modItems[] = {
@@ -67,7 +68,8 @@ public class ModContent
     IRON_GRIT,
     GOLD_GRIT,
     ARIADNE_COAL,
-    STIMPACK
+    STIMPACK,
+    SLEEPING_BAG
   };
 
   private static final ArrayList<Item> registeredItems = new ArrayList<>();

@@ -30,6 +30,8 @@ item.engineerstools.stimpack.name=Auto Stim Pack
 item.engineerstools.stimpack.help=§6Helps when you're in big trouble§r\n\
                                   ... by pushing a few hearts when health is low. Also gives you a small buff to get out of \
                                   any present misery. Warning: The injection may have a delay.
+item.engineerstools.sleeping_bag.name=Sleeping Bag
+item.engineerstools.sleeping_bag.help=§6Made of tough fabric§r, therefore weatherproof and very robust. Does not set your spawn point like beds.
 #-----------------------------------------------------------------------------------------------------------
 tile.engineerstools.ariadne_coal_x.name=Ariadne Coal
 tile.engineerstools.ariadne_coal_y.name=Ariadne Coal

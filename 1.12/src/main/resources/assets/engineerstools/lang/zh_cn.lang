@@ -30,6 +30,8 @@ item.engineerstools.stimpack.name=自动兴奋剂注射包
 item.engineerstools.stimpack.help=§6在你有大麻烦时帮你§r\n\
                                   ……涨几格生命。同时也会给你一点buff来\
                                   逃离当前的困境。警告：注射可能会有延迟。
+item.engineerstools.sleeping_bag.name=Sleeping Bag
+#item.engineerstools.sleeping_bag.help=§6Made of tough fabric§r, therefore weatherproof and very robust. Does not set your spawn point like beds.
 #-----------------------------------------------------------------------------------------------------------
 tile.engineerstools.ariadne_coal_x.name=阿里阿德涅煤
 tile.engineerstools.ariadne_coal_y.name=阿里阿德涅煤

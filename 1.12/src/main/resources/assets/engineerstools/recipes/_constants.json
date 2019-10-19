@@ -49,5 +49,23 @@
       { "item": "immersiveengineering:material", "data": 8 }
     ],
     "name": "toughFabric"
+  },
+  {
+    "ingredient": [
+      { "item": "minecraft:carpet", "data": 32767 }
+    ],
+    "name": "anyCarpet"
+  },
+  {
+    "ingredient": { "type": "forge:ore_dict", "ore": "fabricHemp" },
+    "name": "toughFabric"
+  },
+  {
+    "ingredient": [
+      { "type": "forge:ore_dict", "ore": "wireSteel" },
+      { "type": "forge:ore_dict", "ore": "wireCopper" },
+      { "type": "forge:ore_dict", "ore": "wireAluminum" }
+    ],
+    "name": "anySingleWire"
   }
 ]

@@ -8,6 +8,14 @@
  */
 package wile.engineerstools;
 
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
+import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
+import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import org.lwjgl.Sys;
 import wile.engineerstools.detail.*;
 import wile.engineerstools.items.*;
 import net.minecraft.block.Block;
@@ -139,12 +147,16 @@ public class ModEngineersTools
   public static class PlayerEventHandler
   {
     //@SubscribeEvent
-    public void update(final LivingEvent.LivingUpdateEvent event)
+    public static void update(final LivingEvent.LivingUpdateEvent event)
     {
       if(!(event.getEntity() instanceof EntityPlayer)) return;
       final EntityPlayer player = (EntityPlayer)event.getEntity();
       if(player.world == null) return;
     }
+
+    @SubscribeEvent
+    public static void onBedCheck(SleepingLocationCheckEvent event)
+    { ItemSleepingBag.onBedCheck(event); }
   }
 
 }

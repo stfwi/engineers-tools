@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:grc",
+      "result": "engineerstools:sleeping_bag",
+      "missing": ["immersiveengineering:material"]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNC",
+    "CCC"
+  ],
+  "key": {
+    "N": {
+      "item": "#nuggetIron"
+    },
+    "C": {
+      "item": "#anyCarpet"
+    }
+  },
+  "result": {
+    "item": "engineerstools:sleeping_bag",
+    "count": 1
+  }
+}

@@ -10,6 +10,12 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Version history
 
+                -------------------------------------------------------------------
+    - v1.0.4    [R] Release based on v1.0.4-b1. Release-to-release changes:
+                    * Sleeping Bag added
+                    * Language updates
+                -------------------------------------------------------------------
+
     - v1.0.4-b1 [A] Added Sleeping Bag
                 [A] Added zh_cn.lang (scikirbypoke, PR#4).
 

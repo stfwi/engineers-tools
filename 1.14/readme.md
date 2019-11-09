@@ -10,7 +10,11 @@ Mod sources for Minecraft version 1.14.4.
 ----
 ## Version history
 
-    ~ v1.0.3-b4   [U]
+    ~ v1.0.4-b2   [U]
+
+    - v1.0.4-b1   [U] Updated to Forge 1.14.4-28.1.44/20190719-1.14.3.
+                  [A] Added Sleeping Bag
+                  [A] Added zh_cn.lang (scikirbypoke, PR#4).
 
     - v1.0.3-b3   [U] Updated to Forge 1.14.4-28.1.31/20190719-1.14.3.
                   [M] REDIA tool tweaked.

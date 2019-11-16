@@ -1,0 +1,32 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:crushing_hammer"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " BR",
+    " SI",
+    "S  "
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "engineerstools:crushing_hammer",
+    "count": 1
+  }
+}

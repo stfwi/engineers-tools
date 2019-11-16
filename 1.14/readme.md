@@ -10,7 +10,9 @@ Mod sources for Minecraft version 1.14.4.
 ----
 ## Version history
 
-    ~ v1.0.4-b2   [U] Updated to Forge 1.14.4-28.1.90/20190719-1.14.3.
+    ~ v1.0.4-b3   [M] (WIP)
+
+    - v1.0.4-b2   [U] Updated to Forge 1.14.4-28.1.90/20190719-1.14.3.
                   [F] Fixed 1.14 build system sync issue.
 
     - v1.0.4-b1   [U] Updated to Forge 1.14.4-28.1.44/20190719-1.14.3.

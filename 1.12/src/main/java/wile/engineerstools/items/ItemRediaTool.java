@@ -12,14 +12,6 @@ import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.detail.BlockCategories;
 import wile.engineerstools.detail.ModAuxiliaries;
 import wile.engineerstools.detail.TreeCutting;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.item.ItemAxe;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
-import net.minecraftforge.common.IShearable;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.BlockDirt.DirtType;
@@ -28,8 +20,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemAxe;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -38,10 +39,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IShearable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.collect.Multimap;
@@ -61,6 +65,7 @@ public class ItemRediaTool extends ItemAxe
   private static double efficiency_decay[] = { 0.1, 0.8, 0.9, 1.0, 1.0, 1.3, 1.6, 1.8, 2.0, 2.0 }; // index: 0% .. 100% durability
   private static int fortune_decay[] = { 0, 0, 0, 0, 0, 0, 1, 1, 2, 3 }; // index: 0% .. 100% durability
   private static final int max_block_tracking_hitcount = 5;
+  private static final int max_attack_cooldown_ms = 2500;
 
   public static void on_config(boolean without_redia_torchplacing, boolean without_redia_hoeing,
                                boolean without_redia_tree_chopping, int durability, String efficiency_curve,
@@ -206,7 +211,7 @@ public class ItemRediaTool extends ItemAxe
   { return true; }
 
   @Override
-  public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
+  public boolean canApplyAtEnchantingTable(ItemStack tool, Enchantment enchantment)
   {
     if(enchantment == Enchantments.FORTUNE) return false;
     if(enchantment == Enchantments.EFFICIENCY) return false;
@@ -214,21 +219,26 @@ public class ItemRediaTool extends ItemAxe
     if(enchantment == Enchantments.LOOTING) return true;
     if(enchantment == Enchantments.SHARPNESS) return true;
     if(enchantment == Enchantments.FIRE_ASPECT) return true;
-    return enchantment.type.canEnchantItem(stack.getItem());
+    return enchantment.type.canEnchantItem(tool.getItem());
   }
 
   // -------------------------------------------------------------------------------------------------------------------
 
   @Override
-  public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
-  {
-    stack.damageItem(2, attacker);
-    return true;
-  }
+  public boolean hitEntity(ItemStack tool, EntityLivingBase target, EntityLivingBase attacker)
+  { tool.damageItem(2, attacker); return true; }
 
   @Override
-  public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-  { return (entity instanceof EntityVillager); } // Cancel attacks for villagers.
+  public boolean onLeftClickEntity(ItemStack tool, EntityPlayer player, Entity entity)
+  {
+    if(entity instanceof EntityVillager) return true; // never attack villagers.
+    if((entity instanceof EntityTameable) && (((EntityTameable)entity).isTamed()) && (((EntityTameable)entity).getOwner()==player)) return true; // don't attack own pets
+    if((entity instanceof EntityPigZombie) && ((((EntityPigZombie)entity).getAttackTarget() == null))) return true;
+    if(player.world.isRemote) return false; // only server side evaluation
+    if(isAttackingEnabled(tool)) return false;
+    if(entity instanceof EntityCreature) return ((((EntityCreature)entity).getAttackTarget() == null)); // don't attack bloody pigmen if they are not angry. edit: Actually don't attack anyone if not angry.
+    return false;
+  }
 
   @Override
   public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -240,8 +250,8 @@ public class ItemRediaTool extends ItemAxe
   }
 
   @Override
-  public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player)
-  { if(!player.world.isRemote){setFortune(stack);} return false; }
+  public boolean onBlockStartBreak(ItemStack tool, BlockPos pos, EntityPlayer player)
+  { if(!player.world.isRemote){setFortune(tool); } return false; }
 
   private World a_world = null; // hate doing this, worse performance alternative would be to hook into the global onblockclicked player event.
 
@@ -251,6 +261,7 @@ public class ItemRediaTool extends ItemAxe
     a_world = world;
     resetFortune(tool);
     if(world.isRemote) return true;
+    blockAttacking(tool);
     if(state.getBlockHardness(world, pos) != 0f) tool.damageItem(1, player);
     if(with_tree_felling && (player instanceof EntityPlayer) && (player.isSneaking())) {
       if(tryTreeFelling(world, state, pos, player)) return true;
@@ -259,16 +270,18 @@ public class ItemRediaTool extends ItemAxe
   }
 
   @Override
-  public float getDestroySpeed(ItemStack stack, IBlockState state)
+  public float getDestroySpeed(ItemStack tool, IBlockState state)
   {
     float hardness = 0.9f;
-    try {
-      if(a_world != null) hardness = MathHelper.clamp(state.getBlockHardness(a_world, BlockPos.ORIGIN), 0, 2);
-    } catch(Throwable e) {
-      a_world = null;
+    if(a_world != null) {
+      try {
+        hardness = MathHelper.clamp(state.getBlockHardness(a_world, BlockPos.ORIGIN), 0, 2);
+      } catch(Throwable e) {
+        a_world = null;
+      }
     }
     if(hardness >= 1) {
-      return (float)((double)efficiency * efficiency_decay[(int)MathHelper.clamp(relativeDurability(stack) * efficiency_decay.length,0,efficiency_decay.length-1)]);
+      return (float)((double)efficiency * efficiency_decay[(int)MathHelper.clamp(relativeDurability(tool) * efficiency_decay.length,0,efficiency_decay.length-1)]);
     } else {
       return efficiency;
     }
@@ -287,6 +300,24 @@ public class ItemRediaTool extends ItemAxe
   }
 
   // -------------------------------------------------------------------------------------------------------------------
+
+  private boolean isAttackingEnabled(ItemStack stack)
+  {
+    NBTTagCompound nbt = stack.getTagCompound();
+    if((nbt==null) || (!nbt.hasKey("atdisat"))) return true;
+    if(Math.abs(System.currentTimeMillis()-nbt.getLong("atdisat")) < max_attack_cooldown_ms) return false;
+    nbt.removeTag("atdisat");
+    stack.setTagCompound(nbt);
+    return true;
+  }
+
+  private void blockAttacking(ItemStack stack)
+  {
+    NBTTagCompound nbt = stack.getTagCompound();
+    if(nbt==null) nbt = new NBTTagCompound();
+    nbt.setLong("atdisat", System.currentTimeMillis());
+    stack.setTagCompound(nbt);
+  }
 
   private void setFortune(ItemStack stack)
   {

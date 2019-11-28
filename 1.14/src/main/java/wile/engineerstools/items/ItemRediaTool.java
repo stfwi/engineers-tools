@@ -8,9 +8,9 @@
  */
 package wile.engineerstools.items;
 
+import net.minecraft.entity.monster.ZombiePigmanEntity;
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.detail.ModAuxiliaries;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.*;
 import net.minecraft.block.*;
@@ -24,6 +24,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -50,6 +52,10 @@ public class ItemRediaTool extends AxeItem
   private static boolean with_shearing = true;
   private static double efficiency_decay[] = { 0.1, 0.8, 0.9, 1.0, 1.0, 1.3, 1.6, 1.8, 2.0, 2.0 }; // index: 0% .. 100% durability
   private static int fortune_decay[] = { 0, 0, 0, 0, 0, 0, 1, 1, 2, 3 }; // index: 0% .. 100% durability
+  private static final int max_attack_cooldown_ms = 2500;
+  private static float dirt_digging_speed = 14;
+  private static float grass_digging_speed = 15;
+
 
   public static void on_config(boolean without_redia_torchplacing, boolean without_redia_hoeing,
                                boolean without_redia_tree_chopping, int durability, String efficiency_curve,
@@ -232,8 +238,12 @@ public class ItemRediaTool extends AxeItem
   {
     resetBlockHitCount(stack);
     if(entity instanceof VillagerEntity) return true; // Cancel attacks for villagers.
-    if((entity instanceof WolfEntity) && (((WolfEntity)entity).isTamed()) && (((WolfEntity)entity).isOwner(player))) return true; // Don't hit own dogs
-    return false;
+    if((entity instanceof TameableEntity) && (((TameableEntity)entity).isTamed()) && (((TameableEntity)entity).isOwner(player))) return true; // Don't hit own pets
+    if(((entity instanceof ZombiePigmanEntity)) && ((ZombiePigmanEntity)entity).getAttackTarget() == null) return true; // noone wants to accidentally step them on the foot.
+    if(player.world.isRemote) return false; // only server side evaluation
+    if(isAttackingEnabled(stack)) return false;
+    if(entity instanceof CreatureEntity) return ((((CreatureEntity)entity).getAttackTarget() == null)); // don't attack bloody pigmen if they are not angry.
+    return false; // allow attacking
   }
 
   @Override
@@ -284,6 +294,7 @@ public class ItemRediaTool extends AxeItem
         CompoundNBT nbt = tool.getTag();
         if(nbt==null) nbt = new CompoundNBT();
         nbt.putInt("lhbh", state.getBlock().hashCode());
+        nbt.putLong("atdisat", System.currentTimeMillis());
         tool.setTag(nbt);
       }
       if(with_tree_felling && (player instanceof PlayerEntity) && (player.isSneaking())) {
@@ -296,14 +307,11 @@ public class ItemRediaTool extends AxeItem
   @Override
   public float getDestroySpeed(ItemStack stack, BlockState state)
   {
-    double ramp_scaler = 1.0;
+    if(state.isIn(BlockTags.DIRT_LIKE) || state.isIn(BlockTags.SAND)) return dirt_digging_speed;
+    if(state.getBlock() == Blocks.GRASS) return grass_digging_speed;
+    double scaler = 1.0;
     {
       int hitcount_max = 2;
-      if(state.isIn(BlockTags.DIRT_LIKE) || state.isIn(BlockTags.SAND)) {
-        hitcount_max += 10;
-      } else if(state.getBlock()==Blocks.GRASS) {
-        hitcount_max += 5;
-      }
       CompoundNBT nbt = stack.getTag();
       if(nbt==null) nbt = new CompoundNBT();
       int lasthitblock = nbt.getInt("lhbh");
@@ -319,14 +327,14 @@ public class ItemRediaTool extends AxeItem
         nbt.putInt("lhbh", lasthitblock);
         nbt.putInt("lhbc", hitcount);
         stack.setTag(nbt);
-        ramp_scaler = 0.2 + 0.8 * ((double)hitcount) / hitcount_max;
+        scaler = (hitcount<hitcount_max) ? 0.5 : 1.0;
       }
     }
     return (float)(
-      ((double)efficiency) * ramp_scaler *
-      efficiency_decay[
-        (int)MathHelper.clamp(relativeDurability(stack) * efficiency_decay.length,0,efficiency_decay.length-1)
-      ]
+      ((double)efficiency) * scaler *
+        efficiency_decay[
+          (int)MathHelper.clamp(relativeDurability(stack) * efficiency_decay.length,0,efficiency_decay.length-1)
+          ]
     );
   }
 
@@ -340,6 +348,16 @@ public class ItemRediaTool extends AxeItem
   }
 
   // -------------------------------------------------------------------------------------------------------------------
+
+  private boolean isAttackingEnabled(ItemStack stack)
+  {
+    CompoundNBT nbt = stack.getTag();
+    if((nbt==null) || (!nbt.contains("atdisat"))) return true;
+    if(Math.abs(System.currentTimeMillis()-nbt.getLong("atdisat")) < max_attack_cooldown_ms) return false;
+    nbt.remove("atdisat");
+    stack.setTag(nbt);
+    return true;
+  }
 
   private void setFortune(ItemStack stack)
   {

@@ -21,5 +21,6 @@
  "item.engineerstools.ariadne_coal": "阿里阿德涅煤",
  "item.engineerstools.ariadne_coal.help": "§6能画出有向箭头，可用于找到离开矿坑的路。§r\n 箭头方向取决于单击方块画箭头的位置。",
  "item.engineerstools.stimpack": "自动兴奋剂注射包",
- "item.engineerstools.stimpack.help": "§6在你有大麻烦时帮你§r\n ……涨几格生命。同时也会给你一点buff来 逃离当前的困境。警告：注射可能会有延迟。"
+ "item.engineerstools.stimpack.help": "§6在你有大麻烦时帮你§r\n ……涨几格生命。同时也会给你一点buff来 逃离当前的困境。警告：注射可能会有延迟。",
+ "item.engineerstools.sleeping_bag": "Sleeping Bag"
 }

@@ -86,7 +86,7 @@ public class ModEngineersTools
     }
 
     @SubscribeEvent
-    public static final void onBlocksRegistry(final RegistryEvent.Register<Block> event)
+    public static final void onBlockRegistry(final RegistryEvent.Register<Block> event)
     { ModContent.registerBlocks(event); }
 
     @SubscribeEvent

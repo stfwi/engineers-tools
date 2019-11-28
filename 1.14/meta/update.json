@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.14.4": {
+    "1.0.5-b1": "[M] The REDIA tool prevents you from accidentally attacking villagers, pets, and while mining also mobs (if not aggressive, especially chilled Zombie Pigmen).",
     "1.0.4-b2": "[U] Updated to Forge 1.14.4-28.1.90/20190719-1.14.3.\n[F] Fixed 1.14 build system sync issue.",
     "1.0.4-b1": "[U] Updated to Forge 1.14.4-28.1.44/20190719-1.14.3.\n[A] Added Sleeping Bag\n[A] Added zh_cn.lang (scikirbypoke, PR#4).",
     "1.0.3-b3": "[U] Updated to Forge 1.14.4-28.1.31/20190719-1.14.3.\n[M] REDIA tool tweaked.",
@@ -13,6 +14,6 @@
   },
   "promos": {
     "1.14.4-recommended": "",
-    "1.14.4-latest": "1.0.4-b2"
+    "1.14.4-latest": "1.0.5-b1"
   }
 }

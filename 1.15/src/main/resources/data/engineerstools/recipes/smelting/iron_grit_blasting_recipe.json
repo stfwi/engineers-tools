@@ -1,0 +1,16 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "minecraft:iron_ingot",
+      "requires": ["engineerstools:iron_grit"]
+    }
+  ],
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "engineerstools:iron_grit"
+  },
+  "result": "minecraft:iron_ingot",
+  "experience": 0.7,
+  "cookingtime": 100
+}

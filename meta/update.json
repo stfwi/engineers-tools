@@ -4,7 +4,9 @@
     "1.12.2-recommended": "1.0.4",
     "1.12.2-latest": "1.0.5-b1",
     "1.14.4-recommended": "",
-    "1.14.4-latest": "1.0.5-b1"
+    "1.14.4-latest": "1.0.5-b1",
+    "1.15.1-recommended": "",
+    "1.15.1-latest": "1.0.5-b1"
   },
   "1.12.2": {
     "1.0.5-b1": "[M] The REDIA tool prevents you from accidentally attacking villagers, pets, and while mining also mobs (if not aggressive, especially chilled Zombie Pigmen).",
@@ -37,5 +39,8 @@
     "1.0.1-b3": "[U] Updated to Forge 1.14.4-28.0.100/20190719-1.14.3.\n[A] Ariadne Coal (arrow drawing for orientation) added.\n[M] REDIA tool exhaustion and item damage adapted to 1.12.\n[M] Mod logo fixed.",
     "1.0.1-b2": "[U] Updated to Forge 1.14.4-28.0.81/20190719-1.14.3, recipe condition processing updated accordingly.",
     "1.0.1-b1": "[A] Ported REDIA tool from 1.12.2.\n[A] Ported ore crushing hammer from 1.12.2.\n[A] Ported Coarse Iron/Gold Grit 1.12.2, currently not auto-disabled if other mods provide grits (OreDict replacement unclear yet)."
+  },
+  "1.15.1": {
+    "1.0.5-b1": "[A] Initial 1.15 port (Forge 1.15.1-30.0.7)."
   }
 }

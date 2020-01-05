@@ -257,7 +257,7 @@ public class ItemRediaTool extends AxeItem
     final Vec3d hitvec = context.getHitVec();
     resetBlockHitCount(player.getHeldItem(hand));
     ActionResultType rv;
-    if(context.getPlayer().func_225608_bj_() /*isSneaking()*/) {
+    if(context.getPlayer().func_225608_bj_()/*isSneaking()*/) {
       rv = tryPlantSnipping(player, world, pos, hand, facing, hitvec);
       if(rv != ActionResultType.PASS) return rv;
       if(facing == Direction.UP) {

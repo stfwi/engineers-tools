@@ -82,6 +82,8 @@ commits.
 
   - [1.14](1.14/readme.md)
 
+  - [1.15](1.15/readme.md)
+
 ### Community references
 
 - [Immersive Engineering](https://github.com/BluSunrize/ImmersiveEngineering/):

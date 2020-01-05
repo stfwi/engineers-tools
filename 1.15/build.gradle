@@ -1,5 +1,5 @@
 // @file build.gradle
-// Engineer's tools mod gradle build relay (mc1.14.4)
+// Engineer's tools mod gradle build relay (mc1.15.1)
 buildscript {
   repositories {
     maven { url = 'https://files.minecraftforge.net/maven' }
@@ -19,11 +19,6 @@ version = "${version_engineerstools}"
 group = "wile.engineerstools"
 archivesBaseName = "engineerstools-${version_minecraft}"
 
-def signing = { ->
-  def sp = new Properties()
-  if(file("signing.properties").exists()) file("signing.properties").withInputStream { sp.load(it) }
-  return sp
-}()
 
 repositories {
   maven { name = "Progwml6 maven"; url = "https://dvs1.progwml6.com/files/maven/" } // JEI files

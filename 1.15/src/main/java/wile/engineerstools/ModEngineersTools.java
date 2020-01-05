@@ -6,7 +6,6 @@
  */
 package wile.engineerstools;
 
-import net.minecraft.client.renderer.RenderTypeLookup;
 import wile.engineerstools.detail.*;
 import wile.engineerstools.items.*;
 import net.minecraft.block.Block;
@@ -39,7 +38,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javax.annotation.Nullable;
 
 
@@ -59,6 +57,7 @@ public class ModEngineersTools
 
   public ModEngineersTools()
   {
+    ModAuxiliaries.logGitVersion(MODNAME);
     MinecraftForge.EVENT_BUS.register(this);
     ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_CONFIG_SPEC);
     MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onSleepingLocationCheckEvent);

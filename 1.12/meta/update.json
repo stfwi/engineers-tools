@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.12.2": {
+    "1.0.5-b2": "[M] Lang zh_cn updated (scikirbypoke).",
     "1.0.5-b1": "[M] The REDIA tool prevents you from accidentally attacking villagers, pets, and while mining also mobs (if not aggressive, especially chilled Zombie Pigmen).",
     "1.0.4": "[R] Release based on v1.0.4-b1. Release-to-release changes: * Sleeping Bag added * Language updates",
     "1.0.4-b1": "[A] Added Sleeping Bag\n[A] Added zh_cn.lang (scikirbypoke, PR#4).",
@@ -22,6 +23,6 @@
   },
   "promos": {
     "1.12.2-recommended": "1.0.4",
-    "1.12.2-latest": "1.0.5-b1"
+    "1.12.2-latest": "1.0.5-b2"
   }
 }

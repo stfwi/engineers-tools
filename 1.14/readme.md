@@ -10,7 +10,9 @@ Mod sources for Minecraft version 1.14.4.
 ----
 ## Version history
 
-    ~ v1.0.5-b2
+    - v1.0.5-b2   [M] Lang zh_cn updated (scikirbypoke).
+                  [F] Fixed JEI integration warning if nothing is opt'ed out (thx @SDUBZ).
+                  [A] Added GIT version logging.
 
     - v1.0.5-b1   [M] The REDIA tool prevents you from accidentally attacking villagers,
                       pets, and while mining also mobs (if not aggressive, especially chilled

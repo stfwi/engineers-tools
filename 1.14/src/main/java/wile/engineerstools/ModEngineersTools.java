@@ -47,10 +47,6 @@ public class ModEngineersTools
 {
   public static final String MODID = "engineerstools";
   public static final String MODNAME = "Engineer's Tools";
-  public static final String MODVERSION = "@MOD_VERSION@";
-  public static final String MODMCVERSION = "@MOD_MCVERSION@";
-  public static final String MODFINGERPRINT = "@MOD_SIGNSHA1@";
-  public static final String MODBUILDID = "@MOD_BUILDID@";
   public static final int VERSION_DATAFIXER = 0;
   public static final Logger LOGGER = LogManager.getLogger();
 
@@ -58,6 +54,7 @@ public class ModEngineersTools
 
   public ModEngineersTools()
   {
+    ModAuxiliaries.logGitVersion(MODNAME);
     MinecraftForge.EVENT_BUS.register(this);
     ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_CONFIG_SPEC);
     MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onSleepingLocationCheckEvent);

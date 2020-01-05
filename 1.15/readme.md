@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+    - v1.0.5-b2   [M] Lang zh_cn updated (scikirbypoke).
+                  [A] Added GIT version logging.
+
     - v1.0.5-b1   [A] Initial 1.15 port (Forge 1.15.1-30.0.7).
 
 -----

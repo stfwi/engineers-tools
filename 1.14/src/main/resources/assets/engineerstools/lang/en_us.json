@@ -13,7 +13,7 @@
  "item.engineerstools.crushing_hammer": "Ore Crushing Hammer",
  "item.engineerstools.crushing_hammer.help": "§6Manual handheld ore crushing hammer.§r Higher yield when manually crafting ore to grit in a crafting table. Has a low durability, and cannot be repaired. Almost no attack damage.",
  "item.engineerstools.redia_tool": "REDIA Tool",
- "item.engineerstools.redia_tool.help": "§6REal DIAmond covered steel multi tool.§r Combines axe, pickaxe, and shovel. Very efficient when in good condition, slow when durability is low. Repair with Diamonds.\n Right-click: Place torch.\\n Sneak-right-click: Hoe Dirt to Farmland, Coarse Dirt, etc; Shear sheep, Vines, Leafs etc.\\n Sneak while breaking a wood log: Tree felling.",
+ "item.engineerstools.redia_tool.help": "§6REal DIAmond covered steel multi tool.§r Combines axe, pickaxe, and shovel. Very efficient when in good condition, slow when durability is low. Repair with Diamonds.\n Right-click: Place torch.\n Sneak-right-click: Hoe Dirt to Farmland, Coarse Dirt, etc; Shear sheep, Vines, Leafs etc.\n Sneak while breaking a wood log: Tree felling.",
  "item.engineerstools.iron_grit": "Coarse iron grit",
  "item.engineerstools.iron_grit.help": "§6Can be smelted to iron ingots, but is not suitable for advanced material processing.",
  "item.engineerstools.gold_grit": "Coarse gold grit",

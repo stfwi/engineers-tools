@@ -1,11 +1,12 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.15.1": {
+    "1.0.5-b3": "[A] Added config options for the REDIA tool.\n[F] Fixed newline escapes in lang files.",
     "1.0.5-b2": "[M] Lang zh_cn updated (scikirbypoke).\n[A] Added GIT version logging.",
     "1.0.5-b1": "[A] Initial 1.15 port (Forge 1.15.1-30.0.7)."
   },
   "promos": {
     "1.15.1-recommended": "",
-    "1.15.1-latest": "1.0.5-b2"
+    "1.15.1-latest": "1.0.5-b3"
   }
 }

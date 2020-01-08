@@ -8,7 +8,6 @@
  */
 package wile.engineerstools.items;
 
-import net.minecraft.entity.monster.ZombiePigmanEntity;
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.detail.ModAuxiliaries;
 import net.minecraft.tags.BlockTags;
@@ -23,6 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.ZombiePigmanEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -50,27 +50,33 @@ public class ItemRediaTool extends AxeItem
   private static boolean with_hoeing = true;
   private static boolean with_tree_felling = true;
   private static boolean with_shearing = true;
+  private static boolean with_safe_attacking = true;
   private static double efficiency_decay[] = { 0.1, 0.8, 0.9, 1.0, 1.0, 1.3, 1.6, 1.8, 2.0, 2.0 }; // index: 0% .. 100% durability
   private static int fortune_decay[] = { 0, 0, 0, 0, 0, 0, 1, 1, 2, 3 }; // index: 0% .. 100% durability
-  private static final int max_attack_cooldown_ms = 2500;
+  private static int max_attack_cooldown_ms = 2500;
   private static float dirt_digging_speed = 14;
   private static float grass_digging_speed = 15;
 
 
   public static void on_config(boolean without_redia_torchplacing, boolean without_redia_hoeing,
                                boolean without_redia_tree_chopping, int durability, String efficiency_curve,
-                               String fortune_curve, int redia_tool_initial_durability_percent)
+                               String fortune_curve, int redia_tool_initial_durability_percent,
+                               int attack_cooldown_ms, boolean without_safe_attacking)
   {
     boolean with_torch_placing = !without_redia_torchplacing;
     with_hoeing = !without_redia_hoeing;
     with_tree_felling = !without_redia_tree_chopping;
     max_item_damage = MathHelper.clamp(durability, 750, 4000);
     initial_item_damage = (max_item_damage * (100-MathHelper.clamp(redia_tool_initial_durability_percent, 1, 100))) / 100;
+    max_attack_cooldown_ms = MathHelper.clamp(attack_cooldown_ms, 10, 2500);
+    with_safe_attacking = !without_safe_attacking;
     ModEngineersTools.LOGGER.info("REDIA tool config: "
             + (with_torch_placing?"":"no-") + "torch-placing, "
             + (with_hoeing?"":"no-") + "hoeing, "
-            + (with_tree_felling?"":"no-") + "tree-felling,"
+            + (with_tree_felling?"":"no-") + "tree-felling, "
+            + (with_safe_attacking?"":"no-") + "safe-attack,"
             + (" durability:"+max_item_damage + ", initial-durability:"+redia_tool_initial_durability_percent+"% (dmg="+initial_item_damage+")")
+            + (with_safe_attacking ? (", attack-prevention:" + max_attack_cooldown_ms + "ms") : "")
     );
     // Efficiency
     {
@@ -237,6 +243,7 @@ public class ItemRediaTool extends AxeItem
   public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity)
   {
     resetBlockHitCount(stack);
+    if(!with_safe_attacking) return false;
     if(entity instanceof VillagerEntity) return true; // Cancel attacks for villagers.
     if((entity instanceof TameableEntity) && (((TameableEntity)entity).isTamed()) && (((TameableEntity)entity).isOwner(player))) return true; // Don't hit own pets
     if(((entity instanceof ZombiePigmanEntity)) && ((ZombiePigmanEntity)entity).getAttackTarget() == null) return true; // noone wants to accidentally step them on the foot.

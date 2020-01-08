@@ -4,9 +4,9 @@
     "1.12.2-recommended": "1.0.4",
     "1.12.2-latest": "1.0.5-b2",
     "1.14.4-recommended": "",
-    "1.14.4-latest": "1.0.5-b2",
+    "1.14.4-latest": "1.0.5-b3",
     "1.15.1-recommended": "",
-    "1.15.1-latest": "1.0.5-b2"
+    "1.15.1-latest": "1.0.5-b3"
   },
   "1.12.2": {
     "1.0.5-b2": "[M] Lang zh_cn updated (scikirbypoke).",
@@ -30,6 +30,7 @@
     "1.0.0-b1": "[A] Added ore crushing hammer."
   },
   "1.14.4": {
+    "1.0.5-b3": "[A] Added config options for the REDIA tool.\n[F] Fixed newline escapes in lang files.",
     "1.0.5-b2": "[M] Lang zh_cn updated (scikirbypoke).\n[F] Fixed JEI integration warning if nothing is opt'ed out (thx @SDUBZ).\n[A] Added GIT version logging.",
     "1.0.5-b1": "[M] The REDIA tool prevents you from accidentally attacking villagers, pets, and while mining also mobs (if not aggressive, especially chilled Zombie Pigmen).",
     "1.0.4-b2": "[U] Updated to Forge 1.14.4-28.1.90/20190719-1.14.3.\n[F] Fixed 1.14 build system sync issue.",
@@ -43,6 +44,7 @@
     "1.0.1-b1": "[A] Ported REDIA tool from 1.12.2.\n[A] Ported ore crushing hammer from 1.12.2.\n[A] Ported Coarse Iron/Gold Grit 1.12.2, currently not auto-disabled if other mods provide grits (OreDict replacement unclear yet)."
   },
   "1.15.1": {
+    "1.0.5-b3": "[A] Added config options for the REDIA tool.\n[F] Fixed newline escapes in lang files.",
     "1.0.5-b2": "[M] Lang zh_cn updated (scikirbypoke).\n[A] Added GIT version logging.",
     "1.0.5-b1": "[A] Initial 1.15 port (Forge 1.15.1-30.0.7)."
   }

@@ -104,6 +104,8 @@ public class ModConfig
     public final ForgeConfigSpec.IntValue redia_tool_initial_durability_percent;
     public final ForgeConfigSpec.ConfigValue<String> redia_tool_efficiency_curve;
     public final ForgeConfigSpec.ConfigValue<String> redia_tool_furtune_curve;
+    public final ForgeConfigSpec.BooleanValue without_safe_attacking;
+    public final ForgeConfigSpec.IntValue redia_tool_attack_cooldown_ms;
     // Misc
     public final ForgeConfigSpec.BooleanValue with_experimental;
 
@@ -165,7 +167,7 @@ public class ModConfig
           .translation(MODID + ".config.redia_tool_initial_durability_percent")
           .comment("Durability of the REDIA tool in percent, which the tool has when it is crafted. " +
                    "Allows to tune initial repairing investments for getting efficiency and furtune.")
-          .defineInRange("redia_tool_initial_durability_percent", 50, 25, 100);
+          .defineInRange("redia_tool_initial_durability_percent", 100, 50, 100);
         redia_tool_efficiency_curve = builder
           .translation(MODID + ".config.redia_tool_efficiency_curve")
           .comment(
@@ -184,6 +186,15 @@ public class ModConfig
             "and the curve must be rising left-to-right."
           )
           .define("redia_tool_furtune_curve", "0,0,0,0,0,1,2,2,3,3");
+        without_safe_attacking = builder
+          .translation(MODID + ".config.without_safe_attacking")
+          .comment("Disable the REDIA tool feature to prevent accidentally hitting own pets, villagers, or bloody zombie pigmen.")
+          .define("without_safe_attacking", false);
+        redia_tool_attack_cooldown_ms = builder
+          .translation(MODID + ".config.redia_tool_attack_cooldown_ms")
+          .comment("If safe attacking is enabled, this defines in milliseconds how long you cannot accidentally hit passive " +
+            "non-agressive mobs when breaking blocks. The time does not affect preventing to hit villagers, own pets, or zombie pigmen.")
+          .defineInRange("redia_tool_attack_cooldown_ms", 0, 10, 2500);
         builder.pop();
       }
     }
@@ -304,7 +315,9 @@ public class ModConfig
       COMMON.redia_tool_durability.get(),
       COMMON.redia_tool_furtune_curve.get(),
       COMMON.redia_tool_furtune_curve.get(),
-      COMMON.redia_tool_initial_durability_percent.get()
+      COMMON.redia_tool_initial_durability_percent.get(),
+      COMMON.redia_tool_attack_cooldown_ms.get(),
+      COMMON.without_safe_attacking.get()
     );
     ItemStimPack.on_config( //@todo: make config
       2,

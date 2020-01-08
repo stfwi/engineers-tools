@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+    - v1.0.5-b3   [A] Added config options for the REDIA tool.
+                  [F] Fixed newline escapes in lang files.
+
     - v1.0.5-b2   [M] Lang zh_cn updated (scikirbypoke).
                   [A] Added GIT version logging.
 

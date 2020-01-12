@@ -10,7 +10,27 @@ Mod sources for Minecraft version 1.14.4.
 ----
 ## Version history
 
-    ~ v1.0.4-b2   [U]
+                -------------------------------------------------------------------
+    - v1.0.5    [R] Release based on v1.0.5-b3. Release-to-release changes:
+                    * REDIA tool tweaks (cannot hit own pets, villagers, etc).
+                    * Language updates.
+                    * Config options added.
+                    * Fixes (JEI integration warning, sleeping event).
+                -------------------------------------------------------------------
+
+    - v1.0.5-b3   [A] Added config options for the REDIA tool.
+                  [F] Fixed newline escapes in lang files.
+
+    - v1.0.5-b2   [M] Lang zh_cn updated (scikirbypoke).
+                  [F] Fixed JEI integration warning if nothing is opt'ed out (thx @SDUBZ).
+                  [A] Added GIT version logging.
+
+    - v1.0.5-b1   [M] The REDIA tool prevents you from accidentally attacking villagers,
+                      pets, and while mining also mobs (if not aggressive, especially chilled
+                      Zombie Pigmen).
+
+    - v1.0.4-b2   [U] Updated to Forge 1.14.4-28.1.90/20190719-1.14.3.
+                  [F] Fixed 1.14 build system sync issue.
 
     - v1.0.4-b1   [U] Updated to Forge 1.14.4-28.1.44/20190719-1.14.3.
                   [A] Added Sleeping Bag

@@ -28,6 +28,8 @@ The mod has its focus on manual tools:
   - Sneak-right-click ground: Cycle Dirt - Farmland - Coarse Dirt - Grass Path.
   - Sneak-right-click: Shaering of Grass, Vines, Sheep, etc.
   - Sneak while breaking a wood log: Tree felling (also higher durability loss).
+  - Health and safety features: Prevents you from accidentally attacking villagers,
+    own pets, and especially Zombie Pigmen if they are not aggressive.
 
   *Please read the community references/credits below*. Crafted with iron axe,
   pickaxe, and shovel, and a diamond.
@@ -79,6 +81,8 @@ commits.
   - [1.12](1.12/readme.md)
 
   - [1.14](1.14/readme.md)
+
+  - [1.15](1.15/readme.md)
 
 ### Community references
 

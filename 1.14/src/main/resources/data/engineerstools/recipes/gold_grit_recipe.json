@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:gold_grit",
+      "requires": ["engineerstools:crushing_hammer"]
+    }
+  ],
+  "type": "engineerstools:crafting_extended_shapeless",
+  "group": "grit",
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ore"
+    },
+    {
+      "item": "engineerstools:crushing_hammer"
+    }
+  ],
+  "result": {
+    "item": "engineerstools:gold_grit",
+    "count": 2
+  },
+  "aspects": {
+    "tool": "engineerstools:crushing_hammer",
+    "tool_damage": 10
+  }
+}

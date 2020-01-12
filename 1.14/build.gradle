@@ -19,12 +19,6 @@ version = "${version_engineerstools}"
 group = "wile.engineerstools"
 archivesBaseName = "engineerstools-${version_minecraft}"
 
-def signing = { ->
-  def sp = new Properties()
-  if(file("signing.properties").exists()) file("signing.properties").withInputStream { sp.load(it) }
-  return sp
-}()
-
 repositories {
   maven { name = "Progwml6 maven"; url = "https://dvs1.progwml6.com/files/maven/" } // JEI files
   maven { name = "ModMaven"; url = "modmaven.k-4u.nl" } // JEI files, fallback
@@ -76,7 +70,7 @@ dependencies {
 
 processResources {
   outputs.upToDateWhen { false }
-  doLast { file("${sourceSets.main.output.resourcesDir}/.gitversion").text = 'git log "-1" "--format=%h"'.execute().in.text.trim() }
+  doLast { file("${sourceSets.main.output.resourcesDir}/.gitversion-engineerstools").text = 'git log "-1" "--format=%h"'.execute().in.text.trim() }
 }
 
 jar {

@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "P___nosolutionyet": { "item": "minecraft:potion", "potion": "minecraft:water" },
+      "type": "engineerstools:optional",
+      "result": "engineerstools:stimpack"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FPI",
+    "FNA",
+    " N "
+  ],
+  "key": {
+    "P": { "item": "minecraft:water_bucket" },
+    "A": { "item": "minecraft:golden_apple" },
+    "F": { "tag": "minecraft:carpets" },
+    "I": { "item": "minecraft:iron_ingot" },
+    "N": { "item": "minecraft:iron_nugget" }
+  },
+  "result": {
+    "item": "engineerstools:stimpack",
+    "count": 1
+  }
+}

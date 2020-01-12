@@ -88,8 +88,12 @@ public class ItemSleepingBag extends ItemTools
     BlockPos bl = player.getBedLocation(player.dimension);
     DimensionType dim = player.dimension;
     Optional<BlockPos> optAt = Optional.of(at);
-    PlayerEntity.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(player, optAt);
-    if (ret != null) return Either.left(ret);
+    if(!world.isRemote()) {
+      // Related to #8, tryPlayerSleep() handles sideness check in vanilla, but is effectively only invoked server side
+      // when using beds -> also done here, as other mods hooking into the event may not expect client side usage.
+      PlayerEntity.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(player, optAt);
+      if (ret != null) return Either.left(ret);
+    }
     if(!world.isRemote) {
       if(player.isSleeping() || !player.isAlive()) return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
       if(!world.dimension.isSurfaceWorld()) return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);

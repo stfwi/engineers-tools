@@ -10,7 +10,11 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Version history
 
-    ~ v1.0.5-b3 [U]
+                -------------------------------------------------------------------
+    - v1.0.5    [R] Release based on v1.0.5-b2. Release-to-release changes:
+                    * REDIA tool tweaks (cannot hit own pets, villagers, etc).
+                    * Language updates.
+                -------------------------------------------------------------------
 
     - v1.0.5-b2 [M] Lang zh_cn updated (scikirbypoke).
 

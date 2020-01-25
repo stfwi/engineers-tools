@@ -10,13 +10,15 @@ Mod sources for Minecraft version 1.14.4.
 ----
 ## Version history
 
-                -------------------------------------------------------------------
-    - v1.0.5    [R] Release based on v1.0.5-b3. Release-to-release changes:
-                    * REDIA tool tweaks (cannot hit own pets, villagers, etc).
-                    * Language updates.
-                    * Config options added.
-                    * Fixes (JEI integration warning, sleeping event).
-                -------------------------------------------------------------------
+    - v1.0.6-b1   [A] Curios integration added.
+
+                  -------------------------------------------------------------------
+    - v1.0.5      [R] Release based on v1.0.5-b3. Release-to-release changes:
+                      * REDIA tool tweaks (cannot hit own pets, villagers, etc).
+                      * Language updates.
+                      * Config options added.
+                      * Fixes (JEI integration warning, sleeping event).
+                  -------------------------------------------------------------------
 
     - v1.0.5-b3   [A] Added config options for the REDIA tool.
                   [F] Fixed newline escapes in lang files.

@@ -21,7 +21,7 @@
  "item.engineerstools.ariadne_coal": "Ariadne Coal",
  "item.engineerstools.ariadne_coal.help": "§6Draw orientation arrows to find the way out of your mines.§r\n The arrow direction depends on where you click on the block to draw on.",
  "item.engineerstools.stimpack": "Auto Stim Pack",
- "item.engineerstools.stimpack.help": "§6Helps when you're in big trouble§r\n ... by pushing a few hearts when health is low. Also gives you a small buff to get out of any present misery. Warning: The injection may have a delay.",
+ "item.engineerstools.stimpack.help": "§6Helps when you're in big trouble§r\n ... by pushing a few hearts when health is low. Also gives you a small buff to get out of any present misery. Warning: The injection may have a delay. It just has to be somewhere in your inventory or Bauble slot.",
  "item.engineerstools.sleeping_bag": "Sleeping Bag",
  "item.engineerstools.sleeping_bag.help": "§6Made of tough fabric§r, therefore weatherproof and very robust. Does not set your spawn point like beds."
 }

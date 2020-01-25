@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.15.1": {
+    "1.0.6-b1": "[A] Curios integration added.",
     "1.0.5-b4": "[F] Added Forge hook invocation sidenes assurance for sleeping (related to #8).",
     "1.0.5-b3": "[A] Added config options for the REDIA tool.\n[F] Fixed newline escapes in lang files.",
     "1.0.5-b2": "[M] Lang zh_cn updated (scikirbypoke).\n[A] Added GIT version logging.",
@@ -8,6 +9,6 @@
   },
   "promos": {
     "1.15.1-recommended": "",
-    "1.15.1-latest": "1.0.5-b4"
+    "1.15.1-latest": "1.0.6-b1"
   }
 }

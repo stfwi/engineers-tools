@@ -19,11 +19,6 @@ version = "${version_engineerstools}"
 group = "wile.engineerstools"
 archivesBaseName = "engineerstools-${version_minecraft}"
 
-repositories {
-  maven { name = "Progwml6 maven"; url = "https://dvs1.progwml6.com/files/maven/" } // JEI files
-  maven { name = "ModMaven"; url = "modmaven.k-4u.nl" } // JEI files, fallback
-}
-
 minecraft {
   mappings channel: 'snapshot', version: "${version_fml_mappings}"
   // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
@@ -64,8 +59,6 @@ minecraft {
 
 dependencies {
   minecraft "net.minecraftforge:forge:${version_forge_minecraft}"
-  compileOnly fg.deobf("mezz.jei:jei-${version_jei}:api")
-  runtimeOnly fg.deobf("mezz.jei:jei-${version_jei}")
 }
 
 processResources {
@@ -94,3 +87,24 @@ publishing {
   publications { mavenJava(MavenPublication) { artifact reobfArtifact } }
   repositories { maven { url "file:///${project.projectDir}/mcmodsrepo" } }
 }
+
+// JEI
+repositories {
+  maven { name = "Progwml6 maven"; url = "https://dvs1.progwml6.com/files/maven/" }
+  maven { name = "ModMaven"; url = "modmaven.k-4u.nl" }
+}
+dependencies {
+  compileOnly fg.deobf("mezz.jei:jei-${version_jei}:api")
+  runtimeOnly fg.deobf("mezz.jei:jei-${version_jei}")
+}
+
+/* Currently only tags needed
+// Curios
+repositories {
+  maven { url = "https://maven.theillusivec4.top/" }
+}
+dependencies {
+  runtimeOnly fg.deobf("top.theillusivec4.curios:curios:${version_curios}")
+  compileOnly fg.deobf("top.theillusivec4.curios:curios:${version_curios}:api")
+}
+*/

@@ -37,7 +37,10 @@ The mod has its focus on manual tools:
 - *Auto Stim Pack*: May save your life by pushing back a few hearts when your
   health falls below three hearts. Also gives some small buffs to get out of the
   present misery. Can also be used as Bauble. Warning: The stim pack pulse
-  injector needs to charge first, so there is a small delay.
+  injector needs to charge first, so there is a small delay. There is no need
+  to hold it in a hand, it just jas to be somewhere in the inventory (please
+  double check one time when putting it into extended inventories added by other
+  mods, as they might prevent the stimpack from checking your characters health).
 
 - *Sleeping Bag*: Weatherproof sleeping bag made of tough fabric. Does not need
   to be placed, and does not change the spawn point of the last bed.

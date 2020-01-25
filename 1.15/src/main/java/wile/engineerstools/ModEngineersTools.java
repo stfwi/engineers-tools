@@ -142,7 +142,7 @@ public class ModEngineersTools
     { ModConfig.onLoad(event.getConfig()); }
 
     @SubscribeEvent
-    public static final void onConfigChanged(net.minecraftforge.fml.config.ModConfig.ConfigReloading event)
+    public static final void onConfigChanged(net.minecraftforge.fml.config.ModConfig.Reloading event)
     { ModConfig.onFileChange(event.getConfig()); }
 
     // @SubscribeEvent

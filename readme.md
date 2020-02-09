@@ -55,6 +55,14 @@ The mod has its focus on manual tools:
   stack of ore before breaking. It's not repairable, so a new one has to be
   crafted - or get an IE Ore Crusher machine ASAP.
 
+- *Muslee Power Bar Press*: A manual food press that you can carry in your
+  inventory, and use to create Muslee Melange Power Bars. These are quite
+  nourishing snacks that can be eaten quickly. To make the bars, drop seeds
+  and all food that you can find into the press, and take the Muslee Bars
+  from the output slot. It also has a small internal storage for seeds and
+  food. It is not possible to throw rotten or toxic food into the press,
+  and the seeds have to be acceptable, too (wheat, melon, pumpkin).
+
 ----
 ### Mod pack integration, forking, back ports, bug reports, testing
 

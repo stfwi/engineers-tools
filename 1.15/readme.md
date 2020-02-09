@@ -10,6 +10,8 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+    - v1.0.6-b2   [A] Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it.
+
     - v1.0.6-b1   [A] Curios integration added.
 
     - v1.0.5-b4   [F] Added Forge hook invocation sidenes assurance for sleeping (related to #8).

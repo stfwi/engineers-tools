@@ -23,5 +23,9 @@
  "item.engineerstools.stimpack": "Auto Stim Pack",
  "item.engineerstools.stimpack.help": "§6Helps when you're in big trouble§r\n ... by pushing a few hearts when health is low. Also gives you a small buff to get out of any present misery. Warning: The injection may have a delay. It just has to be somewhere in your inventory or Bauble slot.",
  "item.engineerstools.sleeping_bag": "Sleeping Bag",
- "item.engineerstools.sleeping_bag.help": "§6Made of tough fabric§r, therefore weatherproof and very robust. Does not set your spawn point like beds."
+ "item.engineerstools.sleeping_bag.help": "§6Made of tough fabric§r, therefore weatherproof and very robust. Does not set your spawn point like beds.",
+ "item.engineerstools.musli_bar": "Muslee Melange Power Bar",
+ "item.engineerstools.musli_bar.help": "§6Nutritional quick snack§r, composed in a Muslee Bar Press of everything you can find, with seeds of corse. People have a tendency to eat too much of it and too fast because it's healthy. Oh, and it's actually Müsli, not Muslee - but who cares.",
+ "item.engineerstools.musli_bar_press": "Muslee Melange Power Bar Press",
+ "item.engineerstools.musli_bar_press.help": "§6DIY on-the-go press for Muslee Melange Power Bars§r. Drop in some seeds and every food you can find (well, maybe no rotting stuff) to create healthy snacks."
 }

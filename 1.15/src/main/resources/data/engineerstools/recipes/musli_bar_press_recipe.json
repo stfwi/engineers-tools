@@ -1,0 +1,29 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:musli_bar_press"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "SFS",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:wheat_seeds"
+    },
+    "F": {
+      "item": "minecraft:apple"
+    }
+  },
+  "result": {
+    "item": "engineerstools:musli_bar_press",
+    "count": 1
+  }
+}

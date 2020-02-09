@@ -10,18 +10,17 @@
 package wile.engineerstools.detail;
 
 import wile.engineerstools.ModEngineersTools;
+import wile.engineerstools.blocks.BlockAriadneCoal;
+import wile.engineerstools.items.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.logging.log4j.Logger;
 import org.apache.commons.lang3.tuple.Pair;
-import wile.engineerstools.blocks.BlockAriadneCoal;
-import wile.engineerstools.items.ItemRediaTool;
-import wile.engineerstools.items.ItemStimPack;
-import wile.engineerstools.items.ModBlockItem;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+
 
 public class ModConfig
 {
@@ -280,7 +279,11 @@ public class ModConfig
   //--------------------------------------------------------------------------------------------------------------------
   private static final ArrayList<String> includes_ = new ArrayList<String>();
   private static final ArrayList<String> excludes_ = new ArrayList<String>();
+  private static final CompoundNBT server_config_ = new CompoundNBT();
   public static boolean with_experimental = false;
+
+  public static final CompoundNBT getServerConfig() // config that may be synchronized from server to client via net pkg.
+  { return server_config_; }
 
   public static final void apply()
   {
@@ -317,10 +320,20 @@ public class ModConfig
       COMMON.redia_tool_attack_cooldown_ms.get(),
       COMMON.without_safe_attacking.get()
     );
-    ItemStimPack.on_config( //@todo: make config
+    ItemStimPack.on_config(
       2,
       3,
       3
+    );
+    ItemMusliBar.on_config(
+      6,
+      1.2
+    );
+    ItemMusliBarPress.on_config(
+      512,
+      128,
+      1,
+      6+2 // efficiency loss 1/4
     );
   }
 }

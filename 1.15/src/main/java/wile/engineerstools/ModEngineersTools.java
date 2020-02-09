@@ -7,38 +7,29 @@
 package wile.engineerstools;
 
 import wile.engineerstools.detail.*;
+import wile.engineerstools.libmc.detail.*;
 import wile.engineerstools.items.*;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.world.World;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import javax.annotation.Nullable;
 
 
 @Mod("engineerstools")
@@ -53,7 +44,9 @@ public class ModEngineersTools
 
   public ModEngineersTools()
   {
-    ModAuxiliaries.logGitVersion(MODNAME);
+    Auxiliaries.init(MODID, LOGGER, ModConfig::getServerConfig);
+    Auxiliaries.logGitVersion(MODNAME);
+    OptionalRecipeCondition.init(MODID, LOGGER);
     MinecraftForge.EVENT_BUS.register(this);
     ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_CONFIG_SPEC);
     MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onSleepingLocationCheckEvent);
@@ -77,9 +70,7 @@ public class ModEngineersTools
 
     @SubscribeEvent
     public static final void onRecipeRegistry(final RegistryEvent.Register<IRecipeSerializer<?>> event)
-    {
-      event.getRegistry().register(ExtendedShapelessRecipe.SERIALIZER);
-    }
+    { event.getRegistry().register(wile.engineerstools.libmc.detail.ExtendedShapelessRecipe.SERIALIZER); }
 
     @SubscribeEvent
     public static final void onBlockRegistry(final RegistryEvent.Register<Block> event)
@@ -89,27 +80,13 @@ public class ModEngineersTools
     public static final void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event)
     { ModContent.registerTileEntities(event); }
 
-    // @SubscribeEvent
-    public static final void onRegisterEntityTypes(final RegistryEvent.Register<EntityType<?>> event)
-    {}
-
-    // @SubscribeEvent
+    @SubscribeEvent
     public static final void onRegisterContainerTypes(final RegistryEvent.Register<ContainerType<?>> event)
-    {}
+    { ModContent.registerContainers(event); }
 
     @SubscribeEvent
     public static final void onRegisterSounds(final RegistryEvent.Register<SoundEvent> event)
     { ModResources.registerSoundEvents(event); }
-
-    // @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static final void registerBlockColourHandlers(final ColorHandlerEvent.Block event)
-    {}
-
-    // @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static final void registerItemColourHandlers(final ColorHandlerEvent.Item event)
-    {}
 
     @SubscribeEvent
     public static final void onCommonSetup(final FMLCommonSetupEvent event)
@@ -118,24 +95,13 @@ public class ModEngineersTools
       LOGGER.info("Registering recipe condition processor ...");
       CraftingHelper.register(OptionalRecipeCondition.Serializer.INSTANCE);
       LOGGER.info("Init networking, content processors ...");
+      Networking.init(MODID);
       ModContent.processRegisteredContent();
     }
 
     @SubscribeEvent
     public static final void onClientSetup(final FMLClientSetupEvent event)
-    { ModContent.processContentClientSide(); }
-
-    // @SubscribeEvent
-    public static final void onSendImc(final InterModEnqueueEvent event)
-    {}
-
-    // @SubscribeEvent
-    public static final void onRecvImc(final InterModProcessEvent event)
-    {}
-
-    // @SubscribeEvent
-    public static final void onServerStarting(FMLServerStartingEvent event)
-    {}
+    { ModContent.processContentClientSide(); ModContent.registerGuis(event); }
 
     @SubscribeEvent
     public static final void onConfigLoad(net.minecraftforge.fml.config.ModConfig.Loading event)
@@ -159,30 +125,6 @@ public class ModEngineersTools
     public static final void onPlayerWakeUpEvent(net.minecraftforge.event.entity.player.PlayerWakeUpEvent event)
     { ItemSleepingBag.onPlayerWakeUpEvent(event); }
 
-  }
-
-  // -------------------------------------------------------------------------------------------------------------------
-  // Sided proxy functionality
-  // -------------------------------------------------------------------------------------------------------------------
-
-  public static final ISidedProxy proxy = DistExecutor.runForDist(()->ClientProxy::new, ()->ServerProxy::new);
-  public interface ISidedProxy
-  {
-    default @Nullable PlayerEntity getPlayerClientSide() { return null; }
-    default @Nullable World getWorldClientSide() { return null; }
-    default @Nullable Minecraft mc() { return null; }
-  }
-  public static final class ClientProxy implements ISidedProxy
-  {
-    public @Nullable PlayerEntity getPlayerClientSide() { return Minecraft.getInstance().player; }
-    public @Nullable World getWorldClientSide() { return Minecraft.getInstance().world; }
-    public @Nullable Minecraft mc() { return Minecraft.getInstance(); }
-  }
-  public static final class ServerProxy implements ISidedProxy
-  {
-    public @Nullable PlayerEntity getPlayerClientSide() { return null; }
-    public @Nullable World getWorldClientSide() { return null; }
-    public @Nullable Minecraft mc() { return null; }
   }
 
   // -------------------------------------------------------------------------------------------------------------------

@@ -8,27 +8,19 @@
  */
 package wile.engineerstools.eapi.jei;
 
-//@todo: implement when JEI is available
-
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.detail.ModConfig;
 import wile.engineerstools.ModContent;
-//import mezz.jei.api.constants.VanillaRecipeCategoryUid;
-//import mezz.jei.api.registration.IRecipeTransferRegistration;
-//import mezz.jei.api.constants.VanillaTypes;
-//import mezz.jei.api.runtime.IJeiRuntime;
+import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JEIPlugin
-{
-
-}
-
-/*
 @mezz.jei.api.JeiPlugin
 public class JEIPlugin implements mezz.jei.api.IModPlugin
 {
@@ -58,4 +50,3 @@ public class JEIPlugin implements mezz.jei.api.IModPlugin
     }
   }
 }
-*/

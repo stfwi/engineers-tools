@@ -4,9 +4,8 @@
  * @copyright (C) 2018 Stefan Wilhelm
  * @license MIT (see https://opensource.org/licenses/MIT)
  */
-package wile.engineerstools.detail;
+package wile.engineerstools.libmc.detail;
 
-import wile.engineerstools.ModEngineersTools;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.item.ItemStack;
@@ -20,10 +19,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import com.google.gson.*;
 
+
 public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftingRecipe
 {
   public static final ExtendedShapelessRecipe.Serializer SERIALIZER = ((ExtendedShapelessRecipe.Serializer)(
-    (new ExtendedShapelessRecipe.Serializer()).setRegistryName(ModEngineersTools.MODID, "crafting_extended_shapeless")
+    (new ExtendedShapelessRecipe.Serializer()).setRegistryName(Auxiliaries.modid(), "crafting_extended_shapeless")
   ));
 
   //--------------------------------------------------------------------------------------------------------------------

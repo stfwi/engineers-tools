@@ -9,7 +9,7 @@
 package wile.engineerstools.items;
 
 import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.detail.ModAuxiliaries;
+import wile.engineerstools.libmc.detail.Auxiliaries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.*;
 import net.minecraft.block.*;
@@ -37,9 +37,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import com.google.common.collect.ImmutableList;
 import wile.engineerstools.detail.ModConfig;
-
 import javax.annotation.Nullable;
 import java.util.*;
+
 
 public class ItemRediaTool extends AxeItem
 {
@@ -158,7 +158,7 @@ public class ItemRediaTool extends AxeItem
   @Override
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag)
-  { ModAuxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
+  { Auxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
 
   @Override
   @OnlyIn(Dist.CLIENT)

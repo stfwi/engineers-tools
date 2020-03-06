@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.15.2": {
+    "1.0.6": "[R] Release based on v1.0.6-b2. Release-to-release changes: * Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it. * Curios integration added. * Patchouli Manual added.",
     "1.0.6-b2": "[A] Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it.",
     "1.0.6-b1": "[A] Curios integration added.",
     "1.0.5-b4": "[F] Added Forge hook invocation sidenes assurance for sleeping (related to #8).",
@@ -9,7 +10,7 @@
     "1.0.5-b1": "[A] Initial 1.15 port (Forge 1.15.1-30.0.7)."
   },
   "promos": {
-    "1.15.2-recommended": "",
-    "1.15.2-latest": "1.0.6-b2"
+    "1.15.2-recommended": "1.0.6",
+    "1.15.2-latest": "1.0.6"
   }
 }

@@ -147,12 +147,29 @@ public class ItemMusliBarPress extends ItemTools
       }
     }
 
+    public static class ReadonlySlot extends Slot
+    {
+      public ReadonlySlot(IInventory inventory, int index, int xpos, int ypos)
+      { super(inventory, index, xpos, ypos); }
+
+      @Override
+      public boolean isItemValid(ItemStack stack)
+      { return false; }
+
+      public ItemStack decrStackSize(int amount)
+      { return ItemStack.EMPTY; }
+
+      public boolean canTakeStack(PlayerEntity playerIn)
+      { return false; }
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     private PlayerEntity player;
     private PlayerInventory player_inventory;
     private Inventory inventory_ = new Inventory(2);
     private final ItemStack muslipress;
+    private ReadonlySlot muslipress_slot_ = null;
     private int seeds_stored = 0;
     private int food_stored = 0;
 
@@ -178,11 +195,21 @@ public class ItemMusliBarPress extends ItemTools
       addSlot(new OutputSlot(this, inventory_, ++i, 92, 45));
       // player slots
       for(int x=0; x<9; ++x) {
-        addSlot(new Slot(player_inventory, x, 8+x*18, 144)); // player slots: 0..8
+        int slot = x;
+        if(player_inventory.currentItem != slot) {
+          addSlot(new Slot(player_inventory, slot, 8+x*18, 144)); // player slots: 0..8
+        } else {
+          addSlot(muslipress_slot_ = new ReadonlySlot(player_inventory, slot, 8+x*18, 144));
+        }
       }
       for(int y=0; y<3; ++y) {
         for(int x=0; x<9; ++x) {
-          addSlot(new Slot(player_inventory, x+y*9+9, 8+x*18, 86+y*18)); // player slots: 9..35
+          int slot = x+y*9+9;
+          if(player_inventory.currentItem != slot) {
+            addSlot(new Slot(player_inventory, slot, 8+x*18, 86+y*18)); // player slots: 9..35
+          } else {
+            addSlot(muslipress_slot_ = new ReadonlySlot(player_inventory, slot, 8+x*18, 86+y*18)); // player slots: 9..35
+          }
         }
       }
       read(muslipress.getTag());
@@ -344,6 +371,10 @@ public class ItemMusliBarPress extends ItemTools
       blit(x0, y0, 0, 0, w, h);
       blit(x0+48, y0+45, 180, 45, seeds_px(43), 7);
       blit(x0+48, y0+54, 180, 54, food_px(43), 7);
+      {
+        final Slot slot = getContainer().muslipress_slot_;
+        if(slot != null) blit(x0+slot.xPos, y0+slot.yPos, 181, 144, 16, 16);
+      }
     }
 
     private int seeds_px(int pixels)

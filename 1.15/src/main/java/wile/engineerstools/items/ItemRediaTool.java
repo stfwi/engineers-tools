@@ -264,7 +264,7 @@ public class ItemRediaTool extends AxeItem
     final Vec3d hitvec = context.getHitVec();
     resetBlockHitCount(player.getHeldItem(hand));
     ActionResultType rv;
-    if(context.getPlayer().func_225608_bj_()/*isSneaking()*/) {
+    if(context.getPlayer().isShiftKeyDown()) {
       rv = tryPlantSnipping(player, world, pos, hand, facing, hitvec);
       if(rv != ActionResultType.PASS) return rv;
       if(facing == Direction.UP) {
@@ -304,7 +304,7 @@ public class ItemRediaTool extends AxeItem
         nbt.putLong("atdisat", System.currentTimeMillis());
         tool.setTag(nbt);
       }
-      if(with_tree_felling && (player instanceof PlayerEntity) && (player.func_225608_bj_() /*isSneaking()*/)) {
+      if(with_tree_felling && (player instanceof PlayerEntity) && (player.isShiftKeyDown())) {
         if(tryTreeFelling(world, state, pos, player)) return true;
       }
     }
@@ -435,7 +435,7 @@ public class ItemRediaTool extends AxeItem
       if((!stack.isEmpty()) && (stack.getItem() == Blocks.TORCH.asItem())) {
         ItemStack tool = player.getHeldItem(hand);
         player.setHeldItem(hand, stack);
-        ItemUseContext torch_context = new ItemUseContext(context.getPlayer(), context.getHand(), new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), context.func_221533_k()));
+        ItemUseContext torch_context = new ItemUseContext(context.getPlayer(), context.getHand(), new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), context.isInside()));
         ActionResultType r = stack.getItem().onItemUse(torch_context);
         player.setHeldItem(hand, tool);
         return r;

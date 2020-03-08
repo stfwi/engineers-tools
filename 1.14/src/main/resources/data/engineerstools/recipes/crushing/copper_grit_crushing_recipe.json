@@ -1,0 +1,60 @@
+{ "type": "forge:conditional", "recipes": [
+  {
+    "conditions": [
+      {
+        "type": "engineerstools:optional",
+        "result": "immersiveengineering:dust_copper",
+        "requires": ["engineerstools:crushing_hammer", "#forge:ores/copper"]
+      }
+    ],
+    "recipe": {
+      "type": "engineerstools:crafting_extended_shapeless",
+      "group": "grit",
+      "ingredients": [
+        {
+          "tag": "forge:ores/copper"
+        },
+        {
+          "item": "engineerstools:crushing_hammer"
+        }
+      ],
+      "result": {
+        "item": "immersiveengineering:dust_copper",
+        "count": 2
+      },
+      "aspects": {
+        "tool": "engineerstools:crushing_hammer",
+        "tool_damage": 10
+      }
+    }
+  },
+  {
+    "conditions": [
+      {
+        "type": "engineerstools:optional",
+        "result": "#forge:dusts/copper",
+        "requires": ["engineerstools:crushing_hammer", "#forge:ores/copper"]
+      }
+    ],
+    "recipe": {
+      "type": "engineerstools:crafting_extended_shapeless",
+      "group": "grit",
+      "ingredients": [
+        {
+          "tag": "forge:ores/copper"
+        },
+        {
+          "item": "engineerstools:crushing_hammer"
+        }
+      ],
+      "result": {
+        "tag": "forge:dusts/copper",
+        "count": 2
+      },
+      "aspects": {
+        "tool": "engineerstools:crushing_hammer",
+        "tool_damage": 10
+      }
+    }
+  }
+]}

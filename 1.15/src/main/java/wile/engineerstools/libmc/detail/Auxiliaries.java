@@ -76,15 +76,15 @@ public class Auxiliaries
   @OnlyIn(Dist.CLIENT)
   public static final boolean isShiftDown()
   {
-    return (InputMappings.isKeyDown(SidedProxy.mc().func_228018_at_()/*getMainWindow()*/.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) ||
-            InputMappings.isKeyDown(SidedProxy.mc().func_228018_at_()/*getMainWindow()*/.getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT));
+    return (InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) ||
+            InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT));
   }
 
   @OnlyIn(Dist.CLIENT)
   public static final boolean isCtrlDown()
   {
-    return (InputMappings.isKeyDown(SidedProxy.mc().func_228018_at_()/*getMainWindow()*/.getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL) ||
-            InputMappings.isKeyDown(SidedProxy.mc().func_228018_at_()/*getMainWindow()*/.getHandle(), GLFW.GLFW_KEY_RIGHT_CONTROL));
+    return (InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL) ||
+            InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_CONTROL));
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ public class Auxiliaries
         if(!help_available) return false;
         String s = localize(helpTranslationKey + ".help");
         if(s.isEmpty()) return false;
-        tooltip.add(new StringTextComponent(s)); // @todo: check how to optimise that (to use TranslationTextComponent directly without compat losses)
+        tooltip.add(new StringTextComponent(s));
         return true;
       } else if(extendedTipCondition()) {
         if(!tip_available) return false;

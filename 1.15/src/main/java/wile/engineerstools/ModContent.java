@@ -207,7 +207,7 @@ public class ModContent
     // No specific interface or base block in this mod, therefore simply loop the few registered blocks.
     for(Block block: getRegisteredBlocks()) {
       if(block instanceof BlockAriadneCoal) {
-        RenderTypeLookup.setRenderLayer(block, RenderType.func_228645_f_()/*transparent*/);
+        RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent());
       }
     }
   }

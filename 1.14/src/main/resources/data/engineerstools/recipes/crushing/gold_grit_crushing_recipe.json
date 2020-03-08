@@ -1,0 +1,89 @@
+{ "type": "forge:conditional", "recipes": [
+  {
+    "conditions": [
+      {
+        "type": "engineerstools:optional",
+        "result": "immersiveengineering:dust_gold",
+        "requires": ["engineerstools:crushing_hammer", "#forge:ores/gold"]
+      }
+    ],
+    "recipe": {
+      "type": "engineerstools:crafting_extended_shapeless",
+      "group": "grit",
+      "ingredients": [
+        {
+          "tag": "forge:ores/gold"
+        },
+        {
+          "item": "engineerstools:crushing_hammer"
+        }
+      ],
+      "result": {
+        "item": "immersiveengineering:dust_gold",
+        "count": 2
+      },
+      "aspects": {
+        "tool": "engineerstools:crushing_hammer",
+        "tool_damage": 8
+      }
+    }
+  },
+  {
+    "conditions": [
+      {
+        "type": "engineerstools:optional",
+        "result": "#forge:dusts/gold",
+        "requires": ["engineerstools:crushing_hammer", "#forge:ores/gold"]
+      }
+    ],
+    "recipe": {
+      "type": "engineerstools:crafting_extended_shapeless",
+      "group": "grit",
+      "ingredients": [
+        {
+          "tag": "forge:ores/gold"
+        },
+        {
+          "item": "engineerstools:crushing_hammer"
+        }
+      ],
+      "result": {
+        "tag": "forge:dusts/gold",
+        "count": 2
+      },
+      "aspects": {
+        "tool": "engineerstools:crushing_hammer",
+        "tool_damage": 8
+      }
+    }
+  },
+  {
+    "conditions": [
+      {
+        "type": "engineerstools:optional",
+        "result": "engineerstools:gold_grit",
+        "requires": ["engineerstools:crushing_hammer", "minecraft:gold_ore", "engineerstools:gold_grit"]
+      }
+    ],
+    "recipe": {
+      "type": "engineerstools:crafting_extended_shapeless",
+      "group": "grit",
+      "ingredients": [
+        {
+          "item": "minecraft:gold_ore"
+        },
+        {
+          "item": "engineerstools:crushing_hammer"
+        }
+      ],
+      "result": {
+        "item": "engineerstools:gold_grit",
+        "count": 2
+      },
+      "aspects": {
+        "tool": "engineerstools:crushing_hammer",
+        "tool_damage": 8
+      }
+    }
+  }
+]}

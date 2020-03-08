@@ -8,16 +8,21 @@ package wile.engineerstools.libmc.detail;
 
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import com.google.common.collect.Lists;
 import com.google.gson.*;
+import java.util.List;
 
 public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftingRecipe
 {
@@ -28,9 +33,10 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
   //--------------------------------------------------------------------------------------------------------------------
 
   private final CompoundNBT aspects;
+  private final ResourceLocation resultTag;
 
-  public ExtendedShapelessRecipe(ResourceLocation id, String group, ItemStack output, NonNullList<Ingredient> ingredients, CompoundNBT aspects)
-  { super(id, group, output, ingredients); this.aspects=aspects;}
+  public ExtendedShapelessRecipe(ResourceLocation id, String group, ItemStack output, NonNullList<Ingredient> ingredients, CompoundNBT aspects, ResourceLocation resultTag)
+  { super(id, group, output, ingredients); this.aspects=aspects; this.resultTag = resultTag; }
 
   public CompoundNBT getAspects()
   { return aspects.copy(); }
@@ -81,6 +87,7 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
     @Override
     public ExtendedShapelessRecipe read(ResourceLocation recipeId, JsonObject json)
     {
+      ResourceLocation resultTag = null;
       String group = JSONUtils.getString(json, "group", "");
       NonNullList<Ingredient> list = NonNullList.create();
       JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
@@ -90,10 +97,22 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
       }
       if (list.isEmpty()) throw new JsonParseException("No ingredients for "+this.getRegistryName().getPath()+" recipe");
       if (list.size() > MAX_WIDTH * MAX_HEIGHT) throw new JsonParseException("Too many ingredients for crafting_tool_shapeless recipe the max is " + (MAX_WIDTH * MAX_HEIGHT));
-      ItemStack stack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+      // Tag based item picking
+      final JsonObject res = JSONUtils.getJsonObject(json, "result");
+      if(res.has("tag")) {
+        ResourceLocation rl = new ResourceLocation(res.get("tag").getAsString());
+        Tag<Item> tag = ItemTags.getCollection().getTagMap().getOrDefault(rl, null);
+        if(tag==null) throw new JsonParseException(this.getRegistryName().getPath() + ": Result tag does not exist: #" + rl);
+        if(tag.getAllElements().isEmpty()) throw new JsonParseException(this.getRegistryName().getPath() + ": Result tag has no items: #" + rl);
+        if(res.has("item")) res.remove("item");
+        resultTag = rl;
+        List<Item> lst = Lists.newArrayList(tag.getAllElements());
+        res.addProperty("item", lst.get(0).getRegistryName().toString());
+      }
+      ItemStack stack = ShapedRecipe.deserializeItem(res);
       //--------------------
       CompoundNBT nbt = new CompoundNBT();
-      if(json.get("aspects")==null) return new ExtendedShapelessRecipe(recipeId, group, stack, list, nbt);
+      if(json.get("aspects")==null) return new ExtendedShapelessRecipe(recipeId, group, stack, list, nbt, resultTag);
       final JsonObject aspects = JSONUtils.getJsonObject(json, "aspects");
       if(aspects.size() > 0) {
         try {
@@ -102,7 +121,7 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
           throw new JsonParseException(this.getRegistryName().getPath() + ": Failed to parse the 'aspects' object:" + ex.getMessage());
         }
       }
-      return new ExtendedShapelessRecipe(recipeId, group, stack, list, nbt);
+      return new ExtendedShapelessRecipe(recipeId, group, stack, list, nbt, resultTag);
     }
 
     @Override
@@ -114,7 +133,8 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
       for(int i=0; i<list.size(); ++i) list.set(i, Ingredient.read(pkt));
       ItemStack stack = pkt.readItemStack();
       CompoundNBT aspects = pkt.readCompoundTag();
-      return new ExtendedShapelessRecipe(recipeId, group, stack, list, aspects);
+      ResourceLocation resultTag = pkt.readResourceLocation();
+      return new ExtendedShapelessRecipe(recipeId, group, stack, list, aspects, resultTag);
     }
 
     @Override
@@ -125,6 +145,7 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
       for(Ingredient ingredient : recipe.getIngredients()) ingredient.write(pkt);
       pkt.writeItemStack(recipe.getRecipeOutput());
       pkt.writeCompoundTag(recipe.getAspects());
+      pkt.writeResourceLocation(recipe.resultTag);
     }
   }
 }

@@ -1,0 +1,60 @@
+{ "type": "forge:conditional", "recipes": [
+  {
+    "conditions": [
+      {
+        "type": "engineerstools:optional",
+        "result": "immersiveengineering:dust_uranium",
+        "requires": ["engineerstools:crushing_hammer", "#forge:ores/uranium"]
+      }
+    ],
+    "recipe": {
+      "type": "engineerstools:crafting_extended_shapeless",
+      "group": "grit",
+      "ingredients": [
+        {
+          "tag": "forge:ores/uranium"
+        },
+        {
+          "item": "engineerstools:crushing_hammer"
+        }
+      ],
+      "result": {
+        "item": "immersiveengineering:dust_uranium",
+        "count": 2
+      },
+      "aspects": {
+        "tool": "engineerstools:crushing_hammer",
+        "tool_damage": 10
+      }
+    }
+  },
+  {
+    "conditions": [
+      {
+        "type": "engineerstools:optional",
+        "result": "#forge:dusts/uranium",
+        "requires": ["engineerstools:crushing_hammer", "#forge:ores/uranium"]
+      }
+    ],
+    "recipe": {
+      "type": "engineerstools:crafting_extended_shapeless",
+      "group": "grit",
+      "ingredients": [
+        {
+          "tag": "forge:ores/uranium"
+        },
+        {
+          "item": "engineerstools:crushing_hammer"
+        }
+      ],
+      "result": {
+        "tag": "forge:dusts/uranium",
+        "count": 2
+      },
+      "aspects": {
+        "tool": "engineerstools:crushing_hammer",
+        "tool_damage": 10
+      }
+    }
+  }
+]}

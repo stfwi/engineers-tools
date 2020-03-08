@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.14.4.
 ----
 ## Version history
 
+    ~ v1.0.7-b1   [A] Added Ore Crushing Hammer recipes for common ores, preferred output are IE grits.
+                      Provided easy data driven way to add other ore->dust recipes (issue #6).
+
                   -------------------------------------------------------------------
     - v1.0.6      [R] Release based on v1.0.6-b2. Release-to-release changes:
                       * Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it.

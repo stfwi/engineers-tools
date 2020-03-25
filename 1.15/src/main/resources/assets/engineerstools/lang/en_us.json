@@ -22,6 +22,8 @@
  "item.engineerstools.ariadne_coal.help": "§6Draw orientation arrows to find the way out of your mines.§r\n The arrow direction depends on where you click on the block to draw on.",
  "item.engineerstools.stimpack": "Auto Stim Pack",
  "item.engineerstools.stimpack.help": "§6Helps when you're in big trouble§r\n ... by pushing a few hearts when health is low. Also gives you a small buff to get out of any present misery. Warning: The injection may have a delay. It just has to be somewhere in your inventory or Bauble slot.",
+ "item.engineerstools.diving_capsule": "Diving Air Capsule",
+ "item.engineerstools.diving_capsule.help": "§6Helps when you're about to drown§r\n ... by automatically pushing a few air boubles back. It just has to be somewhere in your inventory or Curios/Bauble slot. Note that the capsule air tank is limited.",
  "item.engineerstools.sleeping_bag": "Sleeping Bag",
  "item.engineerstools.sleeping_bag.help": "§6Made of tough fabric§r, therefore weatherproof and very robust.",
  "item.engineerstools.musli_bar": "Muslee Melange Power Bar",

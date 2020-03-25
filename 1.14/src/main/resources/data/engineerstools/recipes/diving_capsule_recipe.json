@@ -1,0 +1,23 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:diving_capsule"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "BNB",
+    "BNB"
+  ],
+  "key": {
+    "B": { "item": "minecraft:glass_bottle" },
+    "I": { "item": "minecraft:iron_ingot" },
+    "N": { "item": "minecraft:iron_nugget" }
+  },
+  "result": {
+    "item": "engineerstools:diving_capsule",
+    "count": 1
+  }
+}

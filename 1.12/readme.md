@@ -10,7 +10,7 @@ Mod sources for Minecraft version 1.12.2.
 ----
 ## Version history
 
-    ~ v1.0.6-b1 [M]
+    ~ v1.0.6-b1 [M] REDIA Tool default Fortune curve tweaked (slightly nerfed).
 
                 -------------------------------------------------------------------
     - v1.0.5    [R] Release based on v1.0.5-b2. Release-to-release changes:

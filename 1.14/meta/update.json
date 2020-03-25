@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.14.4": {
+    "1.0.7-b1": "[A] Added Ore Crushing Hammer recipes for common ores, preferred output are IE grits. Provided easy data driven way to add other ore->dust recipes (issue #6).\n[A] Added Diving Air Capsule (automatic air refreshing).\n[M] REDIA Tool default Fortune curve tweaked (slightly nerfed).",
     "1.0.6": "[R] Release based on v1.0.6-b2. Release-to-release changes: * Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it. * Curios integration added. * Patchouli Manual added.",
     "1.0.6-b2": "[A] Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it.",
     "1.0.6-b1": "[A] Curios integration added.",
@@ -20,6 +21,6 @@
   },
   "promos": {
     "1.14.4-recommended": "1.0.6",
-    "1.14.4-latest": "1.0.6"
+    "1.14.4-latest": "1.0.7-b1"
   }
 }

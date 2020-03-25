@@ -87,7 +87,7 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
     @Override
     public ExtendedShapelessRecipe read(ResourceLocation recipeId, JsonObject json)
     {
-      ResourceLocation resultTag = null;
+      ResourceLocation resultTag = new ResourceLocation("libmc", "none"); // just no null
       String group = JSONUtils.getString(json, "group", "");
       NonNullList<Ingredient> list = NonNullList.create();
       JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");

@@ -101,7 +101,7 @@ public class ModConfig
       "and the curve must be rising left-to-right."
     })
     @Config.Name("REDIA tool: Dur-Fortune curve")
-    public String redia_fortune_curve = "0,0,0,0,0,1,2,2,3,3";
+    public String redia_fortune_curve = "0,0,0,0,0,1,1,1,2,3";
 
   }
 

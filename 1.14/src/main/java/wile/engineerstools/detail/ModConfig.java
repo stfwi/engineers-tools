@@ -12,6 +12,7 @@ package wile.engineerstools.detail;
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.blocks.BlockAriadneCoal;
 import wile.engineerstools.items.*;
+import wile.engineerstools.libmc.detail.Auxiliaries;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundNBT;
@@ -98,6 +99,12 @@ public class ModConfig
     public final ForgeConfigSpec.ConfigValue<String> pattern_includes;
     public final ForgeConfigSpec.BooleanValue without_crushing_hammer;
     public final ForgeConfigSpec.BooleanValue without_redia_tool;
+    public final ForgeConfigSpec.BooleanValue without_stimpack;
+    public final ForgeConfigSpec.BooleanValue without_diving_capsule;
+    public final ForgeConfigSpec.BooleanValue without_ariadne_coal;
+    public final ForgeConfigSpec.BooleanValue without_sleeping_bag;
+    public final ForgeConfigSpec.BooleanValue without_musli_bar;
+
     // Tweaks
     public final ForgeConfigSpec.IntValue redia_tool_durability;
     public final ForgeConfigSpec.IntValue redia_tool_initial_durability_percent;
@@ -140,6 +147,26 @@ public class ModConfig
           .translation(MODID + ".config.without_redia_tool")
           .comment("Completely disable the REDIA tool.")
           .define("without_redia_tool", false);
+        without_stimpack = builder
+          .translation(MODID + ".config.without_stimpack")
+          .comment("Completely disable the Auto Stim Pack.")
+          .define("without_stimpack", false);
+        without_diving_capsule = builder
+          .translation(MODID + ".config.without_diving_capsule")
+          .comment("Completely disable the Diving Air Capsule.")
+          .define("without_diving_capsule", false);
+        without_ariadne_coal = builder
+          .translation(MODID + ".config.without_ariadne_coal")
+          .comment("Completely disable the Ariadne Coal.")
+          .define("without_ariadne_coal", false);
+        without_sleeping_bag = builder
+          .translation(MODID + ".config.without_sleeping_bag")
+          .comment("Completely disable the Sleeping Bag.")
+          .define("without_sleeping_bag", false);
+        without_musli_bar = builder
+          .translation(MODID + ".config.without_musli_bar")
+          .comment("Completely disable the Muslee Bar and Muslee Bar Press.")
+          .define("without_musli_bar", false);
         builder.pop();
       }
       // --- MISC ---------------------------------------------------------------
@@ -182,7 +209,7 @@ public class ModConfig
             "Ten values have to given as integer numbers, (between 0 and 3), " +
             "and the curve must be rising left-to-right."
           )
-          .define("redia_tool_furtune_curve", "0,0,0,0,0,1,2,2,3,3");
+          .define("redia_tool_furtune_curve", "0,0,0,0,0,1,1,1,2,3");
         without_safe_attacking = builder
           .translation(MODID + ".config.without_safe_attacking")
           .comment("Disable the REDIA tool feature to prevent accidentally hitting own pets, villagers, or bloody zombie pigmen.")
@@ -213,8 +240,7 @@ public class ModConfig
     if(COMMON == null) return false;
     try {
       if(!with_experimental) {
-        //if(block instanceof ModAuxiliaries.IExperimentalFeature) return true;
-        //if(ModContent.getExperimentalBlocks().contains(block)) return true;
+        if(block instanceof Auxiliaries.IExperimentalFeature) return true;
       }
       final String rn = block.getRegistryName().getPath();
       // Force-include/exclude pattern matching
@@ -247,6 +273,13 @@ public class ModConfig
     if(item == null) return true;
     if((item instanceof ModBlockItem) && (((ModBlockItem)item).getBlock() instanceof BlockAriadneCoal)) return true;
     if(COMMON == null) return false;
+    if(COMMON.without_crushing_hammer.get() && (item instanceof ItemCrushingHammer)) return true;
+    if(COMMON.without_redia_tool.get() && (item instanceof ItemRediaTool)) return true;
+    if(COMMON.without_ariadne_coal.get() && (item instanceof ItemAriadneCoal)) return true;
+    if(COMMON.without_diving_capsule.get() && (item instanceof ItemDivingCapsule)) return true;
+    if(COMMON.without_stimpack.get() && (item instanceof ItemStimPack)) return true;
+    if(COMMON.without_sleeping_bag.get() && (item instanceof ItemSleepingBag)) return true;
+    if(COMMON.without_musli_bar.get() && ((item instanceof ItemMusliBar)||(item instanceof ItemMusliBarPress))) return true;
     try {
       final String rn = item.getRegistryName().getPath();
       // Force-include/exclude pattern matching
@@ -324,6 +357,11 @@ public class ModConfig
       2,
       3,
       3
+    );
+    ItemDivingCapsule.on_config(
+      10,
+      3,
+      7
     );
     ItemMusliBar.on_config(
       6,

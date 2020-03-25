@@ -91,11 +91,10 @@ public class ModEngineersTools
     @SubscribeEvent
     public static final void onCommonSetup(final FMLCommonSetupEvent event)
     {
-      ModConfig.apply();
+      wile.engineerstools.libmc.detail.Networking.init(MODID);
       LOGGER.info("Registering recipe condition processor ...");
       CraftingHelper.register(OptionalRecipeCondition.Serializer.INSTANCE);
-      LOGGER.info("Init networking, content processors ...");
-      Networking.init(MODID);
+      ModConfig.apply();
       ModContent.processRegisteredContent();
     }
 

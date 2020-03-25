@@ -95,6 +95,10 @@ public class ModContent
     default_item_properties()
   ).setRegistryName(MODID, "stimpack")));
 
+  public static final ItemDivingCapsule DIVING_CAPSULE = (ItemDivingCapsule)((new ItemDivingCapsule(
+    default_item_properties()
+  ).setRegistryName(MODID, "diving_capsule")));
+
   public static final ItemSleepingBag SLEEPING_BAG = (ItemSleepingBag)((new ItemSleepingBag(
     default_item_properties()
   ).setRegistryName(MODID, "sleeping_bag")));
@@ -120,6 +124,7 @@ public class ModContent
     CRUSHING_HAMMER,
     ARIADNE_COAL,
     STIM_PACK,
+    DIVING_CAPSULE,
     SLEEPING_BAG,
     MUSLI_BAR_PRESS,
     MUSLI_BAR,

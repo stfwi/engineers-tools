@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+    - v1.0.7-b2   [A] REDIA Tool inventory repair recipe added (repair with Diamonds).
+                  [A] REDIA Tool Efficiency/Fortune now added by over-repairing (adding REDIA coating layers).
+
     - v1.0.7-b1   [A] Added Ore Crushing Hammer recipes for common ores, preferred output are IE grits.
                       Provided easy data driven way to add other ore->dust recipes (issue #6).
                   [M] Updated to new MCP/Forge mappings.

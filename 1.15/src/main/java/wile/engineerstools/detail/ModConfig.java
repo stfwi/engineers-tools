@@ -196,21 +196,22 @@ public class ModConfig
         redia_tool_efficiency_curve = builder
           .translation(MODID + ".config.redia_tool_efficiency_curve")
           .comment(
-            "Defines the efficiency scaling depending on the durability. ",
-            "Ten values have to given in precent, (between 10 and 250), " +
-            "and the curve must be rising left-to-right. 100% corresponds " +
+            "Defines the efficiency scaling depending on the durability. " +
+            "Ten values have to given as integer numbers, (between 0 and 4), " +
+            "and the curve must be rising left-to-right. 0 corresponds " +
             "to vanilla diamond tools. The first number specifies the efficiency " +
-            "factor between 0% and 10% durability, second 10% to 20%, last 90% to 100%."
+            "between 0% and 10% durability, second 10% to 20%, last 90% to 100%."
           )
-          .define("redia_tool_efficiency_curve", "10,60,90,100,120,140,170,200,220,230");
+          .define("redia_tool_efficiency_curve", "0,1,1,2,2,3,3,3,3,4");
         redia_tool_furtune_curve = builder
           .translation(MODID + ".config.redia_tool_furtune_curve")
           .comment(
-            "Defines the fortune depending on the durability. ",
+            "Defines the fortune depending on the durability. " +
             "Ten values have to given as integer numbers, (between 0 and 3), " +
-            "and the curve must be rising left-to-right."
+            "and the curve must be rising left-to-right. The first number specifies the furtune " +
+            "between 0% and 10% durability, second 10% to 20%, last 90% to 100%."
           )
-          .define("redia_tool_furtune_curve", "0,0,0,0,0,1,1,1,2,3");
+          .define("redia_tool_furtune_curve", "0,0,0,0,1,1,1,1,2,3");
         without_safe_attacking = builder
           .translation(MODID + ".config.without_safe_attacking")
           .comment("Disable the REDIA tool feature to prevent accidentally hitting own pets, villagers, or bloody zombie pigmen.")
@@ -343,12 +344,16 @@ public class ModConfig
         if(!excl[i].isEmpty()) excludes_.add(excl[i]);
       }
     }
+    // Todo: remove temporary config default data fix (changed efficiency meaning).
+    if(COMMON.redia_tool_efficiency_curve.get().equals("10,60,90,100,120,140,170,200,220,230")) {
+      COMMON.redia_tool_efficiency_curve.set("0,1,1,2,2,3,3,3,3,4");
+    }
     ItemRediaTool.on_config(
       false,
       false,
       false,
       COMMON.redia_tool_durability.get(),
-      COMMON.redia_tool_furtune_curve.get(),
+      COMMON.redia_tool_efficiency_curve.get(),
       COMMON.redia_tool_furtune_curve.get(),
       COMMON.redia_tool_initial_durability_percent.get(),
       COMMON.redia_tool_attack_cooldown_ms.get(),

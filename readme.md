@@ -19,10 +19,11 @@ Main distribution channel for this mod is CurseForge:
 
 The mod has its focus on manual tools:
 
-- *REDIA Tool* (REal DIAmond covered tool): Simple manual multi tool combining
-  pickaxe, axe, shovel, and shears. Reference efficiency: Diamond. Very efficient
-  when in good condition (about Efficiency III), slow when the durability is low
-  (Efficiency curve configurable). Repairable with Diamonds.
+- *REDIA Tool* (REal DIAmond coated tool): Simple manual multi tool combining
+  pickaxe, axe, shovel, hoe, and shears. Reference efficiency: Diamond. Can be
+  repaired with diamonds in the crafting. Add Efficiency (and finally Fortune)
+  by over-repairing (means sharpening) the tool. These effects decay however
+  with decreasing tool durability, so keeping in good shape like a proper Enginneer.
 
   - Right-click action: Place torch.
   - Sneak-right-click ground: Cycle Dirt - Farmland - Coarse Dirt - Grass Path.
@@ -31,8 +32,9 @@ The mod has its focus on manual tools:
   - Health and safety features: Prevents you from accidentally attacking villagers,
     own pets, and especially Zombie Pigmen if they are not aggressive.
 
-  *Please read the community references/credits below*. Crafted with iron axe,
-  pickaxe, and shovel, and a diamond.
+  Efficiency and Fortune curve are configurable. *Please read the community
+  references/credits below*. The initial default recipe is quite simple, note
+  that you have to keep the tool in good condition.
 
 - *Auto Stim Pack*: May save your life by pushing back a few hearts when your
   health falls below three hearts. Also gives some small buffs to get out of the
@@ -41,6 +43,10 @@ The mod has its focus on manual tools:
   to hold it in a hand, it just jas to be somewhere in the inventory (please
   double check one time when putting it into extended inventories added by other
   mods, as they might prevent the stimpack from checking your characters health).
+
+- *Diving Air Capsule*: Small capsule with compressed air. Helps you not to
+  drown by refreshing your air when you have only a few bubbles left. It works
+  automatically when somewhere in your inventory/Bauble/Curios slot.
 
 - *Sleeping Bag*: Weatherproof sleeping bag made of tough fabric. Does not need
   to be placed, and does not change the spawn point of the last bed.

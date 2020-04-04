@@ -1,7 +1,7 @@
 /*
  * @file ExtendedShapelessRecipe.java
  * @author Stefan Wilhelm (wile)
- * @copyright (C) 2018 Stefan Wilhelm
+ * @copyright (C) 2019 Stefan Wilhelm
  * @license MIT (see https://opensource.org/licenses/MIT)
  */
 package wile.engineerstools.libmc.detail;
@@ -26,6 +26,13 @@ import java.util.List;
 
 public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftingRecipe
 {
+  public interface IRepairableToolItem
+  {
+    ItemStack onShapelessRecipeRepaired(ItemStack toolStack, int previousDamage, int repairedDamage);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+
   public static final ExtendedShapelessRecipe.Serializer SERIALIZER = ((ExtendedShapelessRecipe.Serializer)(
     (new ExtendedShapelessRecipe.Serializer()).setRegistryName(Auxiliaries.modid(), "crafting_extended_shapeless")
   ));
@@ -41,9 +48,19 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
   public CompoundNBT getAspects()
   { return aspects.copy(); }
 
+  private int getToolDamage()
+  {
+    if(aspects.contains("tool_repair")) return (-MathHelper.clamp(aspects.getInt("tool_repair"), 0, 4096));
+    if(aspects.contains("tool_damage")) return (MathHelper.clamp(aspects.getInt("tool_damage"), 1, 1024));
+    return 0;
+  }
+
+  private boolean isRepair()
+  { return getToolDamage() < 0; }
+
   @Override
   public boolean isDynamic()
-  { return false; }
+  { return isRepair() || aspects.getBoolean("dynamic"); }
 
   @Override
   public IRecipeSerializer<?> getSerializer()
@@ -52,15 +69,15 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
   @Override
   public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv)
   {
-    String tool_name = aspects.getString("tool");
-    int tool_damage = MathHelper.clamp(aspects.getInt("tool_damage"), 1, 128);
+    final String tool_name = aspects.getString("tool");
+    final int tool_damage = getToolDamage();
     NonNullList<ItemStack> remaining = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
     for(int i=0; i<remaining.size(); ++i) {
       final ItemStack stack = inv.getStackInSlot(i);
       if(stack.getItem().getRegistryName().toString().equals(tool_name)) {
         if(!stack.isDamageable()) {
           remaining.set(i, stack);
-        } else {
+        } else if(!isRepair()) {
           ItemStack rstack = stack.copy();
           rstack.setDamage(rstack.getDamage()+tool_damage);
           if(rstack.getDamage() < rstack.getMaxDamage()) {
@@ -73,6 +90,31 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
     }
     return remaining;
   }
+
+  @Override
+  public ItemStack getCraftingResult(CraftingInventory inv)
+  {
+    if(!isRepair()) return super.getCraftingResult(inv);
+    // Tool repair
+    final String tool_name = aspects.getString("tool");
+    for(int i=0; i<inv.getSizeInventory(); ++i) {
+      final ItemStack stack = inv.getStackInSlot(i);
+      if(!stack.getItem().getRegistryName().toString().equals(tool_name)) continue;
+      ItemStack rstack = stack.copy();
+      final int dmg = rstack.getDamage();
+      final int repair_negative_dmg = Math.min(-1, getToolDamage() * rstack.getMaxDamage() / 100);
+      rstack.setDamage(Math.max(dmg+repair_negative_dmg, 0));
+      if((rstack.getItem() instanceof IRepairableToolItem)) {
+        rstack = ((IRepairableToolItem)(rstack.getItem())).onShapelessRecipeRepaired(rstack, dmg, rstack.getDamage());
+      }
+      return rstack;
+    }
+    return ItemStack.EMPTY; // in doubt prevent duping, people will complain soon enough.
+  }
+
+  @Override
+  public ItemStack getRecipeOutput()
+  { return isDynamic() ? ItemStack.EMPTY : super.getRecipeOutput(); }
 
   //--------------------------------------------------------------------------------------------------------------------
 
@@ -89,17 +131,31 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
     {
       ResourceLocation resultTag = new ResourceLocation("libmc", "none"); // just no null
       String group = JSONUtils.getString(json, "group", "");
+      // Recipe ingredients
       NonNullList<Ingredient> list = NonNullList.create();
       JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
       for(int i = 0; i < ingredients.size(); ++i) {
         Ingredient ingredient = Ingredient.deserialize(ingredients.get(i));
         if (!ingredient.hasNoMatchingItems()) list.add(ingredient);
       }
-      if (list.isEmpty()) throw new JsonParseException("No ingredients for "+this.getRegistryName().getPath()+" recipe");
-      if (list.size() > MAX_WIDTH * MAX_HEIGHT) throw new JsonParseException("Too many ingredients for crafting_tool_shapeless recipe the max is " + (MAX_WIDTH * MAX_HEIGHT));
-      // Tag based item picking
+      if(list.isEmpty()) throw new JsonParseException("No ingredients for "+this.getRegistryName().getPath()+" recipe");
+      if(list.size() > MAX_WIDTH * MAX_HEIGHT) throw new JsonParseException("Too many ingredients for crafting_tool_shapeless recipe the max is " + (MAX_WIDTH * MAX_HEIGHT));
+      // Extended recipe aspects
+      CompoundNBT aspects_nbt = new CompoundNBT();
+      if(json.get("aspects")!=null) {
+        final JsonObject aspects = JSONUtils.getJsonObject(json, "aspects");
+        if(aspects.size() > 0) {
+          try {
+            aspects_nbt = JsonToNBT.getTagFromJson( (((new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()).toJson(aspects))) );
+          } catch(Exception ex) {
+            throw new JsonParseException(this.getRegistryName().getPath() + ": Failed to parse the 'aspects' object:" + ex.getMessage());
+          }
+        }
+      }
+      // Recipe result
       final JsonObject res = JSONUtils.getJsonObject(json, "result");
       if(res.has("tag")) {
+        // Tag based item picking
         ResourceLocation rl = new ResourceLocation(res.get("tag").getAsString());
         Tag<Item> tag = ItemTags.getCollection().getTagMap().getOrDefault(rl, null);
         if(tag==null) throw new JsonParseException(this.getRegistryName().getPath() + ": Result tag does not exist: #" + rl);
@@ -109,19 +165,8 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
         List<Item> lst = Lists.newArrayList(tag.getAllElements());
         res.addProperty("item", lst.get(0).getRegistryName().toString());
       }
-      ItemStack stack = ShapedRecipe.deserializeItem(res);
-      //--------------------
-      CompoundNBT nbt = new CompoundNBT();
-      if(json.get("aspects")==null) return new ExtendedShapelessRecipe(recipeId, group, stack, list, nbt, resultTag);
-      final JsonObject aspects = JSONUtils.getJsonObject(json, "aspects");
-      if(aspects.size() > 0) {
-        try {
-          nbt = JsonToNBT.getTagFromJson( (((new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()).toJson(aspects))) );
-        } catch(Exception ex) {
-          throw new JsonParseException(this.getRegistryName().getPath() + ": Failed to parse the 'aspects' object:" + ex.getMessage());
-        }
-      }
-      return new ExtendedShapelessRecipe(recipeId, group, stack, list, nbt, resultTag);
+      ItemStack result_stack = ShapedRecipe.deserializeItem(res);
+      return new ExtendedShapelessRecipe(recipeId, group, result_stack, list, aspects_nbt, resultTag);
     }
 
     @Override

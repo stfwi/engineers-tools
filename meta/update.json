@@ -4,9 +4,9 @@
     "1.12.2-recommended": "1.0.5",
     "1.12.2-latest": "1.0.5",
     "1.14.4-recommended": "1.0.6",
-    "1.14.4-latest": "1.0.7-b1",
+    "1.14.4-latest": "1.0.7-b2",
     "1.15.2-recommended": "1.0.6",
-    "1.15.2-latest": "1.0.7-b1"
+    "1.15.2-latest": "1.0.7-b2"
   },
   "1.12.2": {
     "1.0.5": "[R] Release based on v1.0.5-b2. Release-to-release changes: * REDIA tool tweaks (cannot hit own pets, villagers, etc). * Language updates.",
@@ -31,6 +31,7 @@
     "1.0.0-b1": "[A] Added ore crushing hammer."
   },
   "1.14.4": {
+    "1.0.7-b2": "[A] REDIA Tool inventory repair recipe added (repair with Diamonds).\n[A] REDIA Tool Efficiency/Fortune now added by over-repairing (adding REDIA coating layers).",
     "1.0.7-b1": "[A] Added Ore Crushing Hammer recipes for common ores, preferred output are IE grits. Provided easy data driven way to add other ore->dust recipes (issue #6).\n[A] Added Diving Air Capsule (automatic air refreshing).\n[M] REDIA Tool default Fortune curve tweaked (slightly nerfed).",
     "1.0.6": "[R] Release based on v1.0.6-b2. Release-to-release changes: * Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it. * Curios integration added. * Patchouli Manual added.",
     "1.0.6-b2": "[A] Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it.",
@@ -50,6 +51,7 @@
     "1.0.1-b1": "[A] Ported REDIA tool from 1.12.2.\n[A] Ported ore crushing hammer from 1.12.2.\n[A] Ported Coarse Iron/Gold Grit 1.12.2, currently not auto-disabled if other mods provide grits (OreDict replacement unclear yet)."
   },
   "1.15.2": {
+    "1.0.7-b2": "[A] REDIA Tool inventory repair recipe added (repair with Diamonds).\n[A] REDIA Tool Efficiency/Fortune now added by over-repairing (adding REDIA coating layers).",
     "1.0.7-b1": "[A] Added Ore Crushing Hammer recipes for common ores, preferred output are IE grits. Provided easy data driven way to add other ore->dust recipes (issue #6).\n[M] Updated to new MCP/Forge mappings.\n[M] REDIA Tool default Fortune curve tweaked (slightly nerfed).\n[A] Added Diving Air Capsule (automatic air refreshing).",
     "1.0.6": "[R] Release based on v1.0.6-b2. Release-to-release changes: * Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it. * Curios integration added. * Patchouli Manual added.",
     "1.0.6-b2": "[A] Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it.",

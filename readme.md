@@ -21,7 +21,7 @@ The mod has its focus on manual tools:
 
 - *REDIA Tool* (REal DIAmond coated tool): Simple manual multi tool combining
   pickaxe, axe, shovel, hoe, and shears. Reference efficiency: Diamond. Can be
-  repaired with diamonds in the crafting. Add Efficiency (and finally Fortune)
+  repaired with diamonds in the crafting grid. Add Efficiency (and finally Fortune)
   by over-repairing (means sharpening) the tool. These effects decay however
   with decreasing tool durability, so keeping in good shape like a proper Enginneer.
 

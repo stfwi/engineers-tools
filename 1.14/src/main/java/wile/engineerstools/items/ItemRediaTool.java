@@ -9,7 +9,9 @@
 package wile.engineerstools.items;
 
 import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.detail.ModAuxiliaries;
+import wile.engineerstools.detail.ModConfig;
+import wile.engineerstools.libmc.detail.Auxiliaries;
+import wile.engineerstools.libmc.detail.ExtendedShapelessRecipe;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.*;
 import net.minecraft.block.*;
@@ -24,11 +26,9 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.ZombiePigmanEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -36,27 +36,24 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import com.google.common.collect.ImmutableList;
-import wile.engineerstools.detail.ModConfig;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class ItemRediaTool extends AxeItem
+public class ItemRediaTool extends AxeItem implements ExtendedShapelessRecipe.IRepairableToolItem
 {
   private static int enchantability = ItemTier.DIAMOND.getEnchantability();
   private static int max_item_damage = 3000;
-  private static int initial_item_damage = 1500;
+  private static int initial_item_damage_percent = 100;
   private static boolean with_torch_placing = true;
   private static boolean with_hoeing = true;
   private static boolean with_tree_felling = true;
   private static boolean with_shearing = true;
   private static boolean with_safe_attacking = true;
-  private static double efficiency_decay[] = { 0.1, 0.8, 0.9, 1.0, 1.0, 1.3, 1.6, 1.8, 2.0, 2.0 }; // index: 0% .. 100% durability
+  private static int efficiency_decay[] = { 0, 0, 1, 1, 2, 2, 3, 3, 3, 4 }; // index: 0% .. 100% durability
   private static int fortune_decay[] = { 0, 0, 0, 0, 0, 0, 1, 1, 2, 3 }; // index: 0% .. 100% durability
-  private static int max_attack_cooldown_ms = 2500;
   private static float dirt_digging_speed = 14;
   private static float grass_digging_speed = 15;
-
 
   public static void on_config(boolean without_redia_torchplacing, boolean without_redia_hoeing,
                                boolean without_redia_tree_chopping, int durability, String efficiency_curve,
@@ -67,26 +64,24 @@ public class ItemRediaTool extends AxeItem
     with_hoeing = !without_redia_hoeing;
     with_tree_felling = !without_redia_tree_chopping;
     max_item_damage = MathHelper.clamp(durability, 750, 4000);
-    initial_item_damage = (max_item_damage * (100-MathHelper.clamp(redia_tool_initial_durability_percent, 1, 100))) / 100;
-    max_attack_cooldown_ms = MathHelper.clamp(attack_cooldown_ms, 10, 2500);
+    initial_item_damage_percent = MathHelper.clamp(redia_tool_initial_durability_percent, 1, 100);
     with_safe_attacking = !without_safe_attacking;
     ModEngineersTools.LOGGER.info("REDIA tool config: "
             + (with_torch_placing?"":"no-") + "torch-placing, "
             + (with_hoeing?"":"no-") + "hoeing, "
             + (with_tree_felling?"":"no-") + "tree-felling, "
             + (with_safe_attacking?"":"no-") + "safe-attack,"
-            + (" durability:"+max_item_damage + ", initial-durability:"+redia_tool_initial_durability_percent+"% (dmg="+initial_item_damage+")")
-            + (with_safe_attacking ? (", attack-prevention:" + max_attack_cooldown_ms + "ms") : "")
+            + (" durability:"+max_item_damage + ", initial-durability:"+redia_tool_initial_durability_percent)
     );
     // Efficiency
     {
-      String[] sc = efficiency_curve.replaceAll("^[,0-9]", "").split(",");
+      String[] sc = efficiency_curve.trim().replaceAll("[^,0-9]", "").split(",");
       if(sc.length > 0) {
-        ArrayList<Double> dc = new ArrayList<Double>();
+        ArrayList<Integer> dc = new ArrayList<Integer>();
         boolean parsing_ok = true;
         for(int i=0; (i<sc.length) && (i<efficiency_decay.length); ++i) {
           try {
-            dc.add(MathHelper.clamp(Double.parseDouble(sc[i]), 20, 250));
+            dc.add(MathHelper.clamp(Integer.parseInt(sc[i]), 0, 4));
           } catch(Exception ex) {
             ModEngineersTools.logger().error("Parsing efficiency curve failed (number at index "+i+")");
             parsing_ok = false;
@@ -100,24 +95,23 @@ public class ItemRediaTool extends AxeItem
             if(dc.get(i) < dc.get(i-1)) dc.set(i, dc.get(i-1));
           }
           while(dc.size() < efficiency_decay.length) dc.add(dc.get(dc.size()-1));
-          for(int i=0; i<dc.size(); ++i) efficiency_decay[i] = dc.get(i)/100;
         }
       }
       StringBuilder confout = new StringBuilder();
       confout.append("REDIA tool efficiency curve: [");
-      for(int i=0; i<efficiency_decay.length; ++i) confout.append(Math.round(efficiency_decay[i]*100)).append(",");
+      for(int i=0; i<efficiency_decay.length; ++i) confout.append(Math.round(efficiency_decay[i])).append(",");
       confout.deleteCharAt(confout.length()-1).append("]");
       ModEngineersTools.LOGGER.info(confout.toString());
     }
     // Fortune
     {
-      String[] sc = efficiency_curve.replaceAll("^[,0-9]", "").split(",");
+      String[] sc = fortune_curve.trim().replaceAll("[^,0-9]", "").split(",");
       if(sc.length > 0) {
         ArrayList<Integer> dc = new ArrayList<Integer>();
         boolean parsing_ok = true;
         for(int i=0; (i<sc.length) && (i<fortune_decay.length); ++i) {
           try {
-            dc.add(MathHelper.clamp(Integer.parseInt(sc[i]), 0, 3));
+            dc.add(MathHelper.clamp(Integer.parseInt(sc[i]), 0, 4));
           } catch(Exception ex) {
             ModEngineersTools.logger().error("Parsing fortune curve failed (number at index "+i+")");
             parsing_ok = false;
@@ -158,7 +152,7 @@ public class ItemRediaTool extends AxeItem
   @Override
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag)
-  { ModAuxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
+  { Auxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
 
   @Override
   @OnlyIn(Dist.CLIENT)
@@ -219,37 +213,32 @@ public class ItemRediaTool extends AxeItem
   public Collection<ItemGroup> getCreativeTabs()
   { return ModConfig.isOptedOut(this) ? (ModBlockItem.DISABLED_TABS) : (ModBlockItem.ENABLED_TABS); }
 
+  @Override
+  public float getDestroySpeed(ItemStack stack, BlockState state)
+  { return this.efficiency; }
+
   // -------------------------------------------------------------------------------------------------------------------
 
-  private void resetBlockHitCount(ItemStack stack)
-  {
-    CompoundNBT nbt = stack.getTag();
-    if(nbt==null) nbt = new CompoundNBT();
-    if(nbt.contains("lhbc")) nbt.putInt("lhbc", 0);
-    stack.setTag(nbt);
-  }
-
+  @Override
   public void onCreated(ItemStack stack, World world, PlayerEntity player)
-  { stack.setDamage(initial_item_damage); }
+  {
+    if((stack.getDamage()==0) && (stack.getTag()==null)) {
+      stack.setDamage(absoluteDmg(initial_item_damage_percent));
+    }
+  }
 
   @Override
   public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker)
-  {
-    resetBlockHitCount(stack);
-    return super.hitEntity(stack, target, attacker);  // already 2 item dmg, ok
-  }
+  { return super.hitEntity(stack, target, attacker); } // already 2 item dmg, ok
 
   @Override
   public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity)
   {
-    resetBlockHitCount(stack);
     if(!with_safe_attacking) return false;
     if(entity instanceof VillagerEntity) return true; // Cancel attacks for villagers.
     if((entity instanceof TameableEntity) && (((TameableEntity)entity).isTamed()) && (((TameableEntity)entity).isOwner(player))) return true; // Don't hit own pets
     if(((entity instanceof ZombiePigmanEntity)) && ((ZombiePigmanEntity)entity).getAttackTarget() == null) return true; // noone wants to accidentally step them on the foot.
     if(player.world.isRemote) return false; // only server side evaluation
-    if(isAttackingEnabled(stack)) return false;
-    if(entity instanceof CreatureEntity) return ((((CreatureEntity)entity).getAttackTarget() == null)); // don't attack bloody pigmen if they are not angry.
     return false; // allow attacking
   }
 
@@ -262,7 +251,6 @@ public class ItemRediaTool extends AxeItem
     final World world = context.getWorld();
     final BlockPos pos = context.getPos();
     final Vec3d hitvec = context.getHitVec();
-    resetBlockHitCount(player.getHeldItem(hand));
     ActionResultType rv;
     if(context.getPlayer().isSneaking()) {
       rv = tryPlantSnipping(player, world, pos, hand, facing, hitvec);
@@ -284,65 +272,13 @@ public class ItemRediaTool extends AxeItem
   }
 
   @Override
-  public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, PlayerEntity player)
-  {
-    if(!player.world.isRemote) setFortune(stack);
-    return false;
-  }
-
-  @Override
   public boolean onBlockDestroyed(ItemStack tool, World world, BlockState state, BlockPos pos, LivingEntity player)
   {
-    if(!world.isRemote) {
-      if(state.getBlockHardness(world, pos) != 0.0f) {
-        tool.damageItem(1, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
-      }
-      {
-        CompoundNBT nbt = tool.getTag();
-        if(nbt==null) nbt = new CompoundNBT();
-        nbt.putInt("lhbh", state.getBlock().hashCode());
-        nbt.putLong("atdisat", System.currentTimeMillis());
-        tool.setTag(nbt);
-      }
-      if(with_tree_felling && (player instanceof PlayerEntity) && (player.isSneaking())) {
-        if(tryTreeFelling(world, state, pos, player)) return true;
-      }
-    }
+    if(world.isRemote) return true;
+    if(state.getBlockHardness(world, pos) > 0.2f) tool.damageItem(1, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
+    if(with_tree_felling && (player instanceof PlayerEntity) && (player.isSneaking())) tryTreeFelling(world, state, pos, player);
+    decayEnchantments(tool);
     return true;
-  }
-
-  @Override
-  public float getDestroySpeed(ItemStack stack, BlockState state)
-  {
-    if(state.isIn(BlockTags.DIRT_LIKE) || state.isIn(BlockTags.SAND)) return dirt_digging_speed;
-    if(state.getBlock() == Blocks.GRASS) return grass_digging_speed;
-    double scaler = 1.0;
-    {
-      int hitcount_max = 2;
-      CompoundNBT nbt = stack.getTag();
-      if(nbt==null) nbt = new CompoundNBT();
-      int lasthitblock = nbt.getInt("lhbh");
-      if(lasthitblock != 0) { // this also means it's on the server (`onBlockDestroyed()`)
-        int hitcount = nbt.getInt("lhbc");
-        int hit_id = state.getBlock().hashCode();
-        if(lasthitblock==hit_id) {
-          hitcount = Math.min(hitcount+1, hitcount_max);
-        } else {
-          lasthitblock = hit_id;
-          hitcount = 0;
-        }
-        nbt.putInt("lhbh", lasthitblock);
-        nbt.putInt("lhbc", hitcount);
-        stack.setTag(nbt);
-        scaler = (hitcount<hitcount_max) ? 0.5 : 1.0;
-      }
-    }
-    return (float)(
-      ((double)efficiency) * scaler *
-        efficiency_decay[
-          (int)MathHelper.clamp(relativeDurability(stack) * efficiency_decay.length,0,efficiency_decay.length-1)
-          ]
-    );
   }
 
   @Override
@@ -350,39 +286,65 @@ public class ItemRediaTool extends AxeItem
   public boolean itemInteractionForEntity(ItemStack tool, PlayerEntity player, LivingEntity entity, Hand hand)
   {
     if(entity.world.isRemote) return false;
-    setFortune(player.getHeldItem(hand));
     return tryEntityShearing(tool, player, entity, hand);
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  // IRepairableToolItem -----------------------------------------------------------------------------------------------
 
-  private boolean isAttackingEnabled(ItemStack stack)
+  @Override
+  public ItemStack onShapelessRecipeRepaired(ItemStack stack, int previousDamage, int repairedDamage)
   {
-    CompoundNBT nbt = stack.getTag();
-    if((nbt==null) || (!nbt.contains("atdisat"))) return true;
-    if(Math.abs(System.currentTimeMillis()-nbt.getLong("atdisat")) < max_attack_cooldown_ms) return false;
-    nbt.remove("atdisat");
-    stack.setTag(nbt);
-    return true;
-  }
-
-  private void setFortune(ItemStack stack)
-  {
-    int fortune = durabilityDependentFortune(stack);
-    Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-    if(fortune > 0) {
-      enchantments.put(Enchantments.FORTUNE, fortune);
-    } else if(enchantments.containsKey(Enchantments.FORTUNE)) {
-      enchantments.remove(Enchantments.FORTUNE);
+    if(repairedDamage == 0) {
+      final Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+      final int max_efficiency = durabilityDependentEfficiency(stack);
+      final int act_efficiency = enchantments.getOrDefault(Enchantments.EFFICIENCY, 0);
+      final int max_fortune = durabilityDependentFortune(stack);
+      final int act_fortune = enchantments.getOrDefault(Enchantments.FORTUNE, 0);
+      if((act_fortune > 0) || (act_efficiency >= max_efficiency)) enchantments.put(Enchantments.FORTUNE, Math.min(act_fortune+2, max_fortune));
+      if(act_efficiency < max_efficiency) enchantments.put(Enchantments.EFFICIENCY, Math.min(act_efficiency+2, max_efficiency));
+      EnchantmentHelper.setEnchantments(enchantments, stack);
     }
-    EnchantmentHelper.setEnchantments(enchantments, stack);
+    return stack;
   }
+
+  // Efficiency / Furtune ----------------------------------------------------------------------------------------------
+
+  private int absoluteDmg(int dmg)
+  { return (max_item_damage * (100-MathHelper.clamp(dmg, 1, 100))) / 100; }
 
   private double relativeDurability(ItemStack stack)
   { return MathHelper.clamp(((double)(getMaxDamage(stack)-getDamage(stack)))/((double)getMaxDamage(stack)), 0,1.0); }
 
   private int durabilityDependentFortune(ItemStack stack)
   { return fortune_decay[MathHelper.clamp((int)(relativeDurability(stack)*fortune_decay.length), 0, fortune_decay.length-1)]; }
+
+  private int durabilityDependentEfficiency(ItemStack stack)
+  { return efficiency_decay[MathHelper.clamp((int)(relativeDurability(stack)*efficiency_decay.length), 0, efficiency_decay.length-1)]; }
+
+  private void decayEnchantments(ItemStack stack)
+  {
+    if(Math.random() > 0.17) return;
+    Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+    if(enchantments.containsKey(Enchantments.FORTUNE)) {
+      int fortune = durabilityDependentFortune(stack);
+      if(fortune <= 0) {
+        enchantments.remove(Enchantments.FORTUNE);
+      } else {
+        enchantments.put(Enchantments.FORTUNE, fortune);
+      }
+    }
+    if(enchantments.containsKey(Enchantments.EFFICIENCY)) {
+      int efficiency = durabilityDependentEfficiency(stack);
+      if(efficiency <= 0) {
+        enchantments.remove(Enchantments.EFFICIENCY);
+      } else {
+        enchantments.put(Enchantments.EFFICIENCY, efficiency);
+      }
+    }
+    EnchantmentHelper.setEnchantments(enchantments, stack);
+  }
+
+  // Multi tool features -----------------------------------------------------------------------------------------------
 
   @SuppressWarnings("deprecation")
   private boolean tryEntityShearing(ItemStack tool, PlayerEntity player, LivingEntity entity, Hand hand)
@@ -394,8 +356,8 @@ public class ItemRediaTool extends AxeItem
       List<ItemStack> drops = target.onSheared(tool, entity.world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, tool));
       Random rand = new java.util.Random();
       drops.forEach(d -> {
-        ItemEntity ent = entity.entityDropItem(d, 1.0F);
-        ent.setMotion(ent.getMotion().add((double)((rand.nextFloat() - rand.nextFloat()) * 0.1F), (double)(rand.nextFloat() * 0.05F), (double)((rand.nextFloat() - rand.nextFloat()) * 0.1F)));
+        ItemEntity ent = entity.entityDropItem(d, 1f);
+        ent.setMotion(ent.getMotion().add((double)((rand.nextFloat() - rand.nextFloat()) * 0.1f), (double)(rand.nextFloat() * 0.05f), (double)((rand.nextFloat() - rand.nextFloat()) * 0.1f)));
       });
       tool.damageItem(1, entity, e -> e.sendBreakAnimation(hand));
       player.world.playSound(null, pos, SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.BLOCKS, 0.8f, 1.1f);
@@ -473,9 +435,7 @@ public class ItemRediaTool extends AxeItem
     }
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
-  // Fun algorithm coding ,)
-  // -------------------------------------------------------------------------------------------------------------------
+  // Tree felling ------------------------------------------------------------------------------------------------------
 
   private boolean tryTreeFelling(World world, BlockState state, BlockPos pos, LivingEntity player)
   {

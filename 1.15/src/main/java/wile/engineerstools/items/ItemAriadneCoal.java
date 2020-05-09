@@ -26,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+
 public class ItemAriadneCoal extends ItemTools
 {
   public ItemAriadneCoal(Item.Properties properties)

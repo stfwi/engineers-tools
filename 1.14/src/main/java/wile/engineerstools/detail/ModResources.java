@@ -13,8 +13,8 @@ import wile.engineerstools.ModEngineersTools;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
-
 import java.util.LinkedList;
+
 
 public class ModResources
 {
@@ -34,4 +34,3 @@ public class ModResources
   public static final SoundEvent STIMPACK_INJECT_SOUND = createSoundEvent("stimpack_inject_sound");
 
 }
-

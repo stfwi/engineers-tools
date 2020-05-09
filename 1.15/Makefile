@@ -81,6 +81,3 @@ dist: sanatize dist-check clean-all init mod
 
 assets:
 	@echo "[1.15] Running asset generators ..."
-	@djs tasks.js create-slab-assets
-	@djs tasks.js create-half-slab-assets
-	@djs tasks.js assets

@@ -8,8 +8,6 @@
  */
 package wile.engineerstools.eapi.jei;
 
-import mezz.jei.api.constants.VanillaRecipeCategoryUid;
-import mezz.jei.api.registration.IRecipeTransferRegistration;
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.detail.ModConfig;
 import wile.engineerstools.ModContent;
@@ -27,10 +25,6 @@ public class JEIPlugin implements mezz.jei.api.IModPlugin
   @Override
   public ResourceLocation getPluginUid()
   { return new ResourceLocation(ModEngineersTools.MODID, "jei_plugin_uid"); }
-
-  @Override
-  public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration)
-  {}
 
   @Override
   public void onRuntimeAvailable(IJeiRuntime jeiRuntime)

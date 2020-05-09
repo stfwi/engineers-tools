@@ -13,6 +13,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+
 public class ItemCrushingHammer extends ItemTools
 {
   public ItemCrushingHammer(Item.Properties properties)

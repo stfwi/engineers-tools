@@ -13,7 +13,7 @@
  */
 package wile.engineerstools.blocks;
 
-import wile.engineerstools.detail.ModAuxiliaries;
+import wile.engineerstools.libmc.detail.Auxiliaries;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,6 +41,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+
 public class BlockAriadneCoal extends Block
 {
   public static final IntegerProperty ORIENTATION = IntegerProperty.create("orientation", 0, 15);
@@ -55,60 +56,60 @@ public class BlockAriadneCoal extends Block
     attachment_axis = axis;
     if(axis==Axis.X) {
       aabbs = new VoxelShape[] {
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 0.1,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(15.9,0,0, 16,16,16)),
       };
     } else if(axis==Axis.Y) {
       aabbs = new VoxelShape[] {
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0, 16,0.1,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,15.9,0, 16,16,16)),
       };
     } else {
       aabbs = new VoxelShape[] {
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
-        VoxelShapes.create(ModAuxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,0   , 16,16,0.1)),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
+        VoxelShapes.create(Auxiliaries.getPixeledAABB(0,0,15.9, 16,16,16 )),
       };
     }
   }
@@ -116,7 +117,7 @@ public class BlockAriadneCoal extends Block
   @Override
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag)
-  { ModAuxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
+  { Auxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
 
   @Override
   @OnlyIn(Dist.CLIENT)
@@ -132,11 +133,6 @@ public class BlockAriadneCoal extends Block
   @SuppressWarnings("deprecation")
   public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selectionContext)
   { return VoxelShapes.empty(); }
-
-//  @Override
-//  @SuppressWarnings("deprecation")
-//  public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos)
-//  { return aabbs[state.get(ORIENTATION)]; } // @todo check if empty works
 
   @Override
   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)

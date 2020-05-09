@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:redia_tool",
+      "requires": ["#forge:gems/diamond"]
+    }
+  ],
+  "type": "engineerstools:crafting_extended_shapeless",
+  "ingredients": [
+    { "tag" : "forge:gems/diamond" },
+    { "item": "engineerstools:redia_tool" }
+  ],
+  "result": {
+    "item": "engineerstools:redia_tool"
+  },
+  "aspects": {
+    "tool": "engineerstools:redia_tool",
+    "tool_repair": 65
+  }
+}

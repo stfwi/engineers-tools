@@ -8,7 +8,6 @@
  */
 package wile.engineerstools.items;
 
-import net.minecraft.util.math.MathHelper;
 import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.detail.ModResources;
 import wile.engineerstools.eapi.baubles.IBaubleItem;
@@ -17,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.potion.EffectInstance;

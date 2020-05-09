@@ -13,8 +13,8 @@ package wile.engineerstools.items;
 import net.minecraft.item.Item;
 
 
-public class ItemGrit extends ItemTools
+public class GritItem extends EtItem
 {
-  public ItemGrit(Item.Properties properties)
+  public GritItem(Item.Properties properties)
   { super(properties.maxStackSize(64)); }
 }

@@ -9,7 +9,7 @@
 package wile.engineerstools.eapi.jei;
 
 import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.detail.ModConfig;
+import wile.engineerstools.ModConfig;
 import wile.engineerstools.ModContent;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.runtime.IJeiRuntime;

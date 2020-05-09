@@ -22,10 +22,10 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -33,19 +33,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 
-public class ItemMusliBarPress extends ItemTools
+public class MusliBarPressItem extends EtItem
 {
   private static int max_seed_storage = 512;
-  private static int max_food_storage = 128 * ItemMusliBar.healing();
+  private static int max_food_storage = 128 * MusliBarItem.healing();
   private static int seeds_per_bar = 1;
-  private static int food_per_bar = ItemMusliBar.healing();
+  private static int food_per_bar = MusliBarItem.healing();
 
   public static void on_config(int seed_storage, int food_storage, int seeds_needed_per_bar, int food_value_needed_per_bar)
   {
-    final int healing = Math.max(1, ItemMusliBar.healing());
+    final int healing = Math.max(1, MusliBarItem.healing());
     max_seed_storage = MathHelper.clamp(seed_storage, 64, 1024);
     max_food_storage = MathHelper.clamp(food_storage, 64, 1024) * healing;
     seeds_per_bar = MathHelper.clamp(seeds_needed_per_bar, 1, 32);
@@ -57,7 +57,7 @@ public class ItemMusliBarPress extends ItemTools
   // Block
   //--------------------------------------------------------------------------------------------------------------------
 
-  public ItemMusliBarPress(Item.Properties properties)
+  public MusliBarPressItem(Item.Properties properties)
   { super(properties.maxStackSize(1)); }
 
   @Override
@@ -89,7 +89,7 @@ public class ItemMusliBarPress extends ItemTools
   private static boolean isValidFood(ItemStack stack)
   {
     if((!stack.getItem().isFood()) || (stack.getItem().getFood()==null)) return false;
-    if(stack.getItem() instanceof ItemMusliBar) return false;
+    if(stack.getItem() instanceof MusliBarItem) return false;
     if(stack.getItem().getTags().contains(new ResourceLocation(Auxiliaries.modid(), "musli_bar_food_blacklisted"))) return false;
     return true;
   }
@@ -184,7 +184,7 @@ public class ItemMusliBarPress extends ItemTools
       this.player_inventory = player_inventory;
       this.player = player;
       if((player_inventory.currentItem < 0) || (player_inventory.currentItem >= player_inventory.getSizeInventory())
-        || (!(player_inventory.getStackInSlot(player_inventory.currentItem).getItem() instanceof ItemMusliBarPress))
+        || (!(player_inventory.getStackInSlot(player_inventory.currentItem).getItem() instanceof MusliBarPressItem))
       ) {
         muslipress = new ItemStack(Items.AIR);
         return;
@@ -263,11 +263,10 @@ public class ItemMusliBarPress extends ItemTools
     @Override
     public void onServerPacketReceived(int windowId, CompoundNBT pkg_nbt)
     {
-      if(!(muslipress.getItem() instanceof ItemMusliBarPress)) return;
+      if(!(muslipress.getItem() instanceof MusliBarPressItem)) return;
       if(!pkg_nbt.contains("muslipress")) return;
       CompoundNBT nbt = pkg_nbt.getCompound("muslipress");
       read(nbt);
-      // System.out.println("seeds_stored:"+seeds_stored+", food_stored:"+food_stored+", output:" + inventory_.getStackInSlot(OUTPUT_SLOTNO).getCount());
     }
 
     // Specific --------------------------------------------------------------------------------------------------------
@@ -328,7 +327,6 @@ public class ItemMusliBarPress extends ItemTools
         }
       }
       // Sync client
-      // System.out.println("seeds_stored:"+seeds_stored+", food_stored:"+food_stored+", output_stored:"+inventory_.getStackInSlot(OUTPUT_SLOTNO).getCount());
       CompoundNBT nbt = write(new CompoundNBT());
       muslipress.setTag(nbt);
       player_inventory.markDirty();
@@ -365,7 +363,7 @@ public class ItemMusliBarPress extends ItemTools
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
     {
-      RenderSystem.color4f(1f, 1f, 1f, 1f);
+      GlStateManager.color4f(1f, 1f, 1f, 1f);
       getMinecraft().getTextureManager().bindTexture(BACKGROUND_IMAGE);
       final int x0=getGuiLeft(), y0=getGuiTop(), w=getXSize(), h=getYSize();
       blit(x0, y0, 0, 0, w, h);

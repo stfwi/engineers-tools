@@ -22,7 +22,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.world.World;
 
 
-public class ItemDivingCapsule extends ItemTools implements IBaubleItem
+public class DivingCapsuleItem extends EtItem implements IBaubleItem
 {
   private static int item_damage = 10;
   private static int trigger_threshold = 3;
@@ -38,7 +38,7 @@ public class ItemDivingCapsule extends ItemTools implements IBaubleItem
 
   // -------------------------------------------------------------------------------------------------------------------
 
-  public ItemDivingCapsule(Item.Properties properties)
+  public DivingCapsuleItem(Item.Properties properties)
   { super(properties.maxStackSize(1).defaultMaxDamage(100).setNoRepair()); }
 
   @Override

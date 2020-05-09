@@ -14,9 +14,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 
-public class ItemCrushingHammer extends ItemTools
+public class CrushingHammerItem extends EtItem
 {
-  public ItemCrushingHammer(Item.Properties properties)
+  public CrushingHammerItem(Item.Properties properties)
   { super(properties
     .maxStackSize(1)
     .defaultMaxDamage(640)

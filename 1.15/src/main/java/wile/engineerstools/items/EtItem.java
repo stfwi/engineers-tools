@@ -8,8 +8,7 @@
  */
 package wile.engineerstools.items;
 
-import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.detail.ModConfig;
+import wile.engineerstools.ModConfig;
 import wile.engineerstools.libmc.detail.Auxiliaries;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -19,14 +18,15 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import wile.engineerstools.ModEngineersTools;
+
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-
-public class ItemTools extends Item
+public class EtItem extends Item
 {
-  public ItemTools(Item.Properties properties)
+  public EtItem(Item.Properties properties)
   { super(properties.group(ModEngineersTools.ITEMGROUP)); }
 
   @Override

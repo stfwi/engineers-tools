@@ -7,10 +7,10 @@
  * Main class for module settings. Handles reading and
  * saving the config file.
  */
-package wile.engineerstools.detail;
+package wile.engineerstools;
 
 import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.blocks.BlockAriadneCoal;
+import wile.engineerstools.blocks.AriadneCoalBlock;
 import wile.engineerstools.items.*;
 import wile.engineerstools.libmc.detail.Auxiliaries;
 import net.minecraft.block.Block;
@@ -272,15 +272,15 @@ public class ModConfig
   public static final boolean isOptedOut(final @Nullable Item item, boolean with_log_details)
   {
     if(item == null) return true;
-    if((item instanceof ModBlockItem) && (((ModBlockItem)item).getBlock() instanceof BlockAriadneCoal)) return true;
+    if((item instanceof ModBlockItem) && (((ModBlockItem)item).getBlock() instanceof AriadneCoalBlock)) return true;
     if(COMMON == null) return false;
-    if(COMMON.without_crushing_hammer.get() && (item instanceof ItemCrushingHammer)) return true;
-    if(COMMON.without_redia_tool.get() && (item instanceof ItemRediaTool)) return true;
-    if(COMMON.without_ariadne_coal.get() && (item instanceof ItemAriadneCoal)) return true;
-    if(COMMON.without_diving_capsule.get() && (item instanceof ItemDivingCapsule)) return true;
-    if(COMMON.without_stimpack.get() && (item instanceof ItemStimPack)) return true;
-    if(COMMON.without_sleeping_bag.get() && (item instanceof ItemSleepingBag)) return true;
-    if(COMMON.without_musli_bar.get() && ((item instanceof ItemMusliBar)||(item instanceof ItemMusliBarPress))) return true;
+    if(COMMON.without_crushing_hammer.get() && (item instanceof CrushingHammerItem)) return true;
+    if(COMMON.without_redia_tool.get() && (item instanceof RediaToolItem)) return true;
+    if(COMMON.without_ariadne_coal.get() && (item instanceof AriadneCoalItem)) return true;
+    if(COMMON.without_diving_capsule.get() && (item instanceof DivingCapsuleItem)) return true;
+    if(COMMON.without_stimpack.get() && (item instanceof AutoStimPackItem)) return true;
+    if(COMMON.without_sleeping_bag.get() && (item instanceof SleepingBagItem)) return true;
+    if(COMMON.without_musli_bar.get() && ((item instanceof MusliBarItem)||(item instanceof MusliBarPressItem))) return true;
     try {
       final String rn = item.getRegistryName().getPath();
       // Force-include/exclude pattern matching
@@ -347,7 +347,7 @@ public class ModConfig
     if(COMMON.redia_tool_efficiency_curve.get().equals("10,60,90,100,120,140,170,200,220,230")) {
       COMMON.redia_tool_efficiency_curve.set("0,1,1,2,2,3,3,3,3,4");
     }
-    ItemRediaTool.on_config(
+    RediaToolItem.on_config(
       false,
       false,
       false,
@@ -358,21 +358,21 @@ public class ModConfig
       COMMON.redia_tool_attack_cooldown_ms.get(),
       COMMON.without_safe_attacking.get()
     );
-    ItemStimPack.on_config(
+    AutoStimPackItem.on_config(
       2,
       3,
       3
     );
-    ItemDivingCapsule.on_config(
+    DivingCapsuleItem.on_config(
       10,
       3,
       7
     );
-    ItemMusliBar.on_config(
+    MusliBarItem.on_config(
       6,
       1.2
     );
-    ItemMusliBarPress.on_config(
+    MusliBarPressItem.on_config(
       512,
       128,
       1,

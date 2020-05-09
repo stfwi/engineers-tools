@@ -42,14 +42,14 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class BlockAriadneCoal extends Block
+public class AriadneCoalBlock extends Block
 {
   public static final IntegerProperty ORIENTATION = IntegerProperty.create("orientation", 0, 15);
 
   final VoxelShape aabbs[];
   final Direction.Axis attachment_axis;
 
-  public BlockAriadneCoal(Block.Properties properties, Direction.Axis axis)
+  public AriadneCoalBlock(Block.Properties properties, Direction.Axis axis)
   {
     super(properties);
     setDefaultState(this.getStateContainer().getBaseState().with(ORIENTATION, 0));

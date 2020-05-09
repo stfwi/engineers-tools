@@ -8,13 +8,13 @@
  */
 package wile.engineerstools.items;
 
+import wile.engineerstools.libmc.detail.Auxiliaries;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
-import wile.engineerstools.libmc.detail.Auxiliaries;
 
 
-public class ItemMusliBar extends ItemTools
+public class MusliBarItem extends EtItem
 {
   private static int healing_ = 6;
   private static float saturation_ = 1.2f;
@@ -34,7 +34,7 @@ public class ItemMusliBar extends ItemTools
   public static float saturation()
   { return saturation_; }
 
-  public ItemMusliBar(Item.Properties properties)
+  public MusliBarItem(Item.Properties properties)
   { super(properties.maxStackSize(64).food(musli_bar_food)); }
 
   @Override

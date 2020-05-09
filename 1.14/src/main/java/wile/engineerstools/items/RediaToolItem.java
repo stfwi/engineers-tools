@@ -9,7 +9,7 @@
 package wile.engineerstools.items;
 
 import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.detail.ModConfig;
+import wile.engineerstools.ModConfig;
 import wile.engineerstools.libmc.detail.Auxiliaries;
 import wile.engineerstools.libmc.detail.ExtendedShapelessRecipe;
 import net.minecraft.tags.BlockTags;
@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableList;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class ItemRediaTool extends AxeItem implements ExtendedShapelessRecipe.IRepairableToolItem
+public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IRepairableToolItem
 {
   private static int enchantability = ItemTier.DIAMOND.getEnchantability();
   private static int max_item_damage = 3000;
@@ -137,7 +137,7 @@ public class ItemRediaTool extends AxeItem implements ExtendedShapelessRecipe.IR
 
   // -------------------------------------------------------------------------------------------------------------------
 
-  public ItemRediaTool(Item.Properties properties)
+  public RediaToolItem(Item.Properties properties)
   {
     super(ItemTier.DIAMOND, 5, -3, properties
       .addToolType(ToolType.AXE, ItemTier.DIAMOND.getHarvestLevel())

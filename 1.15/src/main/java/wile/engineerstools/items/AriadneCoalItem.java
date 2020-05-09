@@ -11,7 +11,7 @@
 package wile.engineerstools.items;
 
 import wile.engineerstools.ModContent;
-import wile.engineerstools.blocks.BlockAriadneCoal;
+import wile.engineerstools.blocks.AriadneCoalBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.*;
@@ -27,9 +27,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 
-public class ItemAriadneCoal extends ItemTools
+public class AriadneCoalItem extends EtItem
 {
-  public ItemAriadneCoal(Item.Properties properties)
+  public AriadneCoalItem(Item.Properties properties)
   { super(properties
     .maxStackSize(1)
     .defaultMaxDamage(100)
@@ -68,7 +68,7 @@ public class ItemAriadneCoal extends ItemTools
     final World world = context.getWorld();
     final BlockState state = world.getBlockState(pos);
     final BlockPos markpos = pos.offset(facing);
-    if(((!world.isAirBlock(markpos)) && (!(state.getBlock() instanceof BlockAriadneCoal))) || (stack.getItem()!=this)) return ActionResultType.PASS;
+    if(((!world.isAirBlock(markpos)) && (!(state.getBlock() instanceof AriadneCoalBlock))) || (stack.getItem()!=this)) return ActionResultType.PASS;
     if(!Block.doesSideFillSquare(state.getCollisionShape(world, pos, ISelectionContext.forEntity(player)), facing)) return ActionResultType.PASS;
     final double hitX = context.getHitVec().getX() - pos.getX();
     final double hitY = context.getHitVec().getY() - pos.getY();
@@ -89,7 +89,7 @@ public class ItemAriadneCoal extends ItemTools
       case Y:  setstate = ModContent.ARIADNE_COAL_Y.getDefaultState(); break;
       default: setstate = ModContent.ARIADNE_COAL_Z.getDefaultState(); break;
     }
-    if(world.setBlockState(markpos, setstate.with(BlockAriadneCoal.ORIENTATION, orientation), 1|2)) {
+    if(world.setBlockState(markpos, setstate.with(AriadneCoalBlock.ORIENTATION, orientation), 1|2)) {
       stack.setDamage(stack.getDamage()+1);
       if(stack.getDamage() >= stack.getMaxDamage()) {
         player.setHeldItem(hand, ItemStack.EMPTY);

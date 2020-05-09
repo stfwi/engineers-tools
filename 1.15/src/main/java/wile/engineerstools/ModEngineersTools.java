@@ -119,10 +119,10 @@ public class ModEngineersTools
     }
 
     public static final void onSleepingLocationCheckEvent(net.minecraftforge.event.entity.player.SleepingLocationCheckEvent event)
-    { ItemSleepingBag.onSleepingLocationCheckEvent(event); }
+    { SleepingBagItem.onSleepingLocationCheckEvent(event); }
 
     public static final void onPlayerWakeUpEvent(net.minecraftforge.event.entity.player.PlayerWakeUpEvent event)
-    { ItemSleepingBag.onPlayerWakeUpEvent(event); }
+    { SleepingBagItem.onPlayerWakeUpEvent(event); }
 
   }
 

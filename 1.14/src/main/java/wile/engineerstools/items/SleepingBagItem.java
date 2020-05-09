@@ -26,11 +26,11 @@ import com.mojang.datafixers.util.Either;
 import java.util.Optional;
 
 
-public class ItemSleepingBag extends ItemTools
+public class SleepingBagItem extends EtItem
 {
   private final boolean respawn_at_bed = false;
 
-  public ItemSleepingBag(Item.Properties properties)
+  public SleepingBagItem(Item.Properties properties)
   { super(properties.maxStackSize(1).defaultMaxDamage(4096).setNoRepair()); }
 
   @Override
@@ -66,7 +66,7 @@ public class ItemSleepingBag extends ItemTools
     if(nbt.contains("ETOriginalBedLocation")) { pos = BlockPos.fromLong(nbt.getLong("ETOriginalBedLocation")); nbt.remove("ETOriginalBedLocation"); }
     if(nbt.contains("ETOriginalBedDimension")) { dim = DimensionType.getById(nbt.getInt("ETOriginalBedDimension")); nbt.remove("ETOriginalBedDimension"); }
     if((pos == null) || (dim != player.dimension)) return;
-    if(!((ItemSleepingBag)player.getHeldItem(Hand.MAIN_HAND).getItem()).respawn_at_bed) player.setSpawnPoint(pos, true, dim);
+    if(!((SleepingBagItem)player.getHeldItem(Hand.MAIN_HAND).getItem()).respawn_at_bed) player.setSpawnPoint(pos, true, dim);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ public class ItemSleepingBag extends ItemTools
   {
     if(!(event.getEntity() instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity)event.getEntity();
-    if((player.world.isRemote) || (!(player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof ItemSleepingBag))) return;
+    if((player.world.isRemote) || (!(player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SleepingBagItem))) return;
     event.setResult(net.minecraftforge.event.entity.player.SleepingLocationCheckEvent.Result.ALLOW);
   }
 
@@ -123,7 +123,7 @@ public class ItemSleepingBag extends ItemTools
   {
     if(!(event.getEntity() instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity)event.getEntity();
-    if((player.world.isRemote) || ((!(player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof ItemSleepingBag)))) return;
+    if((player.world.isRemote) || ((!(player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SleepingBagItem)))) return;
     CompoundNBT nbt = player.getPersistentData();
     nbt.putInt("ETCorrectBedLocation", 1);
   }

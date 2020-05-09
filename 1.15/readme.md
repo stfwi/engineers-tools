@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+    - v1.0.8-b1   [A] Added Material Box (simple item storage box with some tweaks).
+                  [M] Refractoring under the hood to new naming conventions.
+
                   -------------------------------------------------------------------
     - v1.0.7      [R] Release based on v1.0.7-b2. Release-to-release changes:
                       * Common tag based ore duping recipes added for the Crushing Hammmer.

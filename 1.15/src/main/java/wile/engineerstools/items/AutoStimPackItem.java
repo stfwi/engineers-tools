@@ -16,16 +16,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 
-public class ItemStimPack extends ItemTools implements IBaubleItem
+public class AutoStimPackItem extends EtItem implements IBaubleItem
 {
   private static int max_uses = 2;
   private static float trigger_threshold_health = 3;
@@ -41,7 +41,7 @@ public class ItemStimPack extends ItemTools implements IBaubleItem
 
   // -------------------------------------------------------------------------------------------------------------------
 
-  public ItemStimPack(Item.Properties properties)
+  public AutoStimPackItem(Item.Properties properties)
   { super(properties.maxStackSize(1).defaultMaxDamage(2).setNoRepair()); }
 
   @Override

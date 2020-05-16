@@ -28,6 +28,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -143,7 +144,7 @@ public class Inventories
       for(int i = start_slot; i < end_slot; ++i) {
         final int sno = reverse ? (end_slot-1-i) : (i);
         final ItemStack stack = inventory.getStackInSlot(sno);
-        if(stack.isEmpty() || (!inventory.isItemValidForSlot(sno, mvstack))) {
+        if(stack.isEmpty()) {
           empties[sno] = true;
         } else if(areItemStacksIdentical(stack, mvstack)) {
           matches[sno] = true;
@@ -153,7 +154,7 @@ public class Inventories
       // first iteration: fillup existing stacks
       for(int i = start_slot; i < end_slot; ++i) {
         final int sno = reverse ? (end_slot-1-i) : (i);
-        if(empties[sno] || !matches[sno]) continue;
+        if((empties[sno]) || (!matches[sno])) continue;
         final ItemStack stack = inventory.getStackInSlot(sno);
         int nmax = Math.min(limit_left, stack.getMaxStackSize() - stack.getCount());
         if(mvstack.getCount() <= nmax) {
@@ -185,7 +186,7 @@ public class Inventories
           }
           for(i=insert_start;i < insert_end; ++i) {
             final int sno = reverse ? (end_slot-1-i) : (i);
-            if(!empties[sno]) continue;
+            if((!empties[sno]) || (!inventory.isItemValidForSlot(sno, mvstack))) continue;
             int nmax = Math.min(limit_left, mvstack.getCount());
             ItemStack moved = mvstack.copy();
             moved.setCount(nmax);
@@ -200,7 +201,7 @@ public class Inventories
             final int sno = reverse ? (end_slot-1-i) : (i);
             if(!matches[sno]) continue;
             int ii = (empties[sno-1]) ? (sno-1) : (empties[sno+1] ? (sno+1) : -1);
-            if(ii >= 0) {
+            if((ii >= 0) && (inventory.isItemValidForSlot(ii, mvstack))) {
               int nmax = Math.min(limit_left, mvstack.getCount());
               ItemStack moved = mvstack.copy();
               moved.setCount(nmax);
@@ -214,7 +215,7 @@ public class Inventories
       // third iteration: use any empty slots
       for(int i = start_slot; i < end_slot; ++i) {
         final int sno = reverse ? (end_slot-1-i) : (i);
-        if(!empties[sno]) continue;
+        if((!empties[sno]) || (!inventory.isItemValidForSlot(sno, mvstack))) continue;
         int nmax = Math.min(limit_left, mvstack.getCount());
         ItemStack placed = mvstack.copy();
         placed.setCount(nmax);
@@ -246,7 +247,7 @@ public class Inventories
           matches.add(stack);
         }
       }
-      matches.sort((a,b) -> Integer.compare(a.getCount(), b.getCount()));
+      matches.sort(Comparator.comparingInt(ItemStack::getCount));
       if(matches.isEmpty()) return ItemStack.EMPTY;
       int n_left = request_stack.getCount();
       ItemStack fetched_stack = matches.get(0).split(n_left);

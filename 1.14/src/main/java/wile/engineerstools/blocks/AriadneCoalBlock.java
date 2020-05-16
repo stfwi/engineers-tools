@@ -13,11 +13,13 @@
  */
 package wile.engineerstools.blocks;
 
+import wile.engineerstools.ModContent;
 import wile.engineerstools.libmc.detail.Auxiliaries;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.item.Item;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.IntegerProperty;
@@ -113,6 +115,10 @@ public class AriadneCoalBlock extends Block
       };
     }
   }
+
+  @Override
+  public Item asItem()
+  { return ModContent.ARIADNE_COAL; }
 
   @Override
   @OnlyIn(Dist.CLIENT)

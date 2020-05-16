@@ -176,8 +176,7 @@ public class MaterialBoxItem extends EtItem
   {
     final boolean is_filled = ((stack.getCount() == 1) && (stack.hasTag()));
     ItemEntity e = new MaterialBoxEntity(world, oe.posX,oe.posY,oe.posZ, stack);
-    if(oe instanceof ItemEntity)
-      e.setDefaultPickupDelay();
+    if(oe instanceof ItemEntity) e.setDefaultPickupDelay();
     e.setSilent(true);
     e.setMotion(oe.getMotion());
     if(oe instanceof ItemEntity) { // you never know who hooks into that ...
@@ -205,7 +204,10 @@ public class MaterialBoxItem extends EtItem
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public static class StorageSlot extends Slot
+    private static boolean is_filled_box(ItemStack stack)
+    { return (stack.getItem() instanceof MaterialBoxItem) && (stack.hasTag()); }
+
+    private static class StorageSlot extends Slot
     {
       private final MaterialBoxContainer container;
 
@@ -214,7 +216,7 @@ public class MaterialBoxItem extends EtItem
 
       @Override
       public boolean isItemValid(ItemStack stack)
-      { return !(stack.getItem() instanceof MaterialBoxItem); }
+      { return !is_filled_box(stack); }
 
       @Override
       public void onSlotChanged()
@@ -224,7 +226,22 @@ public class MaterialBoxItem extends EtItem
       }
     }
 
-    public static class ReadonlySlot extends Slot
+    private static class PlayerSlot extends Slot
+    {
+      private final MaterialBoxContainer container;
+
+      public PlayerSlot(MaterialBoxContainer container, IInventory inventory, int index, int xpos, int ypos)
+      { super(inventory, index, xpos, ypos); this.container = container; }
+
+      @Override
+      public void onSlotChanged()
+      {
+        inventory.markDirty();
+        container.onSlotsChanged();
+      }
+    }
+
+    private static class ReadonlySlot extends Slot
     {
       public ReadonlySlot(IInventory inventory, int index, int xpos, int ypos)
       { super(inventory, index, xpos, ypos); }
@@ -236,15 +253,25 @@ public class MaterialBoxItem extends EtItem
       public ItemStack decrStackSize(int amount)
       { return ItemStack.EMPTY; }
 
-      public boolean canTakeStack(PlayerEntity playerIn)
+      public boolean canTakeStack(PlayerEntity player)
       { return false; }
+    }
+
+    private static class StorageInventory extends Inventory
+    {
+      public StorageInventory(int nslots)
+      { super(nslots); }
+
+      @Override
+      public boolean isItemValidForSlot(int index, ItemStack stack)
+      { return !is_filled_box(stack); }
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
     private PlayerEntity player;
     private PlayerInventory player_inventory;
-    private Inventory inventory_ = new Inventory(NUM_OF_STORGE_SLOTS);
+    private StorageInventory inventory_ = new StorageInventory(NUM_OF_STORGE_SLOTS);
     private final ItemStack bag;
     private final SlotRange player_slot_range;
     private final SlotRange storage_slot_range;
@@ -281,7 +308,7 @@ public class MaterialBoxItem extends EtItem
       for(int x=0; x<9; ++x) {
         int slot = x;
         if(player_inventory.currentItem != slot) {
-          addSlot(new StorageSlot(this, player_inventory, slot, 28+x*18, 183)); // player slots: 0..8
+          addSlot(new PlayerSlot(this, player_inventory, slot, 28+x*18, 183)); // player slots: 0..8
         } else {
           addSlot(bag_slot_ = new ReadonlySlot(player_inventory, slot, 28+x*18, 183));
         }
@@ -290,7 +317,7 @@ public class MaterialBoxItem extends EtItem
         for(int x=0; x<9; ++x) {
           int slot = x+y*9+9;
           if(player_inventory.currentItem != slot) {
-            addSlot(new StorageSlot(this, player_inventory, slot, 28+x*18, 125+y*18)); // player slots: 9..35
+            addSlot(new PlayerSlot(this, player_inventory, slot, 28+x*18, 125+y*18)); // player slots: 9..35
           } else {
             addSlot(bag_slot_ = new ReadonlySlot(player_inventory, slot, 28+x*18, 125+y*18));
           }

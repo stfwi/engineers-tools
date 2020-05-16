@@ -10,6 +10,10 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+    - v1.0.8-b2   [!] Mod config moved from 'common' to 'server' config, in case
+                      of applied setting please double check.
+                  [F] Config reload update fixed (issue #10, thx armoredfury).
+
     - v1.0.8-b1   [A] Added Material Box (simple item storage box with some tweaks).
                   [M] Refractoring under the hood to new naming conventions.
 

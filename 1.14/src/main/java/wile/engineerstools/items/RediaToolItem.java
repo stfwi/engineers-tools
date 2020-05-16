@@ -58,7 +58,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   public static void on_config(boolean without_redia_torchplacing, boolean without_redia_hoeing,
                                boolean without_redia_tree_chopping, int durability, String efficiency_curve,
                                String fortune_curve, int redia_tool_initial_durability_percent,
-                               int attack_cooldown_ms, boolean without_safe_attacking)
+                               boolean without_safe_attacking)
   {
     boolean with_torch_placing = !without_redia_torchplacing;
     with_hoeing = !without_redia_hoeing;
@@ -95,6 +95,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
             if(dc.get(i) < dc.get(i-1)) dc.set(i, dc.get(i-1));
           }
           while(dc.size() < efficiency_decay.length) dc.add(dc.get(dc.size()-1));
+          for(int i=0; i<dc.size(); ++i) efficiency_decay[i] = dc.get(i);
         }
       }
       StringBuilder confout = new StringBuilder();
@@ -125,6 +126,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
             if(dc.get(i) < dc.get(i-1)) dc.set(i, dc.get(i-1));
           }
           while(dc.size() < fortune_decay.length) dc.add(dc.get(dc.size()-1));
+          for(int i=0; i<dc.size(); ++i) fortune_decay[i] = dc.get(i);
         }
       }
       StringBuilder confout = new StringBuilder();
@@ -222,9 +224,9 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   @Override
   public void onCreated(ItemStack stack, World world, PlayerEntity player)
   {
-    if((stack.getDamage()==0) && (stack.getTag()==null)) {
-      stack.setDamage(absoluteDmg(initial_item_damage_percent));
-    }
+    if(stack.getDamage()!=0) return;
+    if(stack.hasTag() && stack.getTag().keySet().stream().anyMatch(e->!e.equals("Damage"))) return;
+    stack.setDamage(absoluteDmg(initial_item_damage_percent));
   }
 
   @Override

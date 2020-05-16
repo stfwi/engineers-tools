@@ -31,8 +31,8 @@ minecraft {
   runs {
     client {
       workingDirectory project.file('run')
-      property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-      property 'forge.logging.console.level', 'debug'
+      property 'forge.logging.markers', '' // SCAN,REGISTRIES,REGISTRYDUMP
+      property 'forge.logging.console.level', 'info'
       mods {
         engineerstools {
           source sourceSets.main
@@ -41,8 +41,8 @@ minecraft {
     }
     server {
       workingDirectory project.file('run')
-      property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-      property 'forge.logging.console.level', 'debug'
+      property 'forge.logging.markers', '' // SCAN,REGISTRIES,REGISTRYDUMP
+      property 'forge.logging.console.level', 'info'
       mods {
         engineerstools {
           source sourceSets.main
@@ -89,7 +89,7 @@ jar {
 }
 
 def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) { type 'jar'; builtBy 'reobfJar'; }
+def reobfArtifact = artifacts.add('default', reobfFile) { type 'jar'; builtBy 'reobfJar' }
 
 def signing = { ->
   def sp = new Properties()
@@ -100,7 +100,7 @@ def signing = { ->
   sp.fingerprint_sha1 = project.fingerprint_sha1
   if(file("signing.properties").exists()) file("signing.properties").withInputStream { sp.load(it) }
   return sp
-}();
+}()
 task signJar(type: SignJar, dependsOn: jar) {
   onlyIf { signing.hasProperty("keystore_file") }
   if(signing.hasProperty("keystore_file")) {

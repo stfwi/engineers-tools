@@ -107,11 +107,11 @@ public class ModContent
     default_item_properties().maxStackSize(1).rarity(Rarity.UNCOMMON)
   ).setRegistryName(MODID, "sleeping_bag")));
 
-  public static final EtItem IRON_GRIT = (EtItem)((new EtItem(
+  public static final GritItem IRON_GRIT = (GritItem)((new GritItem(
     default_item_properties()
   ).setRegistryName(MODID, "iron_grit")));
 
-  public static final EtItem GOLD_GRIT = (EtItem)((new EtItem(
+  public static final GritItem GOLD_GRIT = (GritItem)((new GritItem(
     default_item_properties()
   ).setRegistryName(MODID, "gold_grit")));
 

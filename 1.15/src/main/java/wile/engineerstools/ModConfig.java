@@ -9,10 +9,8 @@
  */
 package wile.engineerstools;
 
-import wile.engineerstools.ModEngineersTools;
 import wile.engineerstools.blocks.*;
 import wile.engineerstools.items.*;
-import wile.engineerstools.libmc.detail.Auxiliaries;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 public class ModConfig
@@ -51,8 +50,8 @@ public class ModConfig
   public static void onLoad(final net.minecraftforge.fml.config.ModConfig config)
   {
     try {
+      LOGGER.info("Loading config file {}", config.getFileName());
       apply();
-      LOGGER.info("Loaded config file {}", config.getFileName());
     } catch(Exception ex) {
       LOGGER.error("Failed to apply config file data {}", config.getFileName());
     }
@@ -60,7 +59,12 @@ public class ModConfig
 
   public static void onFileChange(final net.minecraftforge.fml.config.ModConfig config)
   {
-    LOGGER.info("Config file changed {}", config.getFileName());
+    try {
+      LOGGER.info("Config file changed {}", config.getFileName());
+      apply();
+    } catch(Exception ex) {
+      LOGGER.error("Failed to apply config file data {}", config.getFileName());
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -80,19 +84,19 @@ public class ModConfig
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  public static class ServerConfig
+  public static class CommonConfig
   {
-    ServerConfig(ForgeConfigSpec.Builder builder)
+    CommonConfig(ForgeConfigSpec.Builder builder)
     {
-      builder.comment("Settings not loaded on clients.")
-        .push("server");
+      builder.comment("!Server side config had to be moved to engineerstools-server.toml in the 'serverconfig' directory of the game!")
+        .push("common");
       builder.pop();
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  public static class CommonConfig
+  public static class ServerConfig
   {
     // Optout
     public final ForgeConfigSpec.ConfigValue<String> pattern_excludes;
@@ -104,19 +108,19 @@ public class ModConfig
     public final ForgeConfigSpec.BooleanValue without_ariadne_coal;
     public final ForgeConfigSpec.BooleanValue without_sleeping_bag;
     public final ForgeConfigSpec.BooleanValue without_musli_bar;
+    public final ForgeConfigSpec.BooleanValue without_material_box;
     // Tweaks
     public final ForgeConfigSpec.IntValue redia_tool_durability;
     public final ForgeConfigSpec.IntValue redia_tool_initial_durability_percent;
     public final ForgeConfigSpec.ConfigValue<String> redia_tool_efficiency_curve;
     public final ForgeConfigSpec.ConfigValue<String> redia_tool_furtune_curve;
     public final ForgeConfigSpec.BooleanValue without_safe_attacking;
-    public final ForgeConfigSpec.IntValue redia_tool_attack_cooldown_ms;
     // Misc
     public final ForgeConfigSpec.BooleanValue with_experimental;
 
-    CommonConfig(ForgeConfigSpec.Builder builder)
+    ServerConfig(ForgeConfigSpec.Builder builder)
     {
-      builder.comment("Settings affecting the logical server side, but are also configurable in single player.")
+      builder.comment("Settings affecting the logical server side, also valid for single player games.")
         .push("server");
       // --- OPTOUTS ------------------------------------------------------------
       {
@@ -167,6 +171,10 @@ public class ModConfig
           .translation(MODID + ".config.without_musli_bar")
           .comment("Completely disable the Muslee Bar and Muslee Bar Press.")
           .define("without_musli_bar", false);
+        without_material_box = builder
+          .translation(MODID + ".config.without_material_box")
+          .comment("Completely disable the Material Box.")
+          .define("without_material_box", false);
         builder.pop();
       }
       // --- MISC ---------------------------------------------------------------
@@ -216,11 +224,6 @@ public class ModConfig
           .translation(MODID + ".config.without_safe_attacking")
           .comment("Disable the REDIA tool feature to prevent accidentally hitting own pets, villagers, or bloody zombie pigmen.")
           .define("without_safe_attacking", false);
-        redia_tool_attack_cooldown_ms = builder
-          .translation(MODID + ".config.redia_tool_attack_cooldown_ms")
-          .comment("If safe attacking is enabled, this defines in milliseconds how long you cannot accidentally hit passive " +
-            "non-agressive mobs when breaking blocks. The time does not affect preventing to hit villagers, own pets, or zombie pigmen.")
-          .defineInRange("redia_tool_attack_cooldown_ms", 0, 10, 2500);
         builder.pop();
       }
     }
@@ -231,101 +234,31 @@ public class ModConfig
   //--------------------------------------------------------------------------------------------------------------------
 
   public static final boolean isOptedOut(final @Nullable Block block)
-  { return isOptedOut(block, false); }
+  { return isOptedOut(block.asItem()); }
 
   public static final boolean isOptedOut(final @Nullable Item item)
-  { return isOptedOut(item, false); }
-
-  public static final boolean isOptedOut(final @Nullable Block block, boolean with_log_details)
-  {
-    if(block == null) return true;
-    if(COMMON == null) return false;
-    try {
-      if(!with_experimental) {
-        if(block instanceof Auxiliaries.IExperimentalFeature) return true;
-      }
-      final String rn = block.getRegistryName().getPath();
-      // Force-include/exclude pattern matching
-      try {
-        for(String e:includes_) {
-          if(rn.matches(e)) {
-            if(with_log_details) LOGGER.info("Optout force include: " + rn);
-            return false;
-          }
-        }
-        for(String e:excludes_) {
-          if(rn.matches(e)) {
-            if(with_log_details) LOGGER.info("Optout force exclude: " + rn);
-            return true;
-          }
-        }
-      } catch(Throwable ex) {
-        LOGGER.error("optout include pattern failed, disabling.");
-        includes_.clear();
-        excludes_.clear();
-      }
-    } catch(Exception ex) {
-      LOGGER.error("Exception evaluating the optout config: '" + ex.getMessage() + "'");
-    }
-    return false;
-  }
-
-  public static final boolean isOptedOut(final @Nullable Item item, boolean with_log_details)
-  {
-    if(item == null) return true;
-    if((item instanceof ModBlockItem) && (((ModBlockItem)item).getBlock() instanceof AriadneCoalBlock)) return true;
-    if(COMMON == null) return false;
-    if(COMMON.without_crushing_hammer.get() && (item instanceof CrushingHammerItem)) return true;
-    if(COMMON.without_redia_tool.get() && (item instanceof RediaToolItem)) return true;
-    if(COMMON.without_ariadne_coal.get() && (item instanceof AriadneCoalItem)) return true;
-    if(COMMON.without_diving_capsule.get() && (item instanceof DivingCapsuleItem)) return true;
-    if(COMMON.without_stimpack.get() && (item instanceof AutoStimPackItem)) return true;
-    if(COMMON.without_sleeping_bag.get() && (item instanceof SleepingBagItem)) return true;
-    if(COMMON.without_musli_bar.get() && ((item instanceof MusliBarItem)||(item instanceof MusliBarPressItem))) return true;
-    try {
-      final String rn = item.getRegistryName().getPath();
-      // Force-include/exclude pattern matching
-      try {
-        for(String e:includes_) {
-          if(rn.matches(e)) {
-            if(with_log_details) LOGGER.info("Optout force include: " + rn);
-            return false;
-          }
-        }
-        for(String e:excludes_) {
-          if(rn.matches(e)) {
-            if(with_log_details) LOGGER.info("Optout force exclude: " + rn);
-            return true;
-          }
-        }
-      } catch(Throwable ex) {
-        LOGGER.error("optout include pattern failed, disabling.");
-        includes_.clear();
-        excludes_.clear();
-      }
-    } catch(Exception ex) {
-      LOGGER.error("Exception evaluating the optout config: '" + ex.getMessage() + "'");
-    }
-    return false;
-  }
+  { return (item!=null) && optouts_.contains(item.getRegistryName().getPath()); }
 
   //--------------------------------------------------------------------------------------------------------------------
   // Cache
   //--------------------------------------------------------------------------------------------------------------------
-  private static final ArrayList<String> includes_ = new ArrayList<String>();
-  private static final ArrayList<String> excludes_ = new ArrayList<String>();
+
   private static final CompoundNBT server_config_ = new CompoundNBT();
+  private static HashSet<String> optouts_ = new HashSet<>();
   public static boolean with_experimental = false;
 
   public static final CompoundNBT getServerConfig() // config that may be synchronized from server to client via net pkg.
   { return server_config_; }
 
-  public static final void apply()
+  private static final void updateOptouts()
   {
-    with_experimental = COMMON.with_experimental.get();
+    if(SERVER==null) return;
+    final ArrayList<String> includes_ = new ArrayList<String>();
+    final ArrayList<String> excludes_ = new ArrayList<String>();
+    with_experimental = SERVER.with_experimental.get();
     {
-      String inc = COMMON.pattern_includes.get().toLowerCase().replaceAll(MODID+":", "").replaceAll("[^*_,a-z0-9]", "");
-      if(COMMON.pattern_includes.get() != inc) COMMON.pattern_includes.set(inc);
+      String inc = SERVER.pattern_includes.get().toLowerCase().replaceAll(MODID+":", "").replaceAll("[^*_,a-z0-9]", "");
+      if(SERVER.pattern_includes.get() != inc) SERVER.pattern_includes.set(inc);
       if(!inc.isEmpty()) LOGGER.info("Pattern includes: '" + inc + "'");
       String[] incl = inc.split(",");
       includes_.clear();
@@ -335,7 +268,7 @@ public class ModConfig
       }
     }
     {
-      String exc = COMMON.pattern_includes.get().toLowerCase().replaceAll(MODID+":", "").replaceAll("[^*_,a-z0-9]", "");
+      String exc = SERVER.pattern_excludes.get().toLowerCase().replaceAll(MODID+":", "").replaceAll("[^*_,a-z0-9]", "");
       if(!exc.isEmpty()) LOGGER.info("Pattern excludes: '" + exc + "'");
       String[] excl = exc.split(",");
       excludes_.clear();
@@ -344,20 +277,74 @@ public class ModConfig
         if(!excl[i].isEmpty()) excludes_.add(excl[i]);
       }
     }
-    // Todo: remove temporary config default data fix (changed efficiency meaning).
-    if(COMMON.redia_tool_efficiency_curve.get().equals("10,60,90,100,120,140,170,200,220,230")) {
-      COMMON.redia_tool_efficiency_curve.set("0,1,1,2,2,3,3,3,3,4");
+    {
+      boolean with_log_details = false;
+      HashSet<String> optouts = new HashSet<>();
+      ModContent.getRegisteredItems().stream().filter((Item item) -> {
+        if(item==null) return true;
+        if((item instanceof ModBlockItem)&&(((ModBlockItem)item).getBlock() instanceof AriadneCoalBlock)) return true;
+        if(SERVER.without_crushing_hammer.get()&&(item instanceof CrushingHammerItem)) return true;
+        if(SERVER.without_crushing_hammer.get()&&(item instanceof GritItem)) return true;
+        if(SERVER.without_redia_tool.get()&&(item instanceof RediaToolItem)) return true;
+        if(SERVER.without_ariadne_coal.get()&&(item instanceof AriadneCoalItem)) return true;
+        if(SERVER.without_diving_capsule.get()&&(item instanceof DivingCapsuleItem)) return true;
+        if(SERVER.without_stimpack.get()&&(item instanceof AutoStimPackItem)) return true;
+        if(SERVER.without_sleeping_bag.get()&&(item instanceof SleepingBagItem)) return true;
+        if(SERVER.without_musli_bar.get()&&((item instanceof MusliBarItem)||(item instanceof MusliBarPressItem))) return true;
+        if(SERVER.without_material_box.get()&&((item instanceof MaterialBoxItem))) return true;
+        try {
+          final String rn = item.getRegistryName().getPath();
+          // Force-include/exclude pattern matching
+          try {
+            for(String e : includes_) {
+              if(rn.matches(e)) {
+                if(with_log_details) LOGGER.info("Optout force include: "+rn);
+                return false;
+              }
+            }
+            for(String e : excludes_) {
+              if(rn.matches(e)) {
+                if(with_log_details) LOGGER.info("Optout force exclude: "+rn);
+                return true;
+              }
+            }
+          } catch(Throwable ex) {
+            LOGGER.error("optout include pattern failed, disabling.");
+            includes_.clear();
+            excludes_.clear();
+          }
+        } catch(Exception ex) {
+          LOGGER.error("Exception evaluating the optout config: '"+ex.getMessage()+"'");
+        }
+        return false;
+      }).forEach(e -> optouts.add(e.getRegistryName().getPath()));
+
+      ModContent.getRegisteredBlocks().stream().filter(e->(e==null)||isOptedOut(e.asItem())).forEach(e->optouts.add(e.getRegistryName().getPath()));
+      optouts_ = optouts;
+    }
+    {
+      String s = String.join(",", optouts_);
+      server_config_.putString("optout", s);
+      if(!s.isEmpty()) LOGGER.info("Opt-outs:" + s);
+    }
+  }
+
+  public static final void apply()
+  {
+    if(SERVER==null) return;
+    updateOptouts();
+    if(SERVER.redia_tool_efficiency_curve.get().equals("10,60,90,100,120,140,170,200,220,230")) {
+      SERVER.redia_tool_efficiency_curve.set("0,1,1,2,2,3,3,3,3,4");
     }
     RediaToolItem.on_config(
       false,
       false,
       false,
-      COMMON.redia_tool_durability.get(),
-      COMMON.redia_tool_efficiency_curve.get(),
-      COMMON.redia_tool_furtune_curve.get(),
-      COMMON.redia_tool_initial_durability_percent.get(),
-      COMMON.redia_tool_attack_cooldown_ms.get(),
-      COMMON.without_safe_attacking.get()
+      SERVER.redia_tool_durability.get(),
+      SERVER.redia_tool_efficiency_curve.get(),
+      SERVER.redia_tool_furtune_curve.get(),
+      SERVER.redia_tool_initial_durability_percent.get(),
+      SERVER.without_safe_attacking.get()
     );
     AutoStimPackItem.on_config(
       2,

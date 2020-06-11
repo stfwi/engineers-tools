@@ -250,7 +250,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
     final BlockPos pos = context.getPos();
     final Vec3d hitvec = context.getHitVec();
     ActionResultType rv;
-    if(context.getPlayer().isShiftKeyDown()) {
+    if(context.getPlayer().isSneaking()) {
       rv = tryPlantSnipping(player, world, pos, hand, facing, hitvec);
       if(rv != ActionResultType.PASS) return rv;
       if(facing == Direction.UP) {
@@ -274,7 +274,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   {
     if(world.isRemote) return true;
     if(state.getBlockHardness(world, pos) > 0.2f) tool.damageItem(1, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
-    if(with_tree_felling && (player instanceof PlayerEntity) && (player.isShiftKeyDown())) tryTreeFelling(world, state, pos, player);
+    if(with_tree_felling && (player instanceof PlayerEntity) && (player.isSneaking())) tryTreeFelling(world, state, pos, player);
     decayEnchantments(tool);
     return true;
   }

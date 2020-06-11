@@ -1,4 +1,5 @@
 {
+  "gui_light": "front",
 	"textures": {
 		"particle": "engineerstools:item/diving_capsule",
 		"s": "engineerstools:item/diving_capsule"

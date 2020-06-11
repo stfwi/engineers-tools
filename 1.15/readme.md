@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+    - v1.0.8-b3   [U] Forge/mappings updated.
+                  [M] REDIA Tool model refined.
+
     - v1.0.8-b2   [!] Mod config moved from 'common' to 'server' config, in case
                       of applied setting please double check.
                   [F] Config reload update fixed (issue #10, thx armoredfury).

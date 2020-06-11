@@ -10,6 +10,8 @@ Mod sources for Minecraft version 1.14.4.
 ----
 ## Version history
 
+    - v1.0.8-b3   [M] REDIA Tool model updated.
+
     - v1.0.8-b2   [!] Mod config moved from 'common' to 'server' config, in case
                       of applied setting please double check.
                   [F] Config reload update fixed (issue #10, thx armoredfury).

@@ -1,4 +1,5 @@
 {
+  "gui_light": "front",
 	"textures": {
 		"particle": "engineerstools:item/material_box",
 		"s": "engineerstools:item/material_box"

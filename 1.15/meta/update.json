@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.15.2": {
+    "1.0.8-b3": "[U] Forge/mappings updated.\n[M] REDIA Tool model refined.",
     "1.0.8-b2": "[!] Mod config moved from 'common' to 'server' config, in case of applied setting please double check.\n[F] Config reload update fixed (issue #10, thx armoredfury).",
     "1.0.8-b1": "[A] Added Material Box (simple item storage box with some tweaks).\n[M] Refractoring under the hood to new naming conventions.",
     "1.0.7": "[R] Release based on v1.0.7-b2. Release-to-release changes: * Common tag based ore duping recipes added for the Crushing Hammmer. * Diving Air Capsule added. * REDIA Tool inventory crafting repair and sharpening added.\n[M] Muslee Bar Press also accepts Beetroot seeds by default.",
@@ -16,6 +17,6 @@
   },
   "promos": {
     "1.15.2-recommended": "1.0.7",
-    "1.15.2-latest": "1.0.8-b2"
+    "1.15.2-latest": "1.0.8-b3"
   }
 }

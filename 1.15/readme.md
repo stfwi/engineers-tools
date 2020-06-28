@@ -10,6 +10,15 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+                  -------------------------------------------------------------------
+    - v1.0.8      [R] Release v1.0.8. Release-to-release changes:
+                      ! Forge update, requires Forge 1.15.2-31.2.20.
+                      * Material Box added (inventory storage container).
+                      * REDIA Tool model updated.
+                      * Config rework/update to 1.15 server config paradigm.
+                      * Refractoring under the hood.
+                  -------------------------------------------------------------------
+
     - v1.0.8-b3   [U] Forge/mappings updated.
                   [M] REDIA Tool model refined.
 

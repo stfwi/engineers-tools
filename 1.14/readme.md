@@ -11,6 +11,23 @@ Mod sources for Minecraft version 1.14.4.
 ## Version history
 
                   -------------------------------------------------------------------
+    - v1.0.8      [R] Release v1.0.8. Release-to-release changes:
+                      * Material Box added (inventory storage container).
+                      * REDIA Tool model updated.
+                      * Config rework/update to 1.15 server config paradigm.
+                      * Refractoring under the hood.
+                  -------------------------------------------------------------------
+
+    - v1.0.8-b3   [M] REDIA Tool model updated.
+
+    - v1.0.8-b2   [!] Mod config moved from 'common' to 'server' config, in case
+                      of applied setting please double check.
+                  [F] Config reload update fixed (issue #10, thx armoredfury).
+
+    - v1.0.8-b1   [A] Added Material Box (simple item storage box with some tweaks).
+                  [M] Refractoring under the hood to new naming conventions.
+
+                  -------------------------------------------------------------------
     - v1.0.7      [R] Release based on v1.0.7-b2. Release-to-release changes:
                       * Common tag based ore duping recipes added for the Crushing Hammmer.
                       * Diving Air Capsule added.

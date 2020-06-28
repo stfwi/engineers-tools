@@ -13,6 +13,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SharedConstants;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -42,7 +45,7 @@ public class Auxiliaries
 {
   private static String modid;
   private static Logger logger;
-  private static Supplier<CompoundNBT> server_config_supplier = ()->new CompoundNBT();
+  private static Supplier<CompoundNBT> server_config_supplier = CompoundNBT::new;
 
   public static void init(String modid, Logger logger, Supplier<CompoundNBT> server_config_supplier)
   {
@@ -77,14 +80,14 @@ public class Auxiliaries
   public static final boolean isShiftDown()
   {
     return (InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) ||
-            InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT));
+      InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT));
   }
 
   @OnlyIn(Dist.CLIENT)
   public static final boolean isCtrlDown()
   {
     return (InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL) ||
-            InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_CONTROL));
+      InputMappings.isKeyDown(SidedProxy.mc().getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_CONTROL));
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -110,7 +113,7 @@ public class Auxiliaries
    */
   public static TranslationTextComponent localizable(String modtrkey, @Nullable TextFormatting color, Object... args)
   {
-    TranslationTextComponent tr = new TranslationTextComponent(modid+"."+modtrkey, args);
+    TranslationTextComponent tr = new TranslationTextComponent((modtrkey.startsWith("block.") || (modtrkey.startsWith("item."))) ? (modtrkey) : (modid+"."+modtrkey), args);
     if(color!=null) tr.getStyle().setColor(color);
     return tr;
   }
@@ -191,7 +194,7 @@ public class Auxiliaries
         if(!help_available) return false;
         String s = localize(helpTranslationKey + ".help");
         if(s.isEmpty()) return false;
-        tooltip.add(new StringTextComponent(s));
+        tooltip.add(new StringTextComponent(s)); // @todo: check how to optimise that (to use TranslationTextComponent directly without compat losses)
         return true;
       } else if(extendedTipCondition()) {
         if(!tip_available) return false;
@@ -254,6 +257,20 @@ public class Auxiliaries
       }
     }
     return bb;
+  }
+
+  public static final AxisAlignedBB[] getRotatedAABB(AxisAlignedBB[] bbs, Direction new_facing, boolean horizontal_rotation)
+  {
+    AxisAlignedBB[] transformed = new AxisAlignedBB[bbs.length];
+    for(int i=0; i<bbs.length; ++i) transformed[i] = getRotatedAABB(bbs[i], new_facing, horizontal_rotation);
+    return transformed;
+  }
+
+  public static final VoxelShape getUnionShape(AxisAlignedBB[] aabbs)
+  {
+    VoxelShape shape = VoxelShapes.empty();
+    for(AxisAlignedBB aabb: aabbs) shape = VoxelShapes.combine(shape, VoxelShapes.create(aabb), IBooleanFunction.OR);
+    return shape;
   }
 
   // -------------------------------------------------------------------------------------------------------------------

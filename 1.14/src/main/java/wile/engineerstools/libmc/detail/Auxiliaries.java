@@ -8,16 +8,19 @@
  */
 package wile.engineerstools.libmc.detail;
 
-import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SharedConstants;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.util.InputMappings;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SharedConstants;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -42,7 +45,7 @@ public class Auxiliaries
 {
   private static String modid;
   private static Logger logger;
-  private static Supplier<CompoundNBT> server_config_supplier = ()->new CompoundNBT();
+  private static Supplier<CompoundNBT> server_config_supplier = CompoundNBT::new;
 
   public static void init(String modid, Logger logger, Supplier<CompoundNBT> server_config_supplier)
   {
@@ -110,7 +113,7 @@ public class Auxiliaries
    */
   public static TranslationTextComponent localizable(String modtrkey, @Nullable TextFormatting color, Object... args)
   {
-    TranslationTextComponent tr = new TranslationTextComponent(modid+"."+modtrkey, args);
+    TranslationTextComponent tr = new TranslationTextComponent((modtrkey.startsWith("block.") || (modtrkey.startsWith("item."))) ? (modtrkey) : (modid+"."+modtrkey), args);
     if(color!=null) tr.getStyle().setColor(color);
     return tr;
   }
@@ -218,6 +221,13 @@ public class Auxiliaries
     { return addInformation(stack.getTranslationKey(), stack.getTranslationKey(), tooltip, flag, addAdvancedTooltipHints); }
   }
 
+  @SuppressWarnings("unused")
+  public static void playerChatMessage(final PlayerEntity player, final String message)
+  {
+    String s = message.trim();
+    if(!s.isEmpty()) player.sendMessage(new TranslationTextComponent(s));
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   // Block handling
   // -------------------------------------------------------------------------------------------------------------------
@@ -249,11 +259,18 @@ public class Auxiliaries
     return bb;
   }
 
-  @SuppressWarnings("unused")
-  public static void playerChatMessage(final PlayerEntity player, final String message)
+  public static final AxisAlignedBB[] getRotatedAABB(AxisAlignedBB[] bbs, Direction new_facing, boolean horizontal_rotation)
   {
-    String s = message.trim();
-    if(!s.isEmpty()) player.sendMessage(new TranslationTextComponent(s));
+    AxisAlignedBB[] transformed = new AxisAlignedBB[bbs.length];
+    for(int i=0; i<bbs.length; ++i) transformed[i] = getRotatedAABB(bbs[i], new_facing, horizontal_rotation);
+    return transformed;
+  }
+
+  public static final VoxelShape getUnionShape(AxisAlignedBB[] aabbs)
+  {
+    VoxelShape shape = VoxelShapes.empty();
+    for(AxisAlignedBB aabb: aabbs) shape = VoxelShapes.combine(shape, VoxelShapes.create(aabb), IBooleanFunction.OR);
+    return shape;
   }
 
   // -------------------------------------------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 package wile.engineerstools.items;
 
 import wile.engineerstools.ModEngineersTools;
-import wile.engineerstools.detail.ModConfig;
+import wile.engineerstools.ModConfig;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import java.util.ArrayList;

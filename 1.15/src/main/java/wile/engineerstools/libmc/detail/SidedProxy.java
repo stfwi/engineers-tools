@@ -32,7 +32,7 @@ public class SidedProxy
 
   // --------------------------------------------------------------------------------------------------------
 
-  private static ISidedProxy proxy = DistExecutor.runForDist(()->ClientProxy::new, ()->ServerProxy::new);
+  private static ISidedProxy proxy = DistExecutor.unsafeRunForDist(()->ClientProxy::new, ()->ServerProxy::new);
 
   private interface ISidedProxy
   {

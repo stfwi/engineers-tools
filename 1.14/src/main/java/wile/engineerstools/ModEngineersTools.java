@@ -49,6 +49,7 @@ public class ModEngineersTools
     OptionalRecipeCondition.init(MODID, LOGGER);
     MinecraftForge.EVENT_BUS.register(this);
     ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_CONFIG_SPEC);
+    ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, ModConfig.SERVER_CONFIG_SPEC);
     MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onSleepingLocationCheckEvent);
     MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onPlayerWakeUpEvent);
   }
@@ -123,10 +124,10 @@ public class ModEngineersTools
     }
 
     public static final void onSleepingLocationCheckEvent(net.minecraftforge.event.entity.player.SleepingLocationCheckEvent event)
-    { ItemSleepingBag.onSleepingLocationCheckEvent(event); }
+    { SleepingBagItem.onSleepingLocationCheckEvent(event); }
 
     public static final void onPlayerWakeUpEvent(net.minecraftforge.event.entity.player.PlayerWakeUpEvent event)
-    { ItemSleepingBag.onPlayerWakeUpEvent(event); }
+    { SleepingBagItem.onPlayerWakeUpEvent(event); }
 
   }
 

@@ -10,6 +10,10 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
+    - v1.0.9-b1   [F] Fixed Crushing Hammer not getting damage when hitting blocks (issue #11, cheers Federsavo).
+                  [A] Crushing Hammer knocks back creatures without actually attacking or doing damage. Good for
+                      gently prodding villagers out of the way or for blasting aggressive mobs over the edge.
+
                   -------------------------------------------------------------------
     - v1.0.8      [R] Release v1.0.8. Release-to-release changes:
                       ! Forge update, requires Forge 1.15.2-31.2.20.

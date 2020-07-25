@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.15.2": {
+    "1.0.9-b1": "[F] Fixed Crushing Hammer not getting damage when hitting blocks (issue #11, cheers Federsavo).\n[A] Crushing Hammer knocks back creatures without actually attacking or doing damage. Good for gently prodding villagers out of the way or for blasting aggressive mobs over the edge.",
     "1.0.8": "[R] Release v1.0.8. Release-to-release changes: ! Forge update, requires Forge 1.15.2-31.2.20. * Material Box added (inventory storage container). * REDIA Tool model updated. * Config rework/update to 1.15 server config paradigm. * Refractoring under the hood.",
     "1.0.8-b3": "[U] Forge/mappings updated.\n[M] REDIA Tool model refined.",
     "1.0.8-b2": "[!] Mod config moved from 'common' to 'server' config, in case of applied setting please double check.\n[F] Config reload update fixed (issue #10, thx armoredfury).",
@@ -18,6 +19,6 @@
   },
   "promos": {
     "1.15.2-recommended": "1.0.8",
-    "1.15.2-latest": "1.0.8"
+    "1.15.2-latest": "1.0.9-b1"
   }
 }

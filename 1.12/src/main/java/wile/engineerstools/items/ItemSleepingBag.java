@@ -1,7 +1,7 @@
 /*
  * @file ItemSleepingBag.java
  * @author Stefan Wilhelm (wile)
- * @copyright (C) 2018 Stefan Wilhelm
+ * @copyright (C) 2020 Stefan Wilhelm
  * @license MIT (see https://opensource.org/licenses/MIT)
  *
  * Simple Tough Fabric sleeping bag (don't ask me why - I just wanna know how that works).

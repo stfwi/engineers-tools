@@ -1,35 +1,5 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
-  "promos": {
-    "1.12.2-recommended": "1.0.5",
-    "1.12.2-latest": "1.0.5",
-    "1.14.4-recommended": "1.0.8",
-    "1.14.4-latest": "1.0.8",
-    "1.15.2-recommended": "1.0.8",
-    "1.15.2-latest": "1.0.9-b1"
-  },
-  "1.12.2": {
-    "1.0.5": "[R] Release based on v1.0.5-b2. Release-to-release changes: * REDIA tool tweaks (cannot hit own pets, villagers, etc). * Language updates.",
-    "1.0.5-b2": "[M] Lang zh_cn updated (scikirbypoke).",
-    "1.0.5-b1": "[M] The REDIA tool prevents you from accidentally attacking villagers, pets, and while mining also mobs (if not aggressive, especially chilled Zombie Pigmen).",
-    "1.0.4": "[R] Release based on v1.0.4-b1. Release-to-release changes: * Sleeping Bag added * Language updates",
-    "1.0.4-b1": "[A] Added Sleeping Bag\n[A] Added zh_cn.lang (scikirbypoke, PR#4).",
-    "1.0.3": "[R] Release based on v1.0.3-b2. Release-to-release changes: * Auto Stim Pack added * REDIA tool tweaks.\n[F] Fixed REDIA tool fortune calculation issue when breaking blocks.",
-    "1.0.3-b2": "[M] REDIA tool block breaking speed clamped for blocks with low hardness, torch placing on walls also while sneaking.",
-    "1.0.3-b1": "[A] Added Auto Stim Pack (auto heal a few hearts and Speed Boost when your health falls below three hearts, usable as Bauble).",
-    "1.0.2": "[R] Release based on v1.0.2-b3. Release-to-release changes: * Ariadne coal (arrow drawing pen) added. * REDIA tool fixes and tweaks.",
-    "1.0.2-b3": "[M] REDIA tool: Slightly reduced tree felling exhaustion.",
-    "1.0.2-b2": "[M] Tree felling cross mod compatibility improved.\n[M] Tree felling durability loss tuned, exhaustion added.\n[M] Ariadne Coal durability tuned.",
-    "1.0.2-b1": "[A] Ariadne Coal added to draw arrows in caves and mines.",
-    "1.0.1": "[R] Release based on v1.0.1-b3. Release-to-release changes: * REDIA multi tool added (axe, pickaxe, shove, shears, torch placing, hoeing, etc.)\n[F] REDIA tool: Snipping tall grass fixed.\n[A] REDIA tool: Attack modifiers like a Diamond Axe.\n[A] REDIA tool: Enchantability improved.",
-    "1.0.1-b3": "[A] REDIA tool: Fortune for high durability (curve configurable).\n[M] REDIA tool: Enachantable only with Unbreaking with book (would be OP otherwise).\n[A] REDIA tool: Right-click: Shear harvesting of Vines, Grass, etc.",
-    "1.0.1-b2": "[A] Added REDIA (REal DIAmond) tool, combining pickaxe, axe and shovel. Right-click: Torch placing. Sneak-right-click: Hoeing dirt - farm land - coarse dirt - grass path - dirt. Sneak while chopping wood logs: Tree felling.",
-    "1.0.1-b1": "[F] Fixed oredict recipe issue (#1), the duplicated grit is now a remaining item in the crafting grid, which makes automation harder.",
-    "1.0.0": "[R] Release based on v1.0.0-b3",
-    "1.0.0-b3": "[F] Fixed Crushing hammer experimental config flag, so it's now craftable by default.",
-    "1.0.0-b2": "[A] Added mod internal iron and gold grit, which is used if no other mod provides iron/gold dust. Can only be smelted to ingots. Hidden in JEI, as the grits of other mods shall be preferred.",
-    "1.0.0-b1": "[A] Added ore crushing hammer."
-  },
   "1.14.4": {
     "1.0.8": "[R] Release v1.0.8. Release-to-release changes: * Material Box added (inventory storage container). * REDIA Tool model updated. * Config rework/update to 1.15 server config paradigm. * Refractoring under the hood.",
     "1.0.8-b3": "[M] REDIA Tool model updated.",
@@ -55,21 +25,8 @@
     "1.0.1-b2": "[U] Updated to Forge 1.14.4-28.0.81/20190719-1.14.3, recipe condition processing updated accordingly.",
     "1.0.1-b1": "[A] Ported REDIA tool from 1.12.2.\n[A] Ported ore crushing hammer from 1.12.2.\n[A] Ported Coarse Iron/Gold Grit 1.12.2, currently not auto-disabled if other mods provide grits (OreDict replacement unclear yet)."
   },
-  "1.15.2": {
-    "1.0.9-b1": "[F] Fixed Crushing Hammer not getting damage when hitting blocks (issue #11, cheers Federsavo).\n[A] Crushing Hammer knocks back creatures without actually attacking or doing damage. Good for gently prodding villagers out of the way or for blasting aggressive mobs over the edge.",
-    "1.0.8": "[R] Release v1.0.8. Release-to-release changes: ! Forge update, requires Forge 1.15.2-31.2.20. * Material Box added (inventory storage container). * REDIA Tool model updated. * Config rework/update to 1.15 server config paradigm. * Refractoring under the hood.",
-    "1.0.8-b3": "[U] Forge/mappings updated.\n[M] REDIA Tool model refined.",
-    "1.0.8-b2": "[!] Mod config moved from 'common' to 'server' config, in case of applied setting please double check.\n[F] Config reload update fixed (issue #10, thx armoredfury).",
-    "1.0.8-b1": "[A] Added Material Box (simple item storage box with some tweaks).\n[M] Refractoring under the hood to new naming conventions.",
-    "1.0.7": "[R] Release based on v1.0.7-b2. Release-to-release changes: * Common tag based ore duping recipes added for the Crushing Hammmer. * Diving Air Capsule added. * REDIA Tool inventory crafting repair and sharpening added.\n[M] Muslee Bar Press also accepts Beetroot seeds by default.",
-    "1.0.7-b2": "[A] REDIA Tool inventory repair recipe added (repair with Diamonds).\n[A] REDIA Tool Efficiency/Fortune now added by over-repairing (adding REDIA coating layers).",
-    "1.0.7-b1": "[A] Added Ore Crushing Hammer recipes for common ores, preferred output are IE grits. Provided easy data driven way to add other ore->dust recipes (issue #6).\n[M] Updated to new MCP/Forge mappings.\n[M] REDIA Tool default Fortune curve tweaked (slightly nerfed).\n[A] Added Diving Air Capsule (automatic air refreshing).",
-    "1.0.6": "[R] Release based on v1.0.6-b2. Release-to-release changes: * Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it. * Curios integration added. * Patchouli Manual added.",
-    "1.0.6-b2": "[A] Added Muslee Melange Power Bar food and Muslee Melange Power Bar Press to craft it.",
-    "1.0.6-b1": "[A] Curios integration added.",
-    "1.0.5-b4": "[F] Added Forge hook invocation sidenes assurance for sleeping (related to #8).",
-    "1.0.5-b3": "[A] Added config options for the REDIA tool.\n[F] Fixed newline escapes in lang files.",
-    "1.0.5-b2": "[M] Lang zh_cn updated (scikirbypoke).\n[A] Added GIT version logging.",
-    "1.0.5-b1": "[A] Initial 1.15 port (Forge 1.15.1-30.0.7)."
+  "promos": {
+    "1.14.4-recommended": "1.0.8",
+    "1.14.4-latest": "1.0.8"
   }
 }

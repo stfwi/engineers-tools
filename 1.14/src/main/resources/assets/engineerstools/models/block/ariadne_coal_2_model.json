@@ -1,7 +1,0 @@
-{
-	"parent": "engineerstools:block/ariadne_coal_0_model",
-	"textures": {
-		"s": "engineerstools:block/ariadne_coal_block_texture_2",
-		"particle": "engineerstools:block/ariadne_coal_block_texture_2"
-	}
-}

@@ -1,7 +1,0 @@
-{
-  "stimpack_inject_sound": {
-    "category": "block",
-    "subtitle": "engineerstools.subtitle.stimpack_inject",
-    "sounds": [ "engineerstools:stimpack_inject" ]
-  }
-}

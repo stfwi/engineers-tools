@@ -1,0 +1,31 @@
+{ "type": "forge:conditional", "recipes": [
+  {
+    "conditions": [
+      {
+        "type": "engineerstools:optional",
+        "result": "mekanism:dust_osmium",
+        "requires": ["engineerstools:crushing_hammer", "mekanism:osmium_ore"]
+      }
+    ],
+    "recipe": {
+      "type": "engineerstools:crafting_extended_shapeless",
+      "group": "grit",
+      "ingredients": [
+        {
+          "item": "mekanism:osmium_ore"
+        },
+        {
+          "item": "engineerstools:crushing_hammer"
+        }
+      ],
+      "result": {
+        "item": "mekanism:dust_osmium",
+        "count": 2
+      },
+      "aspects": {
+        "tool": "engineerstools:crushing_hammer",
+        "tool_damage": 25
+      }
+    }
+  }
+]}

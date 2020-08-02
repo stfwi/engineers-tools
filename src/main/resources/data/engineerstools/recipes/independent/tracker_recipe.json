@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:tracker"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IWI",
+    "GCG",
+    "IEI"
+  ],
+  "key": {
+    "C": { "item": "minecraft:compass" },
+    "W": { "item": "minecraft:clock" },
+    "E": { "item": "minecraft:ender_pearl" },
+    "G": { "item": "minecraft:iron_ingot" },
+    "I": { "item": "minecraft:redstone" }
+  },
+  "result": {
+    "item": "engineerstools:tracker",
+    "count": 1
+  }
+}

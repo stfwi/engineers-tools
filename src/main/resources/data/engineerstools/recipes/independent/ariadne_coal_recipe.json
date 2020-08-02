@@ -1,0 +1,22 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:ariadne_coal"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C",
+    "C",
+    "S"
+  ],
+  "key": {
+    "S": { "item": "minecraft:stick" },
+    "C": { "item": "minecraft:coal"  }
+  },
+  "result": {
+    "item": "engineerstools:ariadne_coal",
+    "count": 1
+  }
+}

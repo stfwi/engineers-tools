@@ -1,0 +1,16 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "minecraft:gold_ingot",
+      "requires": ["engineerstools:gold_grit"]
+    }
+  ],
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "engineerstools:gold_grit"
+  },
+  "result": "minecraft:gold_ingot",
+  "experience": 1.0,
+  "cookingtime": 100
+}

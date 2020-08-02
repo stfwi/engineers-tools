@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:sleeping_bag"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNC",
+    "CCC"
+  ],
+  "key": {
+    "N": { "item": "minecraft:iron_nugget" },
+    "C": { "tag": "minecraft:carpets" }
+  },
+  "result": {
+    "item": "engineerstools:sleeping_bag",
+    "count": 1
+  }
+}

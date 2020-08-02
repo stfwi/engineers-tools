@@ -21,8 +21,7 @@ tests
 signing.*
 src/main/java/archive
 src/main/resources/assets/minecraft
-/1.14/src/generated
-/1.15/src/generated
+src/generated
 .vscode
 /classes
 /dev
@@ -36,4 +35,3 @@ desktop.ini
 Thumbs.db
 forge*changelog.txt
 /*.txt
-mcmodsrepo

@@ -1,7 +1,7 @@
 
 ## Engineer's Tools (MC1.15.1)
 
-Mod sources for Minecraft version 1.15.1.
+Mod sources for Minecraft version 1.16.1.
 
 - Description, credits, and features: Please see the readme in the repository root.
 
@@ -10,7 +10,7 @@ Mod sources for Minecraft version 1.15.1.
 ----
 ## Version history
 
-    ~ v1.0.9-b4   [F]
+    ~ v1.0.9-b4   [F] Tracker help JSON typos fixed.
 
     - v1.0.9-b3   [A] Tracker added (compass to find friends and locations).
 

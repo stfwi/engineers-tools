@@ -358,6 +358,7 @@ public class MusliBarPressItem extends EtItem
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void func_230450_a_(MatrixStack mx, float partialTicks, int mouseX, int mouseY)
     {
       RenderSystem.color4f(1f, 1f, 1f, 1f);

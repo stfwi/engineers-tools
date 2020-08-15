@@ -85,7 +85,7 @@ public class SleepingBagItem extends EtItem
       if (!player.world.func_230315_m_().func_236043_f_()) {
         return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
       } else {
-        if(set_spawn_point) player.func_241153_a_(player.world.func_234923_W_(), at, false, true);
+        if(set_spawn_point) player.setBedPosition(at);
         if (player.world.isDaytime()) {
           return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
         } else {
@@ -101,7 +101,6 @@ public class SleepingBagItem extends EtItem
             }
           }
           ((ServerPlayerEntity)player).startSleeping(at);
-          // ((ServerPlayerEntity)player).sleepTimer = 0;     // @todo: AccessTransformer -> public field.
           return Either.right(Unit.INSTANCE);
         }
       }

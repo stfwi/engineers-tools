@@ -101,7 +101,7 @@ public class OptionalRecipeCondition implements ICondition
     if(result != null) {
       ResourceLocation item_rl;
       if(result_is_tag) {
-        ITag<Item> tag = ItemTags.getCollection().getTagMap().getOrDefault(result, null);
+        ITag<Item> tag = ItemTags.getCollection().func_241833_a()/*getTagMap()*/.getOrDefault(result, null);
         if(tag==null) return false;
         if(tag.func_230236_b_().isEmpty()) return false;
         item_rl = Lists.newArrayList(tag.func_230236_b_()).get(0).getRegistryName();
@@ -120,8 +120,8 @@ public class OptionalRecipeCondition implements ICondition
     }
     if(!all_required_tags.isEmpty()) {
       for(ResourceLocation rl:all_required_tags) {
-        if(!ItemTags.getCollection().getTagMap().containsKey(rl)) return false;
-        if(ItemTags.getCollection().getTagMap().get(rl).func_230236_b_().isEmpty()) return false;
+        if(!ItemTags.getCollection().func_241833_a()/*getTagMap()*/.containsKey(rl)) return false;
+        if(ItemTags.getCollection().func_241833_a()/*getTagMap()*/.get(rl).func_230236_b_().isEmpty()) return false;
       }
     }
     if(!any_missing.isEmpty()) {
@@ -132,8 +132,8 @@ public class OptionalRecipeCondition implements ICondition
     }
     if(!any_missing_tags.isEmpty()) {
       for(ResourceLocation rl:any_missing_tags) {
-        if(!ItemTags.getCollection().getTagMap().containsKey(rl)) return true;
-        if(ItemTags.getCollection().getTagMap().get(rl).func_230236_b_().isEmpty()) return true;
+        if(!ItemTags.getCollection().func_241833_a()/*getTagMap()*/.containsKey(rl)) return true;
+        if(ItemTags.getCollection().func_241833_a()/*getTagMap()*/.get(rl).func_230236_b_().isEmpty()) return true;
       }
       return false;
     }

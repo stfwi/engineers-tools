@@ -1,11 +1,12 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.16.2": {
+    "1.1.0-b3": "[F] Updated mappings, fixed tag query issue during recipe processing.",
     "1.1.0-b2": "[F] Rebuilt with Forge 1.16.2-33.0.20 (client crash hot-fix).",
     "1.1.0-b1": "[U] Ported to MC1.16.2."
   },
   "promos": {
     "1.16.2-recommended": "",
-    "1.16.2-latest": "1.1.0-b2"
+    "1.16.2-latest": "1.1.0-b3"
   }
 }

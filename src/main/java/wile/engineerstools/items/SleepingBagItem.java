@@ -89,11 +89,11 @@ public class SleepingBagItem extends EtItem
         if (player.world.isDaytime()) {
           return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
         } else {
-          if (!player.isCreative()) {
+          if(!player.isCreative()) {
             double d0 = 8.0D;
             double d1 = 5.0D;
-            Vector3d vector3d = Vector3d.func_237492_c_(at);
-            List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB(vector3d.getX() - 8.0D, vector3d.getY() - 5.0D, vector3d.getZ() - 8.0D, vector3d.getX() + 8.0D, vector3d.getY() + 5.0D, vector3d.getZ() + 8.0D), (p_241146_1_) -> {
+            Vector3d vpos = Vector3d.copy(at);
+            List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB(vpos.getX() - 8.0D, vpos.getY() - 5.0D, vpos.getZ() - 8.0D, vpos.getX() + 8.0D, vpos.getY() + 5.0D, vpos.getZ() + 8.0D), (p_241146_1_) -> {
               return p_241146_1_.func_230292_f_(player);
             });
             if (!list.isEmpty()) {

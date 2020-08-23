@@ -67,7 +67,7 @@ public class CrushingHammerItem extends EtItem
     World world = player.getEntityWorld();
     if(world.isRemote()) return true;
     boolean hard = (target instanceof MonsterEntity) && (((MonsterEntity)target).getAttackTarget() != null);
-    ((LivingEntity)target).func_233627_a_/*knockBack*/(hard ? 1.2f : 0.3f, Math.sin(Math.PI/180 * player.rotationYaw), -Math.cos(Math.PI/180 * player.rotationYaw));
+    ((LivingEntity)target).applyKnockback(hard ? 1.2f : 0.3f, Math.sin(Math.PI/180 * player.rotationYaw), -Math.cos(Math.PI/180 * player.rotationYaw));
     if(hard) {
       if(world.getRandom().nextInt(1) == 0) stack.damageItem(1, player, p->p.sendBreakAnimation(player.getActiveHand()));
       world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.BLOCK_ANVIL_PLACE, player.getSoundCategory(), 0.2f, 0.05f); // ITEM_TRIDENT_HIT_GROUND

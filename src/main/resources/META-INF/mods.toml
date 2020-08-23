@@ -12,7 +12,7 @@ displayName="Engineer's Tools"
 description="Adds manual handheld tools for the Engineer."
 authors="wilechaote"
 credits="BluSunrize, malte, Vazkii, Ellpeck, the Forge Smiths, the modders of the world."
-updateJSONURL="https://raw.githubusercontent.com/stfwi/engineers-tools/develop/meta/update.json"
+updateJSONURL="https://raw.githubusercontent.com/stfwi/engineers-tools/1.16/meta/update.json"
 displayURL="https://github.com/stfwi/engineers-tools/"
 logoFile="logo.png"
 

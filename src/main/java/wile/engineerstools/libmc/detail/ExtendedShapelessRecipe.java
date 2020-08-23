@@ -14,8 +14,7 @@ import net.minecraft.item.crafting.*;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.ITag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -158,12 +157,12 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
       if(res.has("tag")) {
         // Tag based item picking
         ResourceLocation rl = new ResourceLocation(res.get("tag").getAsString());
-        ITag<Item> tag = ItemTags.getCollection().func_241833_a()/*getTagMap()*/.getOrDefault(rl, null);
+        ITag<Item> tag = TagCollectionManager.func_242178_a/*getInstance?*/().func_241836_b/*getItemTags?*/().func_241833_a/*getTagMap?*/().getOrDefault(rl, null);
         if(tag==null) throw new JsonParseException(this.getRegistryName().getPath() + ": Result tag does not exist: #" + rl);
-        if(tag.func_230236_b_().isEmpty()) throw new JsonParseException(this.getRegistryName().getPath() + ": Result tag has no items: #" + rl);
+        if(tag.getAllElements().isEmpty()) throw new JsonParseException(this.getRegistryName().getPath() + ": Result tag has no items: #" + rl);
         if(res.has("item")) res.remove("item");
         resultTag = rl;
-        List<Item> lst = Lists.newArrayList(tag.func_230236_b_());
+        List<Item> lst = Lists.newArrayList(tag.getAllElements());
         res.addProperty("item", lst.get(0).getRegistryName().toString());
       }
       ItemStack result_stack = ShapedRecipe.deserializeItem(res);

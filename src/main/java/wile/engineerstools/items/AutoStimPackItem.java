@@ -84,7 +84,7 @@ public class AutoStimPackItem extends EtItem
       if((health > (trigger_threshold_health*2)) || (!player.isAlive())) return;
       int t = nbt.getInt("ta");
       if(t < 20) {
-        if(t == 2) world.playSound(player, player.func_233580_cy_(), ModResources.STIMPACK_INJECT_SOUND, SoundCategory.BLOCKS, 1f, 1f);
+        if(t == 2) world.playSound(player, player.getPosition(), ModResources.STIMPACK_INJECT_SOUND, SoundCategory.BLOCKS, 1f, 1f);
         nbt.putInt("ta", t+1);
       } else {
         nbt.remove("ta");

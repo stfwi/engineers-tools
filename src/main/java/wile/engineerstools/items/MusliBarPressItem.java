@@ -350,31 +350,31 @@ public class MusliBarPressItem extends EtItem
     { super(container, player_inventory, title); }
 
     @Override
-    public void func_230430_a_(MatrixStack mx, int mouseX, int mouseY, float partialTicks)
+    public void render(MatrixStack mx, int mouseX, int mouseY, float partialTicks)
     {
-      func_230446_a_(mx);
-      super.func_230430_a_(mx, mouseX, mouseY, partialTicks);
+      renderBackground(mx);
+      super.render(mx, mouseX, mouseY, partialTicks);
       func_230459_a_(mx, mouseX, mouseY);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void func_230450_a_(MatrixStack mx, float partialTicks, int mouseX, int mouseY)
+    protected void drawGuiContainerBackgroundLayer(MatrixStack mx, float partialTicks, int mouseX, int mouseY)
     {
       RenderSystem.color4f(1f, 1f, 1f, 1f);
       getMinecraft().getTextureManager().bindTexture(BACKGROUND_IMAGE);
       final int x0=getGuiLeft(), y0=getGuiTop(), w=getXSize(), h=getYSize();
-      func_238474_b_(mx,x0, y0, 0, 0, w, h);
-      func_238474_b_(mx,x0+48, y0+45, 180, 45, seeds_px(43), 7);
-      func_238474_b_(mx,x0+48, y0+54, 180, 54, food_px(43), 7);
+      blit(mx,x0, y0, 0, 0, w, h);
+      blit(mx,x0+48, y0+45, 180, 45, seeds_px(43), 7);
+      blit(mx,x0+48, y0+54, 180, 54, food_px(43), 7);
       {
         final Slot slot = getContainer().muslipress_slot_;
-        if(slot != null) func_238474_b_(mx,x0+slot.xPos, y0+slot.yPos, 181, 144, 16, 16);
+        if(slot != null) blit(mx,x0+slot.xPos, y0+slot.yPos, 181, 144, 16, 16);
       }
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack mx, int x, int y)
+    protected void drawGuiContainerForegroundLayer(MatrixStack mx, int x, int y)
     {}
 
     private int seeds_px(int pixels)

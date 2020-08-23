@@ -352,7 +352,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   {
     if((entity.world.isRemote) || (!(entity instanceof net.minecraftforge.common.IForgeShearable))) return ActionResultType.PASS;
     net.minecraftforge.common.IForgeShearable target = (net.minecraftforge.common.IForgeShearable)entity;
-    BlockPos pos = new BlockPos(entity.func_233580_cy_());
+    BlockPos pos = new BlockPos(entity.getPosition());
     if (target.isShearable(tool, entity.world, pos)) {
       List<ItemStack> drops = target.onSheared(player, tool, entity.world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, tool));
       Random rand = new java.util.Random();

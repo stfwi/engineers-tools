@@ -1,7 +1,7 @@
 /*
  * @file OptionalRecipeCondition.java
  * @author Stefan Wilhelm (wile)
- * @copyright (C) 2020 Stefan Wilhelm
+ * @copyright (C) 2018 Stefan Wilhelm
  * @license MIT (see https://opensource.org/licenses/MIT)
  *
  * Recipe condition to enable opt'ing out JSON based recipes.
@@ -12,13 +12,13 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.JSONUtils;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
-import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 
@@ -60,7 +61,6 @@ public class OptionalRecipeCondition implements ICondition
     block_optouts = block_optout_provider;
     item_optouts = item_optout_provider;
   }
-
 
   public OptionalRecipeCondition(ResourceLocation result, List<ResourceLocation> required, List<ResourceLocation> missing, List<ResourceLocation> required_tags, List<ResourceLocation> missing_tags, boolean isexperimental, boolean result_is_tag)
   {
@@ -98,20 +98,12 @@ public class OptionalRecipeCondition implements ICondition
     if(without_recipes) return false;
     if((experimental) && (!with_experimental)) return false;
     final IForgeRegistry<Item> item_registry = ForgeRegistries.ITEMS;
+    final Map<ResourceLocation, ITag<Item>> item_tags = TagCollectionManager.func_242178_a().func_241836_b().func_241833_a(); // ItemTags.getCollection().getTagMap() not set yet
     if(result != null) {
-      ResourceLocation item_rl;
-      if(result_is_tag) {
-        ITag<Item> tag = ItemTags.getCollection().func_241833_a()/*getTagMap()*/.getOrDefault(result, null);
-        if(tag==null) return false;
-        if(tag.func_230236_b_().isEmpty()) return false;
-        item_rl = Lists.newArrayList(tag.func_230236_b_()).get(0).getRegistryName();
-      } else {
-        item_rl = result;
-      }
-      boolean item_registered = item_registry.containsKey(item_rl);
+      boolean item_registered = item_registry.containsKey(result);
       if(!item_registered) return false; // required result not registered
-      if(item_registered && item_optouts.test(item_registry.getValue(item_rl))) return false;
-      if(ForgeRegistries.BLOCKS.containsKey(item_rl) && block_optouts.test(ForgeRegistries.BLOCKS.getValue(item_rl))) return false;
+      if(item_registered && item_optouts.test(item_registry.getValue(result))) return false;
+      if(ForgeRegistries.BLOCKS.containsKey(result) && block_optouts.test(ForgeRegistries.BLOCKS.getValue(result))) return false;
     }
     if(!all_required.isEmpty()) {
       for(ResourceLocation rl:all_required) {
@@ -120,8 +112,8 @@ public class OptionalRecipeCondition implements ICondition
     }
     if(!all_required_tags.isEmpty()) {
       for(ResourceLocation rl:all_required_tags) {
-        if(!ItemTags.getCollection().func_241833_a()/*getTagMap()*/.containsKey(rl)) return false;
-        if(ItemTags.getCollection().func_241833_a()/*getTagMap()*/.get(rl).func_230236_b_().isEmpty()) return false;
+        if(!item_tags.containsKey(rl)) return false;
+        if(item_tags.get(rl).getAllElements().isEmpty()) return false;
       }
     }
     if(!any_missing.isEmpty()) {
@@ -132,8 +124,8 @@ public class OptionalRecipeCondition implements ICondition
     }
     if(!any_missing_tags.isEmpty()) {
       for(ResourceLocation rl:any_missing_tags) {
-        if(!ItemTags.getCollection().func_241833_a()/*getTagMap()*/.containsKey(rl)) return true;
-        if(ItemTags.getCollection().func_241833_a()/*getTagMap()*/.get(rl).func_230236_b_().isEmpty()) return true;
+        if(!item_tags.containsKey(rl)) return true;
+        if(item_tags.get(rl).getAllElements().isEmpty()) return true;
       }
       return false;
     }

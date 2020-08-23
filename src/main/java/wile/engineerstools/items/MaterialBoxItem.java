@@ -107,10 +107,10 @@ public class MaterialBoxItem extends EtItem
             item_list = new StringTextComponent("");
             slen = 0;
           } else if(slen > 0) {
-            item_list.func_230529_a_(new TranslationTextComponent(" | ")).func_240699_a_(TextFormatting.DARK_GRAY);
+            item_list.append(new TranslationTextComponent(" | ")).mergeStyle(TextFormatting.DARK_GRAY);
           }
-          item_list.func_230529_a_(
-            ((e instanceof IFormattableTextComponent) ? (((IFormattableTextComponent)e).func_240699_a_(TextFormatting.GRAY)) : (e))
+          item_list.append(
+            ((e instanceof IFormattableTextComponent) ? (((IFormattableTextComponent)e).mergeStyle(TextFormatting.GRAY)) : (e))
           );
           slen += e.getUnformattedComponentText().length();
         }
@@ -129,7 +129,7 @@ public class MaterialBoxItem extends EtItem
     ItemStack stack = player.getHeldItem(hand);
     if(world.isRemote()) {
       if((stack.getCount() > 1)) {
-        world.playSound(player, player.func_233580_cy_(), SoundEvents.BLOCK_CHEST_LOCKED,SoundCategory.NEUTRAL, 0.4f, 3f);
+        world.playSound(player, player.getPosition(), SoundEvents.BLOCK_CHEST_LOCKED,SoundCategory.NEUTRAL, 0.4f, 3f);
         return new ActionResult<>(ActionResultType.FAIL, stack);
       }
     } else if((stack.getCount() == 1)) {
@@ -491,29 +491,29 @@ public class MaterialBoxItem extends EtItem
     }
 
     @Override
-    public void func_230430_a_(MatrixStack mx, int mouseX, int mouseY, float partialTicks)
+    public void render(MatrixStack mx, int mouseX, int mouseY, float partialTicks)
     {
-      func_230446_a_(mx);
-      super.func_230430_a_(mx, mouseX, mouseY, partialTicks);
+      renderBackground(mx);
+      super.render(mx, mouseX, mouseY, partialTicks);
       func_230459_a_(mx, mouseX, mouseY);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void func_230450_a_(MatrixStack mx, float partialTicks, int mouseX, int mouseY)
+    protected void drawGuiContainerBackgroundLayer(MatrixStack mx, float partialTicks, int mouseX, int mouseY)
     {
       RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
       getMinecraft().getTextureManager().bindTexture(BACKGROUND_IMAGE);
       final int x0=getGuiLeft(), y0=getGuiTop(), w=getXSize(), h=getYSize();
-      func_238474_b_(mx, x0, y0, 0, 0, w, h);
+      blit(mx, x0, y0, 0, 0, w, h);
       {
         final Slot slot = getContainer().bag_slot_;
-        if(slot != null) func_238474_b_(mx, x0+slot.xPos, y0+slot.yPos, 240, 183, 16, 16);
+        if(slot != null) blit(mx, x0+slot.xPos, y0+slot.yPos, 240, 183, 16, 16);
       }
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack mx, int x, int y)
+    protected void drawGuiContainerForegroundLayer(MatrixStack mx, int x, int y)
     {}
 
     //------------------------------------------------------------------------------------------------------------------
@@ -538,36 +538,34 @@ public class MaterialBoxItem extends EtItem
       }
     }
 
-// @todo: IMPLEMENT
-//    @Override
-//    public boolean mouseScrolled(double mouseX, double mouseY, double wheel_inc)
-//    {
-//      if(!with_gui_mouse_handling) return super.mouseScrolled(mouseX, mouseY, wheel_inc);
-//      final Slot slot = getSlotUnderMouse();
-//      if(!slot.getHasStack()) return true;
-//      final int count = slot.getStack().getCount();
-//      int limit = (Auxiliaries.isShiftDown() ? 2 : 1) * (Auxiliaries.isCtrlDown() ? 4 : 1);
-//      if(wheel_inc > 0.1) {
-//        if(count > 0) {
-//          if((count < slot.getStack().getMaxStackSize()) && (count < slot.getSlotStackLimit())) {
-//            CompoundNBT nbt = new CompoundNBT();
-//            nbt.putInt("slot", slot.slotNumber);
-//            if(limit > 1) nbt.putInt("limit", limit);
-//            action(MaterialBoxContainer.INCREASE_STACK, nbt);
-//          }
-//        }
-//      } else if(wheel_inc < -0.1) {
-//        if(count > 0) {
-//          CompoundNBT nbt = new CompoundNBT();
-//          nbt.putInt("slot", slot.slotNumber);
-//          if(limit > 1) nbt.putInt("limit", limit);
-//          action(MaterialBoxContainer.DECREASE_STACK, nbt);
-//        }
-//      }
-//      return true;
-//    }
-
-}
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double wheel_inc)
+    {
+      if(!with_gui_mouse_handling) return super.mouseScrolled(mouseX, mouseY, wheel_inc);
+      final Slot slot = getSlotUnderMouse();
+      if(!slot.getHasStack()) return true;
+      final int count = slot.getStack().getCount();
+      int limit = (Auxiliaries.isShiftDown() ? 2 : 1) * (Auxiliaries.isCtrlDown() ? 4 : 1);
+      if(wheel_inc > 0.1) {
+        if(count > 0) {
+          if((count < slot.getStack().getMaxStackSize()) && (count < slot.getSlotStackLimit())) {
+            CompoundNBT nbt = new CompoundNBT();
+            nbt.putInt("slot", slot.slotNumber);
+            if(limit > 1) nbt.putInt("limit", limit);
+            action(MaterialBoxContainer.INCREASE_STACK, nbt);
+          }
+        }
+      } else if(wheel_inc < -0.1) {
+        if(count > 0) {
+          CompoundNBT nbt = new CompoundNBT();
+          nbt.putInt("slot", slot.slotNumber);
+          if(limit > 1) nbt.putInt("limit", limit);
+          action(MaterialBoxContainer.DECREASE_STACK, nbt);
+        }
+      }
+      return true;
+    }
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
   // Entity

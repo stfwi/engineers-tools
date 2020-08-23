@@ -79,9 +79,9 @@ public class DivingCapsuleItem extends EtItem
       if(dmg >= capsule.getMaxDamage()) capsule.shrink(1); else capsule.setDamage(dmg);
     } else {
       if((capsule.getDamage()+item_damage) >= capsule.getMaxDamage()) {
-        world.playSound(player, player.func_233580_cy_(), SoundEvents.ENTITY_PLAYER_HURT_DROWN, SoundCategory.PLAYERS, 1.2f, 1.4f);
+        world.playSound(player, player.getPosition(), SoundEvents.ENTITY_PLAYER_HURT_DROWN, SoundCategory.PLAYERS, 1.2f, 1.4f);
       } else {
-        world.playSound(player, player.func_233580_cy_(), SoundEvents.BLOCK_BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundCategory.PLAYERS, 1.0f, 2.2f);
+        world.playSound(player, player.getPosition(), SoundEvents.BLOCK_BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundCategory.PLAYERS, 1.0f, 2.2f);
       }
     }
     if(!world.isRemote) player.inventory.markDirty();

@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.16.3.
 ----
 ## Version history
 
+    - v1.1.1-b1   [F] Manually wrapped shift-ctrl help tooltip texts (issue #13, ty Goshen).
+                  [A] Added small chance to find Muslee Bars in some chests.
+
     - v1.1.0      [U] Updated to Forge 1.16.3-34.1.0.
 
     - v1.1.0-b5   [U] Ported to MC1.16.3.

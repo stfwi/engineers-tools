@@ -272,7 +272,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   public boolean onBlockDestroyed(ItemStack tool, World world, BlockState state, BlockPos pos, LivingEntity player)
   {
     if(world.isRemote) return true;
-    if(state.getBlockHardness(world, pos) > 0.2f) tool.damageItem(1, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
+    if((state.getBlockHardness(world, pos) > 0.5f) || (world.getRandom().nextDouble() > 0.67)) tool.damageItem(1, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
     if(with_tree_felling && (player instanceof PlayerEntity) && (player.isSneaking())) tryTreeFelling(world, state, pos, player);
     decayEnchantments(tool);
     return true;
@@ -295,16 +295,26 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   @Override
   public ItemStack onShapelessRecipeRepaired(ItemStack stack, int previousDamage, int repairedDamage)
   {
-    if(repairedDamage == 0) {
-      final Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-      final int max_efficiency = durabilityDependentEfficiency(stack);
-      final int act_efficiency = enchantments.getOrDefault(Enchantments.EFFICIENCY, 0);
-      final int max_fortune = durabilityDependentFortune(stack);
-      final int act_fortune = enchantments.getOrDefault(Enchantments.FORTUNE, 0);
-      if((act_fortune > 0) || (act_efficiency >= max_efficiency)) enchantments.put(Enchantments.FORTUNE, Math.min(act_fortune+2, max_fortune));
-      if(act_efficiency < max_efficiency) enchantments.put(Enchantments.EFFICIENCY, Math.min(act_efficiency+2, max_efficiency));
-      EnchantmentHelper.setEnchantments(enchantments, stack);
+    final int enchantment_increase = (repairedDamage == 0) ? 2 : 0;
+    final Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+    final int max_efficiency = durabilityDependentEfficiency(stack);
+    final int act_efficiency = enchantments.getOrDefault(Enchantments.EFFICIENCY, 0);
+    final int new_efficiency = Math.min(act_efficiency+enchantment_increase, max_efficiency);
+    final int max_fortune = durabilityDependentFortune(stack);
+    final int act_fortune = enchantments.getOrDefault(Enchantments.FORTUNE, 0);
+    final int new_fortune = Math.min(act_fortune+enchantment_increase, max_fortune);
+    if(new_fortune > 0) {
+      if((act_fortune > 0) || (act_efficiency >= max_efficiency)) enchantments.put(Enchantments.FORTUNE, new_fortune);
+    } else {
+      enchantments.remove(Enchantments.FORTUNE);
     }
+    if(new_efficiency > 0) {
+      if(act_efficiency < max_efficiency) enchantments.put(Enchantments.EFFICIENCY, new_efficiency);
+    } else {
+      enchantments.remove(Enchantments.EFFICIENCY);
+    }
+    EnchantmentHelper.setEnchantments(enchantments, stack);
+    Auxiliaries.logInfo("REDIA tool repair: efficiency:"+act_efficiency+", fortune:"+new_fortune); // temporary logging, something's changed that sometimes messes up the fortune effect, but not in the ide.
     return stack;
   }
 
@@ -325,24 +335,38 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   private void decayEnchantments(ItemStack stack)
   {
     if(Math.random() > 0.17) return;
+    boolean changed = false;
     Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-    if(enchantments.containsKey(Enchantments.FORTUNE)) {
-      int fortune = durabilityDependentFortune(stack);
-      if(fortune <= 0) {
-        enchantments.remove(Enchantments.FORTUNE);
-      } else {
-        enchantments.put(Enchantments.FORTUNE, fortune);
+    final int fortune_current = enchantments.getOrDefault(Enchantments.FORTUNE, 0);
+    int fortune = 0;
+    if(fortune_current > 0) {
+      fortune = durabilityDependentFortune(stack);
+      if(fortune < fortune_current) {
+        changed = true;
+        if(fortune <= 0) {
+          enchantments.remove(Enchantments.FORTUNE);
+        } else {
+          enchantments.put(Enchantments.FORTUNE, fortune);
+        }
       }
     }
-    if(enchantments.containsKey(Enchantments.EFFICIENCY)) {
-      int efficiency = durabilityDependentEfficiency(stack);
-      if(efficiency <= 0) {
-        enchantments.remove(Enchantments.EFFICIENCY);
-      } else {
-        enchantments.put(Enchantments.EFFICIENCY, efficiency);
+    final int efficiency_current = enchantments.getOrDefault(Enchantments.EFFICIENCY, 0);
+    int efficiency = 0;
+    if(efficiency_current > 0) {
+      efficiency = durabilityDependentEfficiency(stack);
+      if(efficiency < efficiency_current) {
+        changed = true;
+        if(efficiency <= 0) {
+          enchantments.remove(Enchantments.EFFICIENCY);
+        } else {
+          enchantments.put(Enchantments.EFFICIENCY, efficiency);
+        }
       }
     }
-    EnchantmentHelper.setEnchantments(enchantments, stack);
+    if(changed) {
+      EnchantmentHelper.setEnchantments(enchantments, stack);
+      Auxiliaries.logInfo("REDIA tool effect decay: efficiency:"+efficiency+", fortune:"+fortune); // temporary logging, something's changed that sometimes messes up the fortune effect, but not in the ide.
+    }
   }
 
   // Multi tool features -----------------------------------------------------------------------------------------------

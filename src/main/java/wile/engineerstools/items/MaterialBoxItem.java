@@ -580,7 +580,7 @@ public class MaterialBoxItem extends EtItem
       super(world,x,y,z,stack);
       filled = ((getItem().getCount() == 1) && (getItem().hasTag()));
       setInvulnerable(filled);
-      lifespan = filled ? 18000 : 6000;
+      lifespan = filled ? 72000 : 6000;
     }
 
     @Override

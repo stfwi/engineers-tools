@@ -75,6 +75,7 @@ public class ModContent
   // Tile entities bound exclusively to the blocks above
   //--------------------------------------------------------------------------------------------------------------------
 
+  @SuppressWarnings("all")
   private static final TileEntityType<?> tile_entity_types[] = {
   };
 
@@ -133,6 +134,16 @@ public class ModContent
     default_item_properties().rarity(Rarity.UNCOMMON)
   ).setRegistryName(MODID, "tracker")));
 
+  public static final ChargedLapisItem CHARGED_LAPIS = (ChargedLapisItem)((new ChargedLapisItem(
+    default_item_properties().rarity(Rarity.UNCOMMON)
+  ).setRegistryName(MODID, "charged_lapis")));
+
+  public static final ChargedLapisSqueezerItem CHARGED_LAPIS_SQUEEZER = (ChargedLapisSqueezerItem)((new ChargedLapisSqueezerItem(
+    default_item_properties().rarity(Rarity.UNCOMMON)
+  ).setRegistryName(MODID, "charged_lapis_squeezer")));
+
+
+
   private static final Item modItems[] = {
     REDIA_TOOL,
     CRUSHING_HAMMER,
@@ -144,6 +155,8 @@ public class ModContent
     DIVING_CAPSULE,
     MUSLI_BAR_PRESS,
     MUSLI_BAR,
+    CHARGED_LAPIS_SQUEEZER,
+    CHARGED_LAPIS,
     IRON_GRIT,
     GOLD_GRIT
   };

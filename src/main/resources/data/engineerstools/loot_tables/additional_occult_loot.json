@@ -5,13 +5,14 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "engineerstools:musli_bar",
+          "name": "engineerstools:charged_lapis",
+          "weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "min": 1,
-                "max": 9
+                "max": 2
               }
             }
           ]
@@ -20,7 +21,7 @@
       "conditions": [
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.4
+          "chance": 0.3
         }
       ]
     }

@@ -8,6 +8,7 @@
  */
 package wile.engineerstools.libmc.detail;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -51,8 +52,15 @@ public class Inventories
     return null;
   }
 
+  public static IItemHandler itemhandler(Entity entity)
+  {
+    if(entity instanceof IInventory) return new InvWrapper((IInventory)entity);
+    if(entity instanceof PlayerEntity) return new InvWrapper(((PlayerEntity)entity).inventory);
+    return null;
+  }
+
   public static ItemStack insert(IItemHandler inventory, ItemStack stack , boolean simulate)
-  { return ItemHandlerHelper.insertItemStacked(inventory, stack, simulate); }
+  { return (inventory==null) ? stack : ItemHandlerHelper.insertItemStacked(inventory, stack, simulate); }
 
   public static ItemStack insert(TileEntity te, @Nullable Direction side, ItemStack stack, boolean simulate)
   {
@@ -67,6 +75,9 @@ public class Inventories
     }
     return (hnd==null) ? stack : ItemHandlerHelper.insertItemStacked(hnd, stack, simulate);
   }
+
+  public static ItemStack insert(Entity entity, ItemStack stack , boolean simulate)
+  { return insert(itemhandler(entity), stack, simulate); }
 
   public static ItemStack extract(IItemHandler inventory, @Nullable ItemStack match, int amount, boolean simulate)
   {
@@ -87,6 +98,9 @@ public class Inventories
     }
     return out_stack;
   }
+
+  public static void give(PlayerEntity entity, ItemStack stack)
+  { ItemHandlerHelper.giveItemToPlayer(entity, stack); }
 
   private static ItemStack checked(ItemStack stack)
   { return stack.isEmpty() ? ItemStack.EMPTY : stack; }

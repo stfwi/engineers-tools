@@ -1,0 +1,23 @@
+{
+  "conditions": [
+    {
+      "type": "engineerstools:optional",
+      "result": "engineerstools:charged_lapis_squeezer"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DED",
+    "LHL"
+  ],
+  "key": {
+    "H": { "item": "minecraft:iron_helmet" },
+    "E": { "item": "minecraft:ender_eye" },
+    "L": { "item": "minecraft:lapis_lazuli" },
+    "D": { "item": "minecraft:diamond" }
+  },
+  "result": {
+    "item": "engineerstools:charged_lapis_squeezer",
+    "count": 1
+  }
+}

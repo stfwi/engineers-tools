@@ -10,6 +10,8 @@ Mod sources for Minecraft version 1.16.3.
 ----
 ## Version history
 
+    - v1.1.1      [R] Release build v1.1.1.
+
     - v1.1.1-b2   [A] Added Charged Lapis and Mind Squeezer.
 
     - v1.1.1-b1   [F] Manually wrapped shift-ctrl help tooltip texts (issue #13, ty Goshen).

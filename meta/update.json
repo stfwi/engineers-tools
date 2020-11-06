@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.16.4": {
+    "1.1.2-b2": "[F] Lang file de_de (German Übersetzung) added.",
     "1.1.2-b1": "[U] Ported to 1.16.4",
     "1.1.1": "[R] Release build v1.1.1.",
     "1.1.1-b2": "[A] Added Charged Lapis and Mind Squeezer.",
@@ -10,6 +11,6 @@
   },
   "promos": {
     "1.16.4-recommended": "1.1.1",
-    "1.16.4-latest": "1.1.2-b1"
+    "1.16.4-latest": "1.1.2-b2"
   }
 }

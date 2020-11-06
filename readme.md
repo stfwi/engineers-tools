@@ -10,6 +10,8 @@ Mod sources for Minecraft version 1.16.3.
 ----
 ## Version history
 
+    - v1.1.2-b2   [F] Lang file de_de (German Übersetzung) added.
+
     - v1.1.2-b1   [U] Ported to 1.16.4
 
     - v1.1.1      [R] Release build v1.1.1.

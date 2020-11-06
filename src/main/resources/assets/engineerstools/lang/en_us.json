@@ -34,7 +34,7 @@
   "item.engineerstools.musli_bar_press": "Muslee Melange Power Bar Press",
   "item.engineerstools.musli_bar_press.help": "DIY on-the-go press for Muslee\n Melange Power Bars. Drop in some\n seeds and every food you can find\n (well, maybe no rotting stuff)\n to create healthy snacks.",
   "item.engineerstools.redia_tool": "REDIA Tool",
-  "item.engineerstools.redia_tool.help": "REal DIAmond covered steel multi\n tool. Combines axe, pickaxe,\n shovel, hoe, and shears. Efficient\n when in good condition, slow when\n durability is low. Repair with\n Diamonds (in your inventory, not\n an anvil). Over-repair to add\n Efficiency and Fortune.\n Right-click: Place torch.\n Sneak-right-click: Hoe Dirt to\n Farmland, Coarse Dirt, etc; Shear\n sheep, Vines, Leafs etc. Sneak\n while breaking a wood log: Tree\n felling.",
+  "item.engineerstools.redia_tool.help": "REal DIAmond covered steel multi\n tool. Combines axe, pickaxe,\n shovel, hoe, and shears. Efficient\n when in good condition, slow when\n durability is low. Repair with\n Diamonds (in your inventory, not\n an anvil). Over-repair to add\n Efficiency and Fortune.\n Right-click: Place torch.\n Sneak-right-click: Hoe Dirt to\n Farmland, Coarse Dirt, etc; Shear\n sheep, Vines, Leafs etc. Sneak\n while breaking a wood log: Tree\n felling.\nNote: You really must over-repair\nthe tool by adding Diamonds in your\ncrafting grid to get Efficiency and\nfinally Fortune.",
   "item.engineerstools.sleeping_bag": "Sleeping Bag",
   "item.engineerstools.sleeping_bag.help": "Made of tough fabric, therefore\n weatherproof and very robust.",
   "item.engineerstools.stimpack": "Auto Stim Pack",
@@ -50,7 +50,7 @@
   "item.engineerstools.tracker.tip.dimension.other": ", untraceable at the moment",
   "item.engineerstools.tracker.tip.dimension.overworld": " in the Overworld",
   "item.engineerstools.tracker.tip.target.distance": " | %1$s blocks away",
-  "item.engineerstools.tracker.tip.target.entity": "Enity: %1$s",
+  "item.engineerstools.tracker.tip.target.entity": "Entity: %1$s",
   "item.engineerstools.tracker.tip.target.location": "Location: %1$s",
   "engineerstools.subtitle.stimpack_inject": "Stim Pack injects"
 }

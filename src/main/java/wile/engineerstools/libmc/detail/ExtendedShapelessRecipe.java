@@ -157,7 +157,7 @@ public class ExtendedShapelessRecipe extends ShapelessRecipe implements ICraftin
       if(res.has("tag")) {
         // Tag based item picking
         ResourceLocation rl = new ResourceLocation(res.get("tag").getAsString());
-        ITag<Item> tag = TagCollectionManager.func_242178_a/*getInstance?*/().func_241836_b/*getItemTags?*/().func_241833_a/*getTagMap?*/().getOrDefault(rl, null);
+        ITag<Item> tag = TagCollectionManager.getManager().getItemTags().getIDTagMap().getOrDefault(rl, null);
         if(tag==null) throw new JsonParseException(this.getRegistryName().getPath() + ": Result tag does not exist: #" + rl);
         if(tag.getAllElements().isEmpty()) throw new JsonParseException(this.getRegistryName().getPath() + ": Result tag has no items: #" + rl);
         if(res.has("item")) res.remove("item");

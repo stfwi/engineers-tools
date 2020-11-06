@@ -62,7 +62,7 @@ public class SleepingBagItem extends EtItem
   private void onUse(PlayerEntity player, World world, BlockPos pos, Direction side)
   {
     if(world.isRemote() || (side != Direction.UP) || (!(player instanceof ServerPlayerEntity))) return;
-    if(!world.func_230315_m_().func_241510_j_()) { // world.dimension().can_sleep_in_or_so()
+    if(!world.getDimensionType().isNatural()) { // world.dimension().can_sleep_in_or_so()
       player.sendStatusMessage(new TranslationTextComponent("block.minecraft.bed.no_sleep"), true);
       return;
     }
@@ -82,7 +82,7 @@ public class SleepingBagItem extends EtItem
     PlayerEntity.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(player, optAt);
     if (ret != null) return Either.left(ret);
     if (!player.isSleeping() && player.isAlive()) {
-      if (!player.world.func_230315_m_().func_236043_f_()) {
+      if (!player.world.getDimensionType().isNatural()) {
         return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
       } else {
         if(set_spawn_point) player.setBedPosition(at);

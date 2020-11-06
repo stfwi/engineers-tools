@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
-  "1.16.3": {
+  "1.16.4": {
+    "1.1.2-b1": "[U] Ported to 1.16.4",
     "1.1.1": "[R] Release build v1.1.1.",
     "1.1.1-b2": "[A] Added Charged Lapis and Mind Squeezer.",
     "1.1.1-b1": "[F] Manually wrapped shift-ctrl help tooltip texts (issue #13, ty Goshen).\n[A] Added small chance to find Muslee Bars in some chests.",
@@ -8,7 +9,7 @@
     "1.1.0-b5": "[U] Ported to MC1.16.3."
   },
   "promos": {
-    "1.16.3-recommended": "1.1.1",
-    "1.16.3-latest": "1.1.1"
+    "1.16.4-recommended": "1.1.1",
+    "1.16.4-latest": "1.1.2-b1"
   }
 }

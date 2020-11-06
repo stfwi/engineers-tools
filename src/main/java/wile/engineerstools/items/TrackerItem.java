@@ -188,10 +188,9 @@ public class TrackerItem extends EtItem
 
   private String dimensionName(World world)
   {
-    // @todo: check how to get a registry name or so for a dimension. This must later also work for Mining dimensions, Between etc.
-    if(world.func_234923_W_() == World.field_234918_g_) return "overworld";
-    if(world.func_234923_W_() == World.field_234919_h_) return "nether";
-    if(world.func_234923_W_() == World.field_234920_i_) return "end";
+    if(world.getDimensionKey() == World.OVERWORLD) return "overworld";
+    if(world.getDimensionKey() == World.THE_NETHER) return "nether";
+    if(world.getDimensionKey() == World.THE_END) return "end";
     return "other";
   }
 

@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.16.3.
 ----
 ## Version history
 
+    - v1.1.2      [R] Release build v1.1.2.
+                  [F] Fixed Sleeping Bag day increment bug (issue #15, thx ariosos).
+
     - v1.1.2-b2   [F] Lang file de_de (German Übersetzung) added.
 
     - v1.1.2-b1   [U] Ported to 1.16.4

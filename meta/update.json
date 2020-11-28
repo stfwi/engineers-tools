@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
   "1.16.4": {
+    "1.1.2": "[R] Release build v1.1.2.\n[F] Fixed Sleeping Bag day increment bug (issue #15, thx ariosos).",
     "1.1.2-b2": "[F] Lang file de_de (German Übersetzung) added.",
     "1.1.2-b1": "[U] Ported to 1.16.4",
     "1.1.1": "[R] Release build v1.1.1.",
@@ -10,7 +11,7 @@
     "1.1.0-b5": "[U] Ported to MC1.16.3."
   },
   "promos": {
-    "1.16.4-recommended": "1.1.1",
-    "1.16.4-latest": "1.1.2-b2"
+    "1.16.4-recommended": "1.1.2",
+    "1.16.4-latest": "1.1.2"
   }
 }

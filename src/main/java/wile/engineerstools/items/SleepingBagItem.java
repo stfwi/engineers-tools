@@ -19,13 +19,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import com.mojang.datafixers.util.Either;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -62,51 +60,45 @@ public class SleepingBagItem extends EtItem
   private void onUse(PlayerEntity player, World world, BlockPos pos, Direction side)
   {
     if(world.isRemote() || (side != Direction.UP) || (!(player instanceof ServerPlayerEntity))) return;
-    if(!world.getDimensionType().isNatural()) { // world.dimension().can_sleep_in_or_so()
-      player.sendStatusMessage(new TranslationTextComponent("block.minecraft.bed.no_sleep"), true);
+    if(!world.getDimensionType().isNatural()) {
+      ITextComponent msg = PlayerEntity.SleepResult.NOT_POSSIBLE_HERE.getMessage();
+      if(msg != null) player.sendStatusMessage(msg, true);
       return;
     }
     boolean setspawn = true;
     tryServerPlayerSleep((ServerPlayerEntity)player, world, pos.up(), setspawn).ifLeft(sr -> {
       switch(sr) {
-        case TOO_FAR_AWAY: break;
-        default: player.sendStatusMessage(sr.getMessage(), true);
+        case TOO_FAR_AWAY:
+          break;
+        default:
+          if(sr.getMessage()!=null) player.sendStatusMessage(sr.getMessage(), true);
       }
     });
-    ((ServerWorld)player.world).updateAllPlayersSleepingFlag();
+    if(!player.world.isDaytime()) {
+      ((ServerWorld)player.world).updateAllPlayersSleepingFlag();
+    }
   }
 
   private Either<PlayerEntity.SleepResult, Unit> tryServerPlayerSleep(ServerPlayerEntity player, World world, BlockPos at, boolean set_spawn_point)
   {
-    Optional<BlockPos> optAt = Optional.of(at);
-    PlayerEntity.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(player, optAt);
-    if (ret != null) return Either.left(ret);
-    if (!player.isSleeping() && player.isAlive()) {
-      if (!player.world.getDimensionType().isNatural()) {
-        return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
-      } else {
-        if(set_spawn_point) player.setBedPosition(at);
-        if (player.world.isDaytime()) {
-          return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
-        } else {
-          if(!player.isCreative()) {
-            double d0 = 8.0D;
-            double d1 = 5.0D;
-            Vector3d vpos = Vector3d.copy(at);
-            List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB(vpos.getX() - 8.0D, vpos.getY() - 5.0D, vpos.getZ() - 8.0D, vpos.getX() + 8.0D, vpos.getY() + 5.0D, vpos.getZ() + 8.0D), (p_241146_1_) -> {
-              return p_241146_1_.func_230292_f_(player);
-            });
-            if (!list.isEmpty()) {
-              return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
-            }
-          }
-          ((ServerPlayerEntity)player).startSleeping(at);
-          return Either.right(Unit.INSTANCE);
-        }
+    if(!player.isAlive()) return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
+    if(!player.world.getDimensionType().isNatural()) return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
+    if(!player.isCreative()) {
+      double d0=8, d1=5;
+      if(!player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB(at.getX()-8, at.getY()-5, at.getZ()-8, at.getX()+8, at.getY()+5, at.getZ()+8), (en)->en.func_230292_f_(player)).isEmpty()) {
+        return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
       }
-    } else {
-      return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
     }
+    if(set_spawn_point) player.setBedPosition(at);
+    if(player.world.isDaytime()) return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
+    if(!player.isSleeping()) {
+      Optional<BlockPos> optAt = Optional.of(at);
+      PlayerEntity.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(player, optAt);
+      if(ret != null) return Either.left(ret);
+      ((ServerPlayerEntity)player).startSleeping(at);
+      return Either.right(Unit.INSTANCE);
+    }
+    return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
   }
 
   public static void onSleepingLocationCheckEvent(net.minecraftforge.event.entity.player.SleepingLocationCheckEvent event)

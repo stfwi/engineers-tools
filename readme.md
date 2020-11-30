@@ -10,6 +10,9 @@ Mod sources for Minecraft version 1.16.3.
 ----
 ## Version history
 
+    - v1.1.3-b1   [M] REDIA Tool recipe made shapeless (ty Bentley).
+                  [F] Fixed missing Coarse Grit smelting recipes if IE is installed (issue #16, ty staegrin).
+
     - v1.1.2      [R] Release build v1.1.2.
                   [F] Fixed Sleeping Bag day increment bug (issue #15, thx ariosos).
 

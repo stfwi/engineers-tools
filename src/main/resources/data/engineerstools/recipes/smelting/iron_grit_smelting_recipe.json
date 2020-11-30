@@ -1,11 +1,4 @@
 {
-  "conditions": [
-    {
-      "type": "engineerstools:optional",
-      "result": "minecraft:iron_ingot",
-      "requires": ["engineerstools:iron_grit"]
-    }
-  ],
   "type": "minecraft:smelting",
   "ingredient": {
     "item": "engineerstools:iron_grit"

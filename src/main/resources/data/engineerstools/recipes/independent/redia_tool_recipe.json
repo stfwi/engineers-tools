@@ -5,25 +5,13 @@
       "result": "engineerstools:redia_tool"
     }
   ],
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "DA",
-    "PS"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:iron_shovel" },
+    { "item": "minecraft:iron_pickaxe" },
+    { "item": "minecraft:iron_axe" },
+    { "item": "minecraft:diamond" }
   ],
-  "key": {
-    "S": {
-      "item": "minecraft:iron_shovel"
-    },
-    "P": {
-      "item": "minecraft:iron_pickaxe"
-    },
-    "A": {
-      "item": "minecraft:iron_axe"
-    },
-    "D": {
-      "item": "minecraft:diamond"
-    }
-  },
   "result": {
     "item": "engineerstools:redia_tool",
     "count": 1

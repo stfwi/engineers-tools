@@ -26,7 +26,7 @@
   "item.engineerstools.gold_grit.help": "Grobes Grus (gebrochenes Erzgestein), kann zu Goldbarren geschmolzen werden, ist jedoch für industrielle Weiterverarbeitung weitgehend unbrauchbar.",
   "item.engineerstools.iron_grit": "Coarse Iron Grit",
   "item.engineerstools.iron_grit.help": "Grobes Grus (gebrochenes Erzgestein), kann zu Eisenbarren geschmolzen werden, ist jedoch für industrielle Weiterverarbeitung weitgehend unbrauchbar.",
-  "item.engineerstools.material_box": "Material Box",
+  "item.engineerstools.material_box": "Material Storage Box",
   "item.engineerstools.material_box.help": "Einfacher Metallkoffer mit Schultergurt, um Werkmaterial von A nach B zu transportieren. Vorschau-Tooltip im Inventar mit der Shift-Taste. In der GUI können mit Shift-Ctrl-Klick alle gleichen Objekte gleichzeitig verschoben werden. 'Kaktus-resistent': Wenn der Koffer nicht leer ist widersteht er Feuer und Kakteen eine Zeit.",
   "item.engineerstools.material_box.tip": "§6%1$s slots used / %2$s free",
   "item.engineerstools.musli_bar": "Muslee Melange Power Bar",

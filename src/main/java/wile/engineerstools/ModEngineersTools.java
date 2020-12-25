@@ -7,9 +7,6 @@
 package wile.engineerstools;
 
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import wile.engineerstools.detail.*;
-import wile.engineerstools.libmc.detail.*;
-import wile.engineerstools.items.*;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
@@ -18,7 +15,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -31,6 +27,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import wile.engineerstools.detail.*;
+import wile.engineerstools.libmc.detail.*;
+import wile.engineerstools.items.*;
 
 
 @Mod("engineerstools")
@@ -49,7 +48,7 @@ public class ModEngineersTools
     Auxiliaries.logGitVersion(MODNAME);
     OptionalRecipeCondition.init(MODID, LOGGER);
     MinecraftForge.EVENT_BUS.register(this);
-    //ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_CONFIG_SPEC);
+    ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_CONFIG_SPEC);
     ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, ModConfig.SERVER_CONFIG_SPEC);
     MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onSleepingLocationCheckEvent);
     MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onPlayerWakeUpEvent);
@@ -120,14 +119,6 @@ public class ModEngineersTools
     @SubscribeEvent
     public static final void onConfigChanged(net.minecraftforge.fml.config.ModConfig.Reloading event)
     { ModConfig.onFileChange(event.getConfig()); }
-
-    // @SubscribeEvent
-    public final void onPlayerUpdateEvent(final LivingEvent.LivingUpdateEvent event)
-    {
-      //   if(!(event.getEntity() instanceof PlayerEntity)) return;
-      //   final PlayerEntity player = (PlayerEntity)event.getEntity();
-      //   if(player.world == null) return;
-    }
 
     public static final void onSleepingLocationCheckEvent(net.minecraftforge.event.entity.player.SleepingLocationCheckEvent event)
     { SleepingBagItem.onSleepingLocationCheckEvent(event); }

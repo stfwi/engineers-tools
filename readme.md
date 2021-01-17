@@ -10,6 +10,8 @@ Mod sources for Minecraft version 1.16.3.
 ----
 ## Version history
 
+    - v1.1.3      [R] Release build v1.1.3, 1.16.5 supported.
+
     - v1.1.3-b2   [F] Opt-out config pack level and pattern based.
                   [F] Minor lang file fixes.
 

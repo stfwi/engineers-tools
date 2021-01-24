@@ -1,7 +1,7 @@
 
-## Engineer's Tools (MC1.16.3)
+## Engineer's Tools (MC1.16 mainline)
 
-Mod sources for Minecraft version 1.16.3.
+Mod sources for Minecraft version 1.16.x, latest version.
 
 - Description, credits, and features: Please see the readme in the repository root.
 
@@ -9,6 +9,9 @@ Mod sources for Minecraft version 1.16.3.
 
 ----
 ## Version history
+
+    - v1.1.4      [F] Chest loot tables made optional to prevent interfering
+                      with pack configuration tool mods.
 
     - v1.1.3      [R] Release build v1.1.3, 1.16.5 supported.
 

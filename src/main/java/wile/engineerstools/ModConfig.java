@@ -18,6 +18,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.logging.log4j.Logger;
 import org.apache.commons.lang3.tuple.Pair;
 import wile.engineerstools.libmc.detail.Auxiliaries;
+import wile.engineerstools.libmc.detail.LootTableExtension;
 import wile.engineerstools.libmc.detail.OptionalRecipeCondition;
 
 import javax.annotation.Nullable;
@@ -95,6 +96,7 @@ public class ModConfig
     // MISC
     public final ForgeConfigSpec.BooleanValue with_experimental;
     public final ForgeConfigSpec.BooleanValue with_config_logging;
+    public final ForgeConfigSpec.BooleanValue with_chest_loot;
 
     CommonConfig(ForgeConfigSpec.Builder builder)
     {
@@ -134,6 +136,10 @@ public class ModConfig
           .translation(MODID + ".config.with_config_logging")
           .comment("Enable detailed logging of the config values and resulting calculations in each mod feature config.")
           .define("with_config_logging", false);
+        with_chest_loot = builder
+          .translation(MODID + ".config.with_chest_loot")
+          .comment("Enable chest loot tables for villages and mineshafts.")
+          .define("with_chest_loot", false);
         builder.pop();
       }
     }
@@ -292,8 +298,13 @@ public class ModConfig
   {
     with_config_logging_ = COMMON.with_config_logging.get();
     with_experimental_features_ = COMMON.with_experimental.get();
+    LootTableExtension.enabled = COMMON.with_chest_loot.get();
     if(with_experimental_features_) LOGGER.info("Config: EXPERIMENTAL FEATURES ENABLED.");
     immersiveengineering_installed = Auxiliaries.isModLoaded("immersiveengineering");
+    if(with_config_logging_) {
+      if(immersiveengineering_installed) LOGGER.info("Immersive Engineering also installed.");
+      LOGGER.info("Chest loot generation: " + (LootTableExtension.enabled ? "enabled" : "disabled") + ".");
+    }
     updateOptouts();
     if(!SERVER_CONFIG_SPEC.isLoaded()) return;
     if(SERVER.redia_tool_efficiency_curve.get().equals("10,60,90,100,120,140,170,200,220,230")) {

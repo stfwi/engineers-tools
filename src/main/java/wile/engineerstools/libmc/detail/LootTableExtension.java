@@ -15,8 +15,11 @@ import net.minecraftforge.event.LootTableLoadEvent;
 
 public class LootTableExtension
 {
+  public static boolean enabled = false;
+
   public static void onLootTableLoad(LootTableLoadEvent event)
   {
+    if(!enabled) return;
     ResourceLocation table_path = new ResourceLocation(Auxiliaries.modid(), "additional/" + event.getName().getNamespace() + "/" + event.getName().getPath());
     if(LootTableExtension.class.getResource("/data/" + table_path.getNamespace() + "/loot_tables/" + table_path.getPath() + ".json") == null) return;
     event.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(table_path).weight(1)).name(Auxiliaries.modid()+"_additional_loot").bonusRolls(0, 1).build());

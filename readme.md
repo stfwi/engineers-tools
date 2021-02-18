@@ -10,6 +10,8 @@ Mod sources for Minecraft version 1.16.x, latest version.
 ----
 ## Version history
 
+    - v1.1.5-b1   [A] Added Manual language zh_cn (PR#17, kappa-maintainer).
+
     - v1.1.4      [F] Chest loot tables made optional to prevent interfering
                       with pack configuration tool mods.
 

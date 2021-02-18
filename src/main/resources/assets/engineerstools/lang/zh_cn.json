@@ -52,8 +52,8 @@
   "item.engineerstools.tracker.tip.target.distance": " | 有 %1$s 格远",
   "item.engineerstools.tracker.tip.target.entity": "实体：%1$s",
   "item.engineerstools.tracker.tip.target.location": "位置：%1$s",
-  "engineerstools.subtitle.stimpack_inject": "兴奋剂包注射",
+  "engineerstools.book.landing_text": "提前提示：要获得方块或设备的简短帮助文本，请在用鼠标悬停时同时按 CONTROL 和 SHIFT 键。这样你就不需要一直带着这个沉重的手册了。",
   "engineerstools.book.name": "工程师的工具",
   "engineerstools.book.subtitle": "参考指南",
-  "engineerstools.book.landing_text": "提前提示：要获得方块或设备的简短帮助文本，请在用鼠标悬停时同时按 CONTROL 和 SHIFT 键。这样你就不需要一直带着这个沉重的手册了。"
+  "engineerstools.subtitle.stimpack_inject": "兴奋剂包注射"
 }

@@ -1,0 +1,20 @@
+{
+  "name": "粗矿石砂",
+  "icon": "engineerstools:iron_grit",
+  "category": "consumables",
+  "sortnum": 1010,
+  "pages": [
+    {
+      "type": "spotlight",
+      "title": "粗铁砂",
+      "item": "engineerstools:iron_grit",
+      "text": "粗糙、厚重的铁矿粉，可以熔炼成$(n)铁锭$()，但对于进一步处理来说没有多少用。通过使用$(o)碎矿锤$()获得。$(br2) $(br)$(o)[该物品只在没有其他模组提供铁粉的时候使用/激活。]"
+    },
+    {
+      "type": "spotlight",
+      "title": "Coarse Gold Grit",
+      "item": "engineerstools:gold_grit",
+      "text": "粗糙、厚重的金矿粉，可以熔炼成$(n)铁锭$()，但对于进一步处理来说没有多少用。通过使用$(o)碎矿锤$()获得。$(br2) $(br)$(o)[该物品只在没有其他模组提供金粉的时候使用/激活。]没错，我复制粘贴了上面的。"
+    }
+  ]
+}

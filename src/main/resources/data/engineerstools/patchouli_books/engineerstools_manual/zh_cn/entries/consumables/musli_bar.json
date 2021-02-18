@@ -1,0 +1,18 @@
+{
+  "name": "木斯里能量棒",
+  "icon": "engineerstools:musli_bar",
+  "category": "consumables",
+  "sortnum": 1020,
+  "pages": [
+    {
+      "type": "spotlight",
+      "title": "木斯里能量棒",
+      "item": "engineerstools:musli_bar",
+      "text": "实际上是“木斯里混合能量棒”，或者“木斯里棒”。这是一个混合了多种可食用原料的谷物棒（所以是“混合”）。$(br2)能量棒可以用$(o)能量棒挤压机$()生产，而且可以随时食用，哪怕你的胃快要满到爆炸。"
+    },
+    {
+      "type": "text",
+      "text": "$(br2) $(br2) $(br)食用能量棒需要的时间比一餐需要的时间少得多（众所周知，能量棒可以瞬间消失）。$(br2)营养价值可与$(o)金胡萝卜$()相比。"
+    }
+  ]
+}

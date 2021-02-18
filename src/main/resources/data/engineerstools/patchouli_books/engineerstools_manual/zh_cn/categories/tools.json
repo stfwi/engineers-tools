@@ -1,0 +1,6 @@
+{
+	"name": "工具和装备",
+	"description": "工程师的工具箱和背包里不可或缺的手持式工具、手动操作设备和实用装备。$(br)幸运的是一页暂时还放得下。",
+  "icon": "engineerstools:redia_tool",
+  "sortnum": 1000
+}

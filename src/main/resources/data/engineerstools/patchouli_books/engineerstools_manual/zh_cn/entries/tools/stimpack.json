@@ -1,0 +1,18 @@
+{
+  "name": "自动兴奋剂注射包",
+  "icon": "engineerstools:stimpack",
+  "category": "tools",
+  "sortnum": 1030,
+  "pages": [
+    {
+      "type": "spotlight",
+      "title": "自动兴奋剂注射包",
+      "item": "engineerstools:stimpack",
+      "text": "一个便携自动注射系统，放在物品栏、Curios 或 Bauble 槽时会检测你的生命值。$(br)当你$(t:默认 3 颗心)生命值较低$()时，它会激活一秒钟，立即回复几颗心的生命。除此之外，还会提供短期回复和增益来帮你摆脱"
+    },
+    {
+      "type": "text",
+      "text": "$(br2) $(br2) $(br)不幸的情况：$(br) $(br)$(li)再生：15 秒$(li)速度：20 秒$(li)抗性提升：10 秒$(li)防火：10 秒$(br2)只能注射两发，但现在可以修理。"
+    }
+  ]
+}

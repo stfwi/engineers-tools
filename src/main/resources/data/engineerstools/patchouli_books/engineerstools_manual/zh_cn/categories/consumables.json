@@ -1,0 +1,6 @@
+{
+	"name": "消耗品",
+	"description": "本节描述了健康、营养的食物，还有其合成原料。",
+  "icon": "engineerstools:musli_bar",
+  "sortnum": 2000
+}

@@ -1,0 +1,18 @@
+{
+  "name": "睡袋",
+  "icon": "engineerstools:sleeping_bag",
+  "category": "tools",
+  "sortnum": 1050,
+  "pages": [
+    {
+      "type": "spotlight",
+      "title": "睡袋",
+      "item": "engineerstools:sleeping_bag",
+      "text": "一个结实的传统睡袋。$(br2)手持睡袋右击地面即可睡觉。可以入睡的时间地点判断和床相同。"
+    },
+    {
+      "type": "text",
+      "text": ""
+    }
+  ]
+}

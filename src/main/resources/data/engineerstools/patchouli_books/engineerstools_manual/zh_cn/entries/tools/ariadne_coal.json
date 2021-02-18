@@ -1,0 +1,18 @@
+{
+  "name": "阿里阿德涅煤",
+  "icon": "engineerstools:ariadne_coal",
+  "category": "tools",
+  "sortnum": 1040,
+  "pages": [
+    {
+      "type": "spotlight",
+      "title": "阿里阿德涅煤",
+      "item": "engineerstools:ariadne_coal",
+      "text": "以弥诺斯之女交给忒修斯，让他走出克里特迷宫的那条线命名，阿里阿德涅煤能在墙上画出箭头以指出离开矿洞的方向。$(br2)画出的箭头会指向你右击方块表面的位置。"
+    },
+    {
+      "type": "text",
+      "text": "$(br2) $(br2) $(br)右击方块边缘会画出直箭头（北、南、东、西、上、下），右击位置接近角落则会画出倾斜箭头。"
+    }
+  ]
+}

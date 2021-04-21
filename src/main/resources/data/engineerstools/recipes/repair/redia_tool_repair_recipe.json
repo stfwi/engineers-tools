@@ -16,6 +16,8 @@
   },
   "aspects": {
     "tool": "engineerstools:redia_tool",
-    "tool_repair": 65
+    "tool_repair": 65,
+    "over_repair": true,
+    "relative_repair_damage": true
   }
 }

@@ -87,7 +87,7 @@ public class ModEngineersTools
     { ModContent.registerContainers(event); }
 
     @SubscribeEvent
-    public static final void onRegisterContainerTypes(final ModelRegistryEvent event)
+    public static final void onRegisterModels(final ModelRegistryEvent event)
     { ModContent.registerModels(); }
 
     @SubscribeEvent

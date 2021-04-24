@@ -70,7 +70,7 @@ public class StandardBlocks
     { return false; }
 
     default List<ItemStack> dropList(BlockState state, World world, BlockPos pos, boolean explosion)
-    { return Collections.singletonList((!world.isRemote()) ? (new ItemStack(state.getBlock().asItem())) : (ItemStack.EMPTY)); }
+    { return Collections.singletonList((!world.isClientSide()) ? (new ItemStack(state.getBlock().asItem())) : (ItemStack.EMPTY)); }
 
     enum RenderTypeHint { SOLID,CUTOUT,CUTOUT_MIPPED,TRANSLUCENT }
 
@@ -84,18 +84,18 @@ public class StandardBlocks
     public final long config;
     public final VoxelShape vshape;
 
-    public BaseBlock(long conf, Block.Properties properties)
+    public BaseBlock(long conf, AbstractBlock.Properties properties)
     { this(conf, properties, Auxiliaries.getPixeledAABB(0, 0, 0, 16, 16,16 )); }
 
-    public BaseBlock(long conf, Block.Properties properties, AxisAlignedBB aabb)
+    public BaseBlock(long conf, AbstractBlock.Properties properties, AxisAlignedBB aabb)
     { super(properties); config = conf; vshape = VoxelShapes.create(aabb); }
 
-    public BaseBlock(long conf, Block.Properties properties, VoxelShape voxel_shape)
+    public BaseBlock(long conf, AbstractBlock.Properties properties, VoxelShape voxel_shape)
     { super(properties); config = conf; vshape = voxel_shape; }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit)
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit)
     { return ActionResultType.PASS; }
 
     @Override
@@ -105,7 +105,7 @@ public class StandardBlocks
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag)
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag)
     { Auxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
 
     @Override
@@ -128,40 +128,40 @@ public class StandardBlocks
     {
       BlockState state = super.getStateForPlacement(context);
       if((config & CFG_WATERLOGGABLE)!=0) {
-        FluidState fs = context.getWorld().getFluidState(context.getPos());
-        state = state.with(WATERLOGGED,fs.getFluid()==Fluids.WATER);
+        FluidState fs = context.getLevel().getFluidState(context.getClickedPos());
+        state = state.setValue(WATERLOGGED,fs.getType()==Fluids.WATER);
       }
       return state;
     }
 
     @Override
-    public boolean canSpawnInBlock()
+    public boolean isPossibleToRespawnInThis()
     { return false; }
 
     @Override
     @SuppressWarnings("deprecation")
-    public PushReaction getPushReaction(BlockState state)
+    public PushReaction getPistonPushReaction(BlockState state)
     { return PushReaction.NORMAL; }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
     {
       if(state.hasTileEntity() && (state.getBlock() != newState.getBlock())) {
-        world.removeTileEntity(pos);
-        world.updateComparatorOutputLevel(pos, this);
+        world.removeBlockEntity(pos);
+        world.updateNeighbourForOutputSignal(pos, this);
       }
     }
 
     public static boolean dropBlock(BlockState state, World world, BlockPos pos, @Nullable PlayerEntity player)
     {
       if(!(state.getBlock() instanceof IStandardBlock)) { world.removeBlock(pos, false); return true; }
-      if(!world.isRemote()) {
+      if(!world.isClientSide()) {
         if((player==null) || (!player.isCreative())) {
-          ((IStandardBlock)state.getBlock()).dropList(state, world, pos, player==null).forEach(stack->world.addEntity(new ItemEntity(world, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, stack)));
+          ((IStandardBlock)state.getBlock()).dropList(state, world, pos, player==null).forEach(stack->world.addFreshEntity(new ItemEntity(world, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, stack)));
         }
       }
-      if(state.getBlock().hasTileEntity(state)) world.removeTileEntity(pos);
+      if(state.getBlock().hasTileEntity(state)) world.removeBlockEntity(pos);
       world.removeBlock(pos, false);
       return true;
     }
@@ -171,7 +171,7 @@ public class StandardBlocks
     { return hasDynamicDropList() ? dropBlock(state, world, pos, player) : super.removedByPlayer(state, world,pos , player, willHarvest, fluid); }
 
     @Override
-    public void onExplosionDestroy(World world, BlockPos pos, Explosion explosion)
+    public void wasExploded(World world, BlockPos pos, Explosion explosion)
     { if(hasDynamicDropList()) dropBlock(world.getBlockState(pos), world, pos, null); }
 
     @Override
@@ -183,7 +183,7 @@ public class StandardBlocks
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos)
     {
       if((config & CFG_WATERLOGGABLE)!=0) {
-        if(state.get(WATERLOGGED)) return false;
+        if(state.getValue(WATERLOGGED)) return false;
       }
       return super.propagatesSkylightDown(state, reader, pos);
     }
@@ -193,17 +193,17 @@ public class StandardBlocks
     public FluidState getFluidState(BlockState state)
     {
       if((config & CFG_WATERLOGGABLE)!=0) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
       }
       return super.getFluidState(state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos)
     {
       if((config & CFG_WATERLOGGABLE)!=0) {
-        if(state.get(WATERLOGGED)) world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        if(state.getValue(WATERLOGGED)) world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
       }
       return state;
     }
@@ -211,18 +211,18 @@ public class StandardBlocks
 
   public static class WaterLoggable extends BaseBlock implements IWaterLoggable, IStandardBlock
   {
-    public WaterLoggable(long config, Block.Properties properties)
+    public WaterLoggable(long config, AbstractBlock.Properties properties)
     { super(config|CFG_WATERLOGGABLE, properties); }
 
-    public WaterLoggable(long config, Block.Properties properties, AxisAlignedBB aabb)
+    public WaterLoggable(long config, AbstractBlock.Properties properties, AxisAlignedBB aabb)
     { super(config|CFG_WATERLOGGABLE, properties, aabb); }
 
-    public WaterLoggable(long config, Block.Properties properties, VoxelShape voxel_shape)
+    public WaterLoggable(long config, AbstractBlock.Properties properties, VoxelShape voxel_shape)
     { super(config|CFG_WATERLOGGABLE, properties, voxel_shape);  }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
-    { super.fillStateContainer(builder); builder.add(WATERLOGGED); }
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    { super.createBlockStateDefinition(builder); builder.add(WATERLOGGED); }
   }
 
   public static class Directed extends BaseBlock implements IStandardBlock
@@ -230,10 +230,10 @@ public class StandardBlocks
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     protected final ArrayList<VoxelShape> AABBs;
 
-    public Directed(long config, Block.Properties builder, final AxisAlignedBB unrotatedAABB)
+    public Directed(long config, AbstractBlock.Properties builder, final AxisAlignedBB unrotatedAABB)
     {
       super(config, builder);
-      setDefaultState(stateContainer.getBaseState().with(FACING, Direction.UP));
+      registerDefaultState(stateDefinition.any().setValue(FACING, Direction.UP));
       final boolean is_horizontal = ((config & CFG_HORIZIONTAL)!=0);
       AABBs = new ArrayList<VoxelShape>(Arrays.asList(
         VoxelShapes.create(Auxiliaries.getRotatedAABB(unrotatedAABB, Direction.DOWN, is_horizontal)),
@@ -248,7 +248,7 @@ public class StandardBlocks
     }
 
     @Override
-    public boolean canSpawnInBlock()
+    public boolean isPossibleToRespawnInThis()
     { return false; }
 
     @Override
@@ -257,24 +257,24 @@ public class StandardBlocks
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader source, BlockPos pos, ISelectionContext selectionContext)
-    { return AABBs.get((state.get(FACING)).getIndex() & 0x7); }
+    { return AABBs.get((state.getValue(FACING)).get3DDataValue() & 0x7); }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selectionContext)
     { return getShape(state, world, pos, selectionContext); }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
-    { super.fillStateContainer(builder); builder.add(FACING); }
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    { super.createBlockStateDefinition(builder); builder.add(FACING); }
 
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context)
     {
-      Direction facing = context.getFace();
+      Direction facing = context.getClickedFace();
       if((config & (CFG_HORIZIONTAL|CFG_LOOK_PLACEMENT)) == (CFG_HORIZIONTAL|CFG_LOOK_PLACEMENT)) {
         // horizontal placement in direction the player is looking
-        facing = context.getPlacementHorizontalFacing();
+        facing = context.getHorizontalDirection();
       } else if((config & (CFG_HORIZIONTAL|CFG_LOOK_PLACEMENT)) == (CFG_HORIZIONTAL)) {
         // horizontal placement on a face
         if(((facing==Direction.UP)||(facing==Direction.DOWN))) return null;
@@ -285,20 +285,20 @@ public class StandardBlocks
         // default: placement on the face the player clicking
       }
       if((config & CFG_OPPOSITE_PLACEMENT)!=0) facing = facing.getOpposite();
-      if(((config & CFG_FLIP_PLACEMENT_SHIFTCLICK) != 0) && (context.getPlayer().isSneaking())) facing = facing.getOpposite();
-      return super.getStateForPlacement(context).with(FACING, facing);
+      if(((config & CFG_FLIP_PLACEMENT_SHIFTCLICK) != 0) && (context.getPlayer().isShiftKeyDown())) facing = facing.getOpposite();
+      return super.getStateForPlacement(context).setValue(FACING, facing);
     }
   }
 
   public static class Horizontal extends BaseBlock implements IStandardBlock
   {
-    public static final DirectionProperty HORIZONTAL_FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty HORIZONTAL_FACING = HorizontalBlock.FACING;
     protected final ArrayList<VoxelShape> AABBs;
 
-    public Horizontal(long config, Block.Properties builder, final AxisAlignedBB unrotatedAABB)
+    public Horizontal(long config, AbstractBlock.Properties builder, final AxisAlignedBB unrotatedAABB)
     {
       super(config|CFG_HORIZIONTAL, builder, unrotatedAABB);
-      setDefaultState(stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
+      registerDefaultState(stateDefinition.any().setValue(HORIZONTAL_FACING, Direction.NORTH));
       AABBs = new ArrayList<VoxelShape>(Arrays.asList(
         VoxelShapes.create(Auxiliaries.getRotatedAABB(unrotatedAABB, Direction.DOWN, true)),
         VoxelShapes.create(Auxiliaries.getRotatedAABB(unrotatedAABB, Direction.UP, true)),
@@ -313,62 +313,62 @@ public class StandardBlocks
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader source, BlockPos pos, ISelectionContext selectionContext)
-    { return AABBs.get((state.get(HORIZONTAL_FACING)).getIndex() & 0x7); }
+    { return AABBs.get((state.getValue(HORIZONTAL_FACING)).get3DDataValue() & 0x7); }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selectionContext)
     { return getShape(state, world, pos, selectionContext); }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
-    { super.fillStateContainer(builder); builder.add(HORIZONTAL_FACING); }
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    { super.createBlockStateDefinition(builder); builder.add(HORIZONTAL_FACING); }
 
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context)
     {
-      Direction facing = context.getFace();
+      Direction facing = context.getClickedFace();
       if((config & CFG_LOOK_PLACEMENT) != 0) {
         // horizontal placement in direction the player is looking
-        facing = context.getPlacementHorizontalFacing();
+        facing = context.getHorizontalDirection();
       } else {
         // horizontal placement on a face
-        facing = ((facing==Direction.UP)||(facing==Direction.DOWN)) ? (context.getPlacementHorizontalFacing()) : facing;
+        facing = ((facing==Direction.UP)||(facing==Direction.DOWN)) ? (context.getHorizontalDirection()) : facing;
       }
       if((config & CFG_OPPOSITE_PLACEMENT)!=0) facing = facing.getOpposite();
-      if(((config & CFG_FLIP_PLACEMENT_SHIFTCLICK) != 0) && (context.getPlayer().isSneaking())) facing = facing.getOpposite();
-      return super.getStateForPlacement(context).with(HORIZONTAL_FACING, facing);
+      if(((config & CFG_FLIP_PLACEMENT_SHIFTCLICK) != 0) && (context.getPlayer().isShiftKeyDown())) facing = facing.getOpposite();
+      return super.getStateForPlacement(context).setValue(HORIZONTAL_FACING, facing);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, Rotation rot)
-    { return state.with(HORIZONTAL_FACING, rot.rotate(state.get(HORIZONTAL_FACING))); }
+    { return state.setValue(HORIZONTAL_FACING, rot.rotate(state.getValue(HORIZONTAL_FACING))); }
 
     @Override
     @SuppressWarnings("deprecation")
     public BlockState mirror(BlockState state, Mirror mirrorIn)
-    { return state.rotate(mirrorIn.toRotation(state.get(HORIZONTAL_FACING))); }
+    { return state.rotate(mirrorIn.getRotation(state.getValue(HORIZONTAL_FACING))); }
   }
 
   public static class DirectedWaterLoggable extends Directed implements IWaterLoggable, IStandardBlock
   {
-    public DirectedWaterLoggable(long config, Block.Properties properties, AxisAlignedBB aabb)
+    public DirectedWaterLoggable(long config, AbstractBlock.Properties properties, AxisAlignedBB aabb)
     { super(config|CFG_WATERLOGGABLE, properties, aabb); }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
-    { super.fillStateContainer(builder); builder.add(WATERLOGGED); }
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    { super.createBlockStateDefinition(builder); builder.add(WATERLOGGED); }
   }
 
   public static class HorizontalWaterLoggable extends Horizontal implements IWaterLoggable, IStandardBlock
   {
-    public HorizontalWaterLoggable(long config, Block.Properties properties, AxisAlignedBB aabb)
+    public HorizontalWaterLoggable(long config, AbstractBlock.Properties properties, AxisAlignedBB aabb)
     { super(config|CFG_WATERLOGGABLE|CFG_HORIZIONTAL, properties, aabb); }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
-    { super.fillStateContainer(builder); builder.add(WATERLOGGED); }
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    { super.createBlockStateDefinition(builder); builder.add(WATERLOGGED); }
   }
 
 }

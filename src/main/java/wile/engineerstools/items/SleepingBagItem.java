@@ -15,33 +15,31 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import com.mojang.datafixers.util.Either;
 
 import java.util.Optional;
 
 
 public class SleepingBagItem extends EtItem
 {
-  private final boolean respawn_at_bed = false;
-
   public SleepingBagItem(Item.Properties properties)
-  { super(properties.maxStackSize(1).defaultMaxDamage(4096).setNoRepair()); }
+  { super(properties.stacksTo(1).defaultDurability(4096).setNoRepair()); }
 
   @Override
-  public ActionResultType onItemUse(ItemUseContext context)
+  public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context)
   {
-    if(context.getWorld().getBlockState(context.getPos()).isBed(context.getWorld(), context.getPos(), context.getPlayer())) return ActionResultType.PASS;
-    if(context.getWorld().isRemote()) return ActionResultType.CONSUME;
-    onUse(context.getPlayer(), context.getWorld(), context.getPos(), context.getFace());
-    return ActionResultType.SUCCESS;
+    if(context.getLevel().getBlockState(context.getClickedPos()).isBed(context.getLevel(), context.getClickedPos(), context.getPlayer())) return ActionResultType.PASS;
+    onUse(context.getPlayer(), context.getLevel(), context.getClickedPos(), context.getClickedFace());
+    return context.getLevel().isClientSide() ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
   }
+
+  @Override
+  public ActionResultType useOn(ItemUseContext context)
+  { return ActionResultType.FAIL; }
 
   @Override
   public boolean isBookEnchantable(ItemStack stack, ItemStack book)
@@ -57,55 +55,40 @@ public class SleepingBagItem extends EtItem
 
   // -------------------------------------------------------------------------------------------------------------------
 
-  private void onUse(PlayerEntity player, World world, BlockPos pos, Direction side)
+  private boolean onUse(PlayerEntity player, World world, BlockPos pos, Direction side)
   {
-    if(world.isRemote() || (side != Direction.UP) || (!(player instanceof ServerPlayerEntity))) return;
-    if(!world.getDimensionType().isNatural()) {
-      ITextComponent msg = PlayerEntity.SleepResult.NOT_POSSIBLE_HERE.getMessage();
-      if(msg != null) player.sendStatusMessage(msg, true);
-      return;
-    }
-    boolean setspawn = true;
-    tryServerPlayerSleep((ServerPlayerEntity)player, world, pos.up(), setspawn).ifLeft(sr -> {
-      switch(sr) {
-        case TOO_FAR_AWAY:
-          break;
-        default:
-          if(sr.getMessage()!=null) player.sendStatusMessage(sr.getMessage(), true);
-      }
-    });
-    if(!player.world.isDaytime()) {
-      ((ServerWorld)player.world).updateAllPlayersSleepingFlag();
-    }
+    if(side != Direction.UP) return false;
+    final PlayerEntity.SleepResult sr = trySleep(player, world, pos.above(), true);
+    if(sr == null) return true;
+    if((sr == PlayerEntity.SleepResult.TOO_FAR_AWAY) || (sr.getMessage()==null)) return false;
+    if(!world.isClientSide()) player.displayClientMessage(sr.getMessage(), true);
+    return false;
   }
 
-  private Either<PlayerEntity.SleepResult, Unit> tryServerPlayerSleep(ServerPlayerEntity player, World world, BlockPos at, boolean set_spawn_point)
+  private PlayerEntity.SleepResult trySleep(PlayerEntity player, World world, BlockPos at, boolean set_spawn_point)
   {
-    if(!player.isAlive()) return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
-    if(!player.world.getDimensionType().isNatural()) return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
-    if(!player.isCreative()) {
-      double d0=8, d1=5;
-      if(!player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB(at.getX()-8, at.getY()-5, at.getZ()-8, at.getX()+8, at.getY()+5, at.getZ()+8), (en)->en.func_230292_f_(player)).isEmpty()) {
-        return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
-      }
-    }
-    if(set_spawn_point) player.setBedPosition(at);
-    if(player.world.isDaytime()) return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
-    if(!player.isSleeping()) {
-      Optional<BlockPos> optAt = Optional.of(at);
-      PlayerEntity.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(player, optAt);
-      if(ret != null) return Either.left(ret);
-      ((ServerPlayerEntity)player).startSleeping(at);
-      return Either.right(Unit.INSTANCE);
-    }
-    return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
+    if(player.isSpectator() || player.isCreative()) return null;
+    if(player.isSleeping()) return null;
+    if(!player.isAlive()) return PlayerEntity.SleepResult.OTHER_PROBLEM;
+    if(!world.dimensionType().natural()) return PlayerEntity.SleepResult.NOT_POSSIBLE_HERE;
+    double d0=8, d1=5;
+    if(!world.getEntitiesOfClass(MonsterEntity.class, new AxisAlignedBB(at.getX()-8, at.getY()-5, at.getZ()-8, at.getX()+8, at.getY()+5, at.getZ()+8), (en)->en.isPreventingPlayerRest(player)).isEmpty()) return PlayerEntity.SleepResult.NOT_SAFE;
+    if(!net.minecraftforge.event.ForgeEventFactory.fireSleepingTimeCheck(player, Optional.of(at))) return PlayerEntity.SleepResult.NOT_POSSIBLE_NOW;
+    if(world.isClientSide() || !(player instanceof ServerPlayerEntity)) return null;
+    ((ServerPlayerEntity)player).setSleepingPos(at);
+    Optional<BlockPos> optAt = Optional.of(at);
+    PlayerEntity.SleepResult ret = net.minecraftforge.event.ForgeEventFactory.onPlayerSleepInBed(player, optAt);
+    if(ret != null) return ret;
+    player.startSleeping(at);
+    ((ServerWorld)world).updateSleepingPlayerList();
+    return null;
   }
 
   public static void onSleepingLocationCheckEvent(net.minecraftforge.event.entity.player.SleepingLocationCheckEvent event)
   {
     if(!(event.getEntity() instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity)event.getEntity();
-    if((player.world.isRemote) || (!(player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SleepingBagItem))) return;
+    if((player.level.isClientSide) || (!(player.getItemInHand(Hand.MAIN_HAND).getItem() instanceof SleepingBagItem))) return;
     event.setResult(net.minecraftforge.event.entity.player.SleepingLocationCheckEvent.Result.ALLOW);
   }
 
@@ -113,9 +96,9 @@ public class SleepingBagItem extends EtItem
   {
     if(!(event.getEntity() instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity)event.getEntity();
-    if((player.world.isRemote) || ((!(player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SleepingBagItem)))) return;
-    CompoundNBT nbt = player.getPersistentData();
-    nbt.putInt("ETCorrectBedLocation", 1);
+    if((player.level.isClientSide) || ((!(player.getItemInHand(Hand.MAIN_HAND).getItem() instanceof SleepingBagItem)))) return;
+    //CompoundNBT nbt = player.getPersistentData();
+    //nbt.putInt("ETCorrectBedLocation", 1);
   }
 
 }

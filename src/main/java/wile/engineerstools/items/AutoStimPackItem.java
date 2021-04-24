@@ -40,18 +40,18 @@ public class AutoStimPackItem extends EtItem
   // -------------------------------------------------------------------------------------------------------------------
 
   public AutoStimPackItem(Item.Properties properties)
-  { super(properties.maxStackSize(1).defaultMaxDamage(2).setNoRepair()); }
+  { super(properties.stacksTo(1).defaultDurability(2).setNoRepair()); }
 
   @Override
-  public int getItemEnchantability()
+  public int getEnchantmentValue()
   { return 0; }
 
   @Override
-  public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+  public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair)
   { return false; }
 
   @Override
-  public boolean isDamageable()
+  public boolean canBeDepleted()
   { return true; }
 
   @Override
@@ -84,31 +84,31 @@ public class AutoStimPackItem extends EtItem
       if((health > (trigger_threshold_health*2)) || (!player.isAlive())) return;
       int t = nbt.getInt("ta");
       if(t < 20) {
-        if(t == 2) world.playSound(player, player.getPosition(), ModResources.STIMPACK_INJECT_SOUND, SoundCategory.BLOCKS, 1f, 1f);
+        if(t == 2) world.playSound(player, player.blockPosition(), ModResources.STIMPACK_INJECT_SOUND, SoundCategory.BLOCKS, 1f, 1f);
         nbt.putInt("ta", t+1);
       } else {
         nbt.remove("ta");
-        if(!world.isRemote) {
-          int dmg = stimpack.getDamage() + 1;
-          if(dmg >= stimpack.getMaxDamage()) stimpack.shrink(1); else stimpack.setDamage(dmg);
+        if(!world.isClientSide) {
+          int dmg = stimpack.getDamageValue() + 1;
+          if(dmg >= stimpack.getMaxDamage()) stimpack.shrink(1); else stimpack.setDamageValue(dmg);
           player.setHealth(health+instant_healing_health*2); // setHealth already clamps to maxHealth.
-          player.addPotionEffect(new EffectInstance(Effects.SPEED, 400));
-          player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 300));
-          player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 200));
-          player.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 200));
+          player.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 400));
+          player.addEffect(new EffectInstance(Effects.REGENERATION, 300));
+          player.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 200));
+          player.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 200));
         }
       }
-      for(int i=0; i<player.inventory.getSizeInventory(); ++i) {
+      for(int i=0; i<player.inventory.getContainerSize(); ++i) {
         if(i == itemSlot) continue;
-        ItemStack other = player.inventory.getStackInSlot(i);
-        if(!other.isItemEqualIgnoreDurability(stimpack)) continue;
+        ItemStack other = player.inventory.getItem(i);
+        if(!other.sameItemStackIgnoreDurability(stimpack)) continue;
         CompoundNBT other_nbt = other.getOrCreateTag();
         other_nbt.remove("ta");
         other_nbt.putInt("cd", 30);
       }
       nbt.remove("cd");
       if(nbt.size()==0) nbt = null;
-      if(!world.isRemote) player.inventory.markDirty();
+      if(!world.isClientSide) player.inventory.setChanged();
     }
     stimpack.setTag(nbt);
   }

@@ -31,22 +31,22 @@ public class AriadneCoalItem extends EtItem
 {
   public AriadneCoalItem(Item.Properties properties)
   { super(properties
-    .maxStackSize(1)
-    .defaultMaxDamage(100)
+    .stacksTo(1)
+    .defaultDurability(100)
     .setNoRepair()
     );
   }
 
   @Override
-  public int getItemEnchantability()
+  public int getEnchantmentValue()
   { return 0; }
 
   @Override
-  public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+  public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair)
   { return false; }
 
   @Override
-  public boolean isDamageable()
+  public boolean canBeDepleted()
   { return true; }
 
   @Override
@@ -60,19 +60,19 @@ public class AriadneCoalItem extends EtItem
   @Override
   public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context)
   {
-    if(context.getWorld().isRemote) return ActionResultType.PASS;
+    if(context.getLevel().isClientSide) return ActionResultType.PASS;
     final PlayerEntity player = context.getPlayer();
     final Hand hand = context.getHand();
-    final BlockPos pos = context.getPos();
-    final Direction facing = context.getFace();
-    final World world = context.getWorld();
+    final BlockPos pos = context.getClickedPos();
+    final Direction facing = context.getClickedFace();
+    final World world = context.getLevel();
     final BlockState state = world.getBlockState(pos);
-    final BlockPos markpos = pos.offset(facing);
-    if(((!world.isAirBlock(markpos)) && (!(state.getBlock() instanceof AriadneCoalBlock))) || (stack.getItem()!=this)) return ActionResultType.PASS;
-    if(!Block.doesSideFillSquare(state.getCollisionShape(world, pos, ISelectionContext.forEntity(player)), facing)) return ActionResultType.PASS;
-    final double hitX = context.getHitVec().getX() - pos.getX();
-    final double hitY = context.getHitVec().getY() - pos.getY();
-    final double hitZ = context.getHitVec().getZ() - pos.getZ();
+    final BlockPos markpos = pos.relative(facing);
+    if(((!world.isEmptyBlock(markpos)) && (!(state.getBlock() instanceof AriadneCoalBlock))) || (stack.getItem()!=this)) return ActionResultType.PASS;
+    if(!Block.isFaceFull(state.getCollisionShape(world, pos, ISelectionContext.of(player)), facing)) return ActionResultType.PASS;
+    final double hitX = context.getClickLocation().x() - pos.getX();
+    final double hitY = context.getClickLocation().y() - pos.getY();
+    final double hitZ = context.getClickLocation().z() - pos.getZ();
     Vector3d v;
     switch(facing) {
       case WEST:  v = new Vector3d(0.0+hitZ, hitY, 0); break;
@@ -85,17 +85,17 @@ public class AriadneCoalItem extends EtItem
     final int orientation = (((int)(Math.rint(4.0/Math.PI * Math.atan2(v.y, v.x) + 16) ) % 8) + ((facing.getAxisDirection()==AxisDirection.NEGATIVE) ? 8 : 0)) & 0xf;
     BlockState setstate;
     switch(facing.getAxis()) {
-      case X:  setstate = ModContent.ARIADNE_COAL_X.getDefaultState(); break;
-      case Y:  setstate = ModContent.ARIADNE_COAL_Y.getDefaultState(); break;
-      default: setstate = ModContent.ARIADNE_COAL_Z.getDefaultState(); break;
+      case X:  setstate = ModContent.ARIADNE_COAL_X.defaultBlockState(); break;
+      case Y:  setstate = ModContent.ARIADNE_COAL_Y.defaultBlockState(); break;
+      default: setstate = ModContent.ARIADNE_COAL_Z.defaultBlockState(); break;
     }
-    if(world.setBlockState(markpos, setstate.with(AriadneCoalBlock.ORIENTATION, orientation), 1|2)) {
-      stack.setDamage(stack.getDamage()+1);
-      if(stack.getDamage() >= stack.getMaxDamage()) {
-        player.setHeldItem(hand, ItemStack.EMPTY);
-        world.playSound(null, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 0.4f, 2f);
+    if(world.setBlock(markpos, setstate.setValue(AriadneCoalBlock.ORIENTATION, orientation), 1|2)) {
+      stack.setDamageValue(stack.getDamageValue()+1);
+      if(stack.getDamageValue() >= stack.getMaxDamage()) {
+        player.setItemInHand(hand, ItemStack.EMPTY);
+        world.playSound(null, pos, SoundEvents.WOOD_BREAK, SoundCategory.BLOCKS, 0.4f, 2f);
       } else {
-        world.playSound(null, pos, SoundEvents.BLOCK_GRAVEL_HIT, SoundCategory.BLOCKS, 0.4f, 2f);
+        world.playSound(null, pos, SoundEvents.GRAVEL_HIT, SoundCategory.BLOCKS, 0.4f, 2f);
       }
       return ActionResultType.SUCCESS;
     } else {

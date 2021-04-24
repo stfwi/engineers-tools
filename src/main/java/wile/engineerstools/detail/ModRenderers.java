@@ -32,31 +32,31 @@ public class ModRenderers
   public static class TrackerIster extends ItemStackTileEntityRenderer
   {
     @Override
-    public void func_239207_a_/*render*/(ItemStack stack, ItemCameraTransforms.TransformType ctt, MatrixStack mx, IRenderTypeBuffer buf, int combinedLight, int combinedOverlay)
+    public void renderByItem/*render*/(ItemStack stack, ItemCameraTransforms.TransformType ctt, MatrixStack mx, IRenderTypeBuffer buf, int combinedLight, int combinedOverlay)
     {
       if(ctt == TransformType.FIRST_PERSON_LEFT_HAND || ctt == TransformType.FIRST_PERSON_RIGHT_HAND) return;
       Optional<Tuple<Integer,Integer>> rotations = TrackerItem.getUiAngles(stack);
-      mx.push();
+      mx.pushPose();
       final ItemRenderer ir = Minecraft.getInstance().getItemRenderer();
-      IVertexBuilder vb = ItemRenderer.getBuffer(buf, RenderType.getCutout(), true, false);
+      IVertexBuilder vb = ItemRenderer.getFoilBuffer(buf, RenderType.cutout(), true, false);
       {
         IBakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(new ResourceLocation(ModEngineersTools.MODID, "tracker_model"), "inventory"));
-        ir.renderModel(model, stack, combinedLight, combinedOverlay, mx, vb);
+        ir.renderModelLists(model, stack, combinedLight, combinedOverlay, mx, vb);
       }
       {
         IBakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(new ResourceLocation(ModEngineersTools.MODID, "tracker_pointer_model"), "inventory"));
         mx.translate(0.5,0.5,0.5);
         if(!rotations.isPresent()) {
-          mx.rotate(Vector3f.YP.rotationDegrees(180));
+          mx.mulPose(Vector3f.YP.rotationDegrees(180));
         } else {
-          mx.rotate(Vector3f.YP.rotationDegrees(rotations.get().getB()));
-          mx.rotate(Vector3f.XP.rotationDegrees(rotations.get().getA()));
+          mx.mulPose(Vector3f.YP.rotationDegrees(rotations.get().getB()));
+          mx.mulPose(Vector3f.XP.rotationDegrees(rotations.get().getA()));
         }
         mx.scale(0.6f, 0.6f, 0.6f);
         mx.translate(-0.5,-0.5,-0.5);
-        ir.renderModel(model, stack, combinedLight, combinedOverlay, mx, vb);
+        ir.renderModelLists(model, stack, combinedLight, combinedOverlay, mx, vb);
       }
-      mx.pop();
+      mx.popPose();
     }
   }
 }

@@ -37,6 +37,8 @@ import java.util.Collections;
 import java.util.List;
 
 
+import net.minecraft.block.AbstractBlock;
+
 public class ModContent
 {
   private static final Logger LOGGER = ModEngineersTools.LOGGER;
@@ -46,9 +48,9 @@ public class ModContent
   // -- All blocks
   // -----------------------------------------------------------------------------------------------------------------
 
-  private static final Block.Properties coal_properties = Block.Properties.create(Material.ROCK, MaterialColor.STONE)
-                            .hardnessAndResistance(3f, 50f).sound(SoundType.STONE)
-                            .doesNotBlockMovement().noDrops();
+  private static final AbstractBlock.Properties coal_properties = AbstractBlock.Properties.of(Material.STONE, MaterialColor.STONE)
+                            .strength(3f, 50f).sound(SoundType.STONE)
+                            .noCollission().noDrops();
 
   public static final AriadneCoalBlock ARIADNE_COAL_X = (AriadneCoalBlock)(new AriadneCoalBlock(
     coal_properties,Direction.Axis.X
@@ -84,30 +86,30 @@ public class ModContent
   //--------------------------------------------------------------------------------------------------------------------
 
   private static Item.Properties default_item_properties()
-  { return (new Item.Properties()).group(ModEngineersTools.ITEMGROUP); }
+  { return (new Item.Properties()).tab(ModEngineersTools.ITEMGROUP); }
 
   public static final RediaToolItem REDIA_TOOL = (RediaToolItem)((new RediaToolItem(
-    default_item_properties().maxStackSize(1).rarity(Rarity.RARE)
+    default_item_properties().stacksTo(1).rarity(Rarity.RARE)
   ).setRegistryName(MODID, "redia_tool")));
 
   public static final CrushingHammerItem CRUSHING_HAMMER = (CrushingHammerItem)((new CrushingHammerItem(
-    default_item_properties().maxStackSize(1).rarity(Rarity.UNCOMMON)
+    default_item_properties().stacksTo(1).rarity(Rarity.UNCOMMON)
   ).setRegistryName(MODID, "crushing_hammer")));
 
   public static final AriadneCoalItem ARIADNE_COAL = (AriadneCoalItem)((new AriadneCoalItem(
-    default_item_properties().maxStackSize(1).rarity(Rarity.UNCOMMON)
+    default_item_properties().stacksTo(1).rarity(Rarity.UNCOMMON)
   ).setRegistryName(MODID, "ariadne_coal")));
 
   public static final AutoStimPackItem STIM_PACK = (AutoStimPackItem)((new AutoStimPackItem(
-    default_item_properties().maxStackSize(1).rarity(Rarity.UNCOMMON)
+    default_item_properties().stacksTo(1).rarity(Rarity.UNCOMMON)
   ).setRegistryName(MODID, "stimpack")));
 
   public static final DivingCapsuleItem DIVING_CAPSULE = (DivingCapsuleItem)((new DivingCapsuleItem(
-    default_item_properties().maxStackSize(1).rarity(Rarity.UNCOMMON)
+    default_item_properties().stacksTo(1).rarity(Rarity.UNCOMMON)
   ).setRegistryName(MODID, "diving_capsule")));
 
   public static final SleepingBagItem SLEEPING_BAG = (SleepingBagItem)((new SleepingBagItem(
-    default_item_properties().maxStackSize(1).rarity(Rarity.UNCOMMON)
+    default_item_properties().stacksTo(1).rarity(Rarity.UNCOMMON)
   ).setRegistryName(MODID, "sleeping_bag")));
 
   public static final GritItem IRON_GRIT = (GritItem)((new GritItem(
@@ -123,7 +125,7 @@ public class ModContent
   ).setRegistryName(MODID, "musli_bar")));
 
   public static final MusliBarPressItem MUSLI_BAR_PRESS = (MusliBarPressItem)((new MusliBarPressItem(
-    default_item_properties().maxStackSize(1).rarity(Rarity.UNCOMMON)
+    default_item_properties().stacksTo(1).rarity(Rarity.UNCOMMON)
   ).setRegistryName(MODID, "musli_bar_press")));
 
   public static final MaterialBoxItem MATERIAL_BAG = (MaterialBoxItem)((new MaterialBoxItem(
@@ -192,7 +194,7 @@ public class ModContent
     registeredBlocks.addAll(modBlocks);
     registeredItems = new ArrayList<Item>();
     registeredItems.addAll(Arrays.asList(modItems));
-    for(Block e:registeredBlocks) registeredItems.add(new ModBlockItem(e, (new ModBlockItem.Properties())).setRegistryName(e.getRegistryName()));
+    for(Block e:registeredBlocks) registeredItems.add(new ModBlockItem(e, (new Item.Properties())).setRegistryName(e.getRegistryName()));
   }
 
   public static ArrayList<Block> allBlocks()
@@ -230,8 +232,8 @@ public class ModContent
   @OnlyIn(Dist.CLIENT)
   public static void registerGuis(final FMLClientSetupEvent event)
   {
-    ScreenManager.registerFactory(CT_MUSLI_BAR_PRESS, MusliBarPressItem.MusliBarPressGui::new);
-    ScreenManager.registerFactory(CT_MATERIAL_BAG, MaterialBoxGui::new);
+    ScreenManager.register(CT_MUSLI_BAR_PRESS, MusliBarPressItem.MusliBarPressGui::new);
+    ScreenManager.register(CT_MATERIAL_BAG, MaterialBoxGui::new);
   }
 
   @OnlyIn(Dist.CLIENT)
@@ -245,7 +247,7 @@ public class ModContent
     // No specific interface or base block in this mod, therefore simply loop the few registered blocks.
     for(Block block: getRegisteredBlocks()) {
       if(block instanceof AriadneCoalBlock) {
-        RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(block, RenderType.translucent());
       }
     }
   }

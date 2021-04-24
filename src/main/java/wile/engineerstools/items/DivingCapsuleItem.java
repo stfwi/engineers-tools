@@ -37,18 +37,18 @@ public class DivingCapsuleItem extends EtItem
   // -------------------------------------------------------------------------------------------------------------------
 
   public DivingCapsuleItem(Item.Properties properties)
-  { super(properties.maxStackSize(1).defaultMaxDamage(100).setNoRepair()); }
+  { super(properties.stacksTo(1).defaultDurability(100).setNoRepair()); }
 
   @Override
-  public int getItemEnchantability()
+  public int getEnchantmentValue()
   { return 0; }
 
   @Override
-  public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+  public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair)
   { return false; }
 
   @Override
-  public boolean isDamageable()
+  public boolean canBeDepleted()
   { return true; }
 
   @Override
@@ -65,25 +65,25 @@ public class DivingCapsuleItem extends EtItem
 
   private void inventoryTick(final ItemStack capsule, final World world, final PlayerEntity player, int itemSlot)
   {
-    int air = player.getAir();
-    final int max_air = player.getMaxAir();
+    int air = player.getAirSupply();
+    final int max_air = player.getMaxAirSupply();
     if(max_air <= 0) return; // can't help him.
     if((air > (trigger_threshold * max_air / 10)) || (!player.isAlive())) return;
-    for(int i=0; i<player.inventory.getSizeInventory(); ++i) {
+    for(int i=0; i<player.inventory.getContainerSize(); ++i) {
       if(i == itemSlot) break;
-      if(player.inventory.getStackInSlot(i).isItemEqualIgnoreDurability(capsule)) return;
+      if(player.inventory.getItem(i).sameItemStackIgnoreDurability(capsule)) return;
     }
-    if(!world.isRemote) {
-      player.setAir(Math.min(player.getAir()+(instant_refresh*max_air/10), player.getMaxAir()));
-      int dmg = capsule.getDamage() + item_damage;
-      if(dmg >= capsule.getMaxDamage()) capsule.shrink(1); else capsule.setDamage(dmg);
+    if(!world.isClientSide) {
+      player.setAirSupply(Math.min(player.getAirSupply()+(instant_refresh*max_air/10), player.getMaxAirSupply()));
+      int dmg = capsule.getDamageValue() + item_damage;
+      if(dmg >= capsule.getMaxDamage()) capsule.shrink(1); else capsule.setDamageValue(dmg);
     } else {
-      if((capsule.getDamage()+item_damage) >= capsule.getMaxDamage()) {
-        world.playSound(player, player.getPosition(), SoundEvents.ENTITY_PLAYER_HURT_DROWN, SoundCategory.PLAYERS, 1.2f, 1.4f);
+      if((capsule.getDamageValue()+item_damage) >= capsule.getMaxDamage()) {
+        world.playSound(player, player.blockPosition(), SoundEvents.PLAYER_HURT_DROWN, SoundCategory.PLAYERS, 1.2f, 1.4f);
       } else {
-        world.playSound(player, player.getPosition(), SoundEvents.BLOCK_BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundCategory.PLAYERS, 1.0f, 2.2f);
+        world.playSound(player, player.blockPosition(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundCategory.PLAYERS, 1.0f, 2.2f);
       }
     }
-    if(!world.isRemote) player.inventory.markDirty();
+    if(!world.isClientSide) player.inventory.setChanged();
   }
 }

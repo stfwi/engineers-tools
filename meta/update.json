@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/engineers-tools/",
-  "1.16.4": {
+  "1.16.5": {
+    "1.1.6": "[F] Forge sleeping events updated. Mappings updated, using Forge 1.16.5-36.2.0.",
     "1.1.5": "[F] REDIA Tool repair opts explicitly specified in recipe JSON for pack ref.\n[A] Added Manual language zh_cn (PR#17, kappa-maintainer).",
     "1.1.4": "[F] Chest loot tables made optional to prevent interfering with pack configuration tool mods.",
     "1.1.3": "[R] Release build v1.1.3, 1.16.5 supported.",
@@ -16,7 +17,7 @@
     "1.1.0-b5": "[U] Ported to MC1.16.3."
   },
   "promos": {
-    "1.16.4-recommended": "1.1.5",
-    "1.16.4-latest": "1.1.5"
+    "1.16.5-recommended": "1.1.6",
+    "1.16.5-latest": "1.1.6"
   }
 }

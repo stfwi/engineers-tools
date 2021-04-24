@@ -10,6 +10,8 @@ Mod sources for Minecraft version 1.16.x, latest version.
 ----
 ## Version history
 
+    - v1.1.6      [F] Forge sleeping events updated. Mappings updated, using Forge 1.16.5-36.2.0.
+
     - v1.1.5      [F] REDIA Tool repair opts explicitly specified in recipe JSON for pack ref.
                   [A] Added Manual language zh_cn (PR#17, kappa-maintainer).
 

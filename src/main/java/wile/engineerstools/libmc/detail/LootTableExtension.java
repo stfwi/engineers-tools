@@ -22,6 +22,6 @@ public class LootTableExtension
     if(!enabled) return;
     ResourceLocation table_path = new ResourceLocation(Auxiliaries.modid(), "additional/" + event.getName().getNamespace() + "/" + event.getName().getPath());
     if(LootTableExtension.class.getResource("/data/" + table_path.getNamespace() + "/loot_tables/" + table_path.getPath() + ".json") == null) return;
-    event.getTable().addPool(LootPool.builder().addEntry(TableLootEntry.builder(table_path).weight(1)).name(Auxiliaries.modid()+"_additional_loot").bonusRolls(0, 1).build());
+    event.getTable().addPool(LootPool.lootPool().add(TableLootEntry.lootTableReference(table_path).setWeight(1)).name(Auxiliaries.modid()+"_additional_loot").bonusRolls(0, 1).build());
   }
 }

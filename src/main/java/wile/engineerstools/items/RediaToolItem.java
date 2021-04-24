@@ -41,7 +41,7 @@ import java.util.*;
 
 public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IRepairableToolItem
 {
-  private static int enchantability = ItemTier.DIAMOND.getEnchantability();
+  private static int enchantability = ItemTier.DIAMOND.getEnchantmentValue();
   private static int max_item_damage = 3000;
   private static int initial_item_damage_percent = 100;
   private static boolean with_torch_placing = true;
@@ -141,41 +141,41 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   public RediaToolItem(Item.Properties properties)
   {
     super(ItemTier.DIAMOND, 5, -3, properties
-      .addToolType(ToolType.AXE, ItemTier.DIAMOND.getHarvestLevel())
-      .addToolType(ToolType.PICKAXE, ItemTier.DIAMOND.getHarvestLevel())
-      .addToolType(ToolType.SHOVEL, ItemTier.DIAMOND.getHarvestLevel())
-      .maxStackSize(1)
+      .addToolType(ToolType.AXE, ItemTier.DIAMOND.getLevel())
+      .addToolType(ToolType.PICKAXE, ItemTier.DIAMOND.getLevel())
+      .addToolType(ToolType.SHOVEL, ItemTier.DIAMOND.getLevel())
+      .stacksTo(1)
       .rarity(Rarity.UNCOMMON)
-      .defaultMaxDamage(max_item_damage)
+      .defaultDurability(max_item_damage)
     );
   }
 
   @Override
   @OnlyIn(Dist.CLIENT)
-  public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag)
+  public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag)
   { Auxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
 
   @Override
   @OnlyIn(Dist.CLIENT)
-  public boolean hasEffect(ItemStack stack)
+  public boolean isFoil(ItemStack stack)
   { return false; } // don't show enchantment glint, looks awful. Also nice to cause some confusion ;-)
 
   // -------------------------------------------------------------------------------------------------------------------
 
   @Override
-  public int getItemEnchantability()
+  public int getEnchantmentValue()
   { return enchantability; }
 
   @Override
-  public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
-  { return super.getIsRepairable(toRepair, repair); }
+  public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair)
+  { return super.isValidRepairItem(toRepair, repair); }
 
   @Override
   public int getHarvestLevel(ItemStack stack, net.minecraftforge.common.ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState)
-  { return ItemTier.DIAMOND.getHarvestLevel(); }
+  { return ItemTier.DIAMOND.getLevel(); }
 
   @Override
-  public boolean isDamageable()
+  public boolean canBeDepleted()
   { return true; }
 
   @Override
@@ -183,7 +183,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   { return max_item_damage; }
 
   @Override
-  public boolean canHarvestBlock(BlockState block)
+  public boolean isCorrectToolForDrops(BlockState block)
   { return true; }
 
   @Override
@@ -201,13 +201,13 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
   {
-    if(enchantment == Enchantments.FORTUNE) return false;
-    if(enchantment == Enchantments.EFFICIENCY) return false;
+    if(enchantment == Enchantments.BLOCK_FORTUNE) return false;
+    if(enchantment == Enchantments.BLOCK_EFFICIENCY) return false;
     if(enchantment == Enchantments.KNOCKBACK) return true;
-    if(enchantment == Enchantments.LOOTING) return true;
+    if(enchantment == Enchantments.MOB_LOOTING) return true;
     if(enchantment == Enchantments.SHARPNESS) return true;
     if(enchantment == Enchantments.FIRE_ASPECT) return true;
-    return enchantment.type.canEnchantItem(stack.getItem());
+    return enchantment.category.canEnchant(stack.getItem());
   }
 
   @Override
@@ -217,39 +217,39 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   // -------------------------------------------------------------------------------------------------------------------
 
   @Override
-  public void onCreated(ItemStack stack, World world, PlayerEntity player)
+  public void onCraftedBy(ItemStack stack, World world, PlayerEntity player)
   {
-    if(stack.getDamage()!=0) return;
-    if(stack.hasTag() && stack.getTag().keySet().stream().anyMatch(e->!e.equals("Damage"))) return;
-    stack.setDamage(absoluteDmg(initial_item_damage_percent));
+    if(stack.getDamageValue()!=0) return;
+    if(stack.hasTag() && stack.getTag().getAllKeys().stream().anyMatch(e->!e.equals("Damage"))) return;
+    stack.setDamageValue(absoluteDmg(initial_item_damage_percent));
   }
 
   @Override
-  public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker)
-  { return super.hitEntity(stack, target, attacker); } // already 2 item dmg, ok
+  public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker)
+  { return super.hurtEnemy(stack, target, attacker); } // already 2 item dmg, ok
 
   @Override
   public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity)
   {
     if(!with_safe_attacking) return false;
     if(entity instanceof VillagerEntity) return true; // Cancel attacks for villagers.
-    if((entity instanceof TameableEntity) && (((TameableEntity)entity).isTamed()) && (((TameableEntity)entity).isOwner(player))) return true; // Don't hit own pets
-    if(((entity instanceof ZombifiedPiglinEntity)) && ((ZombifiedPiglinEntity)entity).getAttackTarget() == null) return true; // noone wants to accidentally step them on the foot.
-    if(player.world.isRemote) return false; // only server side evaluation
+    if((entity instanceof TameableEntity) && (((TameableEntity)entity).isTame()) && (((TameableEntity)entity).isOwnedBy(player))) return true; // Don't hit own pets
+    if(((entity instanceof ZombifiedPiglinEntity)) && ((ZombifiedPiglinEntity)entity).getTarget() == null) return true; // noone wants to accidentally step them on the foot.
+    if(player.level.isClientSide) return false; // only server side evaluation
     return false; // allow attacking
   }
 
   @Override
-  public ActionResultType onItemUse(ItemUseContext context)
+  public ActionResultType useOn(ItemUseContext context)
   {
-    final Direction facing = context.getFace();
+    final Direction facing = context.getClickedFace();
     final Hand hand = context.getHand();
     final PlayerEntity player = context.getPlayer();
-    final World world = context.getWorld();
-    final BlockPos pos = context.getPos();
-    final Vector3d hitvec = context.getHitVec();
+    final World world = context.getLevel();
+    final BlockPos pos = context.getClickedPos();
+    final Vector3d hitvec = context.getClickLocation();
     ActionResultType rv;
-    if(context.getPlayer().isSneaking()) {
+    if(context.getPlayer().isShiftKeyDown()) {
       rv = tryPlantSnipping(player, world, pos, hand, facing, hitvec);
       if(rv != ActionResultType.PASS) return rv;
       if(facing == Direction.UP) {
@@ -259,7 +259,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
         rv = tryTorchPlacing(context);
         if(rv != ActionResultType.PASS) return rv;
       } else {
-        rv = super.onItemUse(context); // axe log stripping
+        rv = super.useOn(context); // axe log stripping
       }
     } else {
       rv = tryTorchPlacing(context);
@@ -269,26 +269,26 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   }
 
   @Override
-  public boolean onBlockDestroyed(ItemStack tool, World world, BlockState state, BlockPos pos, LivingEntity player)
+  public boolean mineBlock(ItemStack tool, World world, BlockState state, BlockPos pos, LivingEntity player)
   {
-    if(world.isRemote) return true;
-    if((state.getBlockHardness(world, pos) > 0.5f) || (world.getRandom().nextDouble() > 0.67)) tool.damageItem(1, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
-    if(with_tree_felling && (player instanceof PlayerEntity) && (player.isSneaking())) tryTreeFelling(world, state, pos, player);
+    if(world.isClientSide) return true;
+    if((state.getDestroySpeed(world, pos) > 0.5f) || (world.getRandom().nextDouble() > 0.67)) tool.hurtAndBreak(1, player, (p)->{p.broadcastBreakEvent(player.getUsedItemHand());});
+    if(with_tree_felling && (player instanceof PlayerEntity) && (player.isShiftKeyDown())) tryTreeFelling(world, state, pos, player);
     decayEnchantments(tool);
     return true;
   }
 
   @Override
   @SuppressWarnings("deprecation")
-  public ActionResultType itemInteractionForEntity(ItemStack tool, PlayerEntity player, LivingEntity entity, Hand hand)
+  public ActionResultType interactLivingEntity(ItemStack tool, PlayerEntity player, LivingEntity entity, Hand hand)
   {
-    if(entity.world.isRemote) return ActionResultType.PASS;
+    if(entity.level.isClientSide) return ActionResultType.PASS;
     return tryEntityShearing(tool, player, entity, hand);
   }
 
   @Override
   public float getDestroySpeed(ItemStack stack, BlockState state)
-  { return this.efficiency; }
+  { return this.speed; }
 
   // IRepairableToolItem -----------------------------------------------------------------------------------------------
 
@@ -298,20 +298,20 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
     final int enchantment_increase = (repairedDamage == 0) ? 2 : 0;
     final Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
     final int max_efficiency = durabilityDependentEfficiency(stack);
-    final int act_efficiency = enchantments.getOrDefault(Enchantments.EFFICIENCY, 0);
+    final int act_efficiency = enchantments.getOrDefault(Enchantments.BLOCK_EFFICIENCY, 0);
     final int new_efficiency = Math.min(act_efficiency+enchantment_increase, max_efficiency);
     final int max_fortune = durabilityDependentFortune(stack);
-    final int act_fortune = enchantments.getOrDefault(Enchantments.FORTUNE, 0);
+    final int act_fortune = enchantments.getOrDefault(Enchantments.BLOCK_FORTUNE, 0);
     final int new_fortune = Math.min(act_fortune+enchantment_increase, max_fortune);
     if(new_fortune > 0) {
-      if((act_fortune > 0) || (act_efficiency >= max_efficiency)) enchantments.put(Enchantments.FORTUNE, new_fortune);
+      if((act_fortune > 0) || (act_efficiency >= max_efficiency)) enchantments.put(Enchantments.BLOCK_FORTUNE, new_fortune);
     } else {
-      enchantments.remove(Enchantments.FORTUNE);
+      enchantments.remove(Enchantments.BLOCK_FORTUNE);
     }
     if(new_efficiency > 0) {
-      if(act_efficiency < max_efficiency) enchantments.put(Enchantments.EFFICIENCY, new_efficiency);
+      if(act_efficiency < max_efficiency) enchantments.put(Enchantments.BLOCK_EFFICIENCY, new_efficiency);
     } else {
-      enchantments.remove(Enchantments.EFFICIENCY);
+      enchantments.remove(Enchantments.BLOCK_EFFICIENCY);
     }
     EnchantmentHelper.setEnchantments(enchantments, stack);
     Auxiliaries.logInfo("REDIA tool repair: efficiency:"+act_efficiency+", fortune:"+new_fortune); // temporary logging, something's changed that sometimes messes up the fortune effect, but not in the ide.
@@ -337,29 +337,29 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
     if(Math.random() > 0.17) return;
     boolean changed = false;
     Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-    final int fortune_current = enchantments.getOrDefault(Enchantments.FORTUNE, 0);
+    final int fortune_current = enchantments.getOrDefault(Enchantments.BLOCK_FORTUNE, 0);
     int fortune = 0;
     if(fortune_current > 0) {
       fortune = durabilityDependentFortune(stack);
       if(fortune < fortune_current) {
         changed = true;
         if(fortune <= 0) {
-          enchantments.remove(Enchantments.FORTUNE);
+          enchantments.remove(Enchantments.BLOCK_FORTUNE);
         } else {
-          enchantments.put(Enchantments.FORTUNE, fortune);
+          enchantments.put(Enchantments.BLOCK_FORTUNE, fortune);
         }
       }
     }
-    final int efficiency_current = enchantments.getOrDefault(Enchantments.EFFICIENCY, 0);
+    final int efficiency_current = enchantments.getOrDefault(Enchantments.BLOCK_EFFICIENCY, 0);
     int efficiency = 0;
     if(efficiency_current > 0) {
       efficiency = durabilityDependentEfficiency(stack);
       if(efficiency < efficiency_current) {
         changed = true;
         if(efficiency <= 0) {
-          enchantments.remove(Enchantments.EFFICIENCY);
+          enchantments.remove(Enchantments.BLOCK_EFFICIENCY);
         } else {
-          enchantments.put(Enchantments.EFFICIENCY, efficiency);
+          enchantments.put(Enchantments.BLOCK_EFFICIENCY, efficiency);
         }
       }
     }
@@ -374,18 +374,18 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   @SuppressWarnings("deprecation")
   private ActionResultType tryEntityShearing(ItemStack tool, PlayerEntity player, LivingEntity entity, Hand hand)
   {
-    if((entity.world.isRemote) || (!(entity instanceof net.minecraftforge.common.IForgeShearable))) return ActionResultType.PASS;
+    if((entity.level.isClientSide) || (!(entity instanceof net.minecraftforge.common.IForgeShearable))) return ActionResultType.PASS;
     net.minecraftforge.common.IForgeShearable target = (net.minecraftforge.common.IForgeShearable)entity;
-    BlockPos pos = new BlockPos(entity.getPosition());
-    if (target.isShearable(tool, entity.world, pos)) {
-      List<ItemStack> drops = target.onSheared(player, tool, entity.world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, tool));
+    BlockPos pos = new BlockPos(entity.blockPosition());
+    if (target.isShearable(tool, entity.level, pos)) {
+      List<ItemStack> drops = target.onSheared(player, tool, entity.level, pos, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool));
       Random rand = new java.util.Random();
       drops.forEach(d -> {
-        ItemEntity ent = entity.entityDropItem(d, 1f);
-        ent.setMotion(ent.getMotion().add((double)((rand.nextFloat() - rand.nextFloat()) * 0.1f), (double)(rand.nextFloat() * 0.05f), (double)((rand.nextFloat() - rand.nextFloat()) * 0.1f)));
+        ItemEntity ent = entity.spawnAtLocation(d, 1f);
+        ent.setDeltaMovement(ent.getDeltaMovement().add((double)((rand.nextFloat() - rand.nextFloat()) * 0.1f), (double)(rand.nextFloat() * 0.05f), (double)((rand.nextFloat() - rand.nextFloat()) * 0.1f)));
       });
-      tool.damageItem(1, entity, e -> e.sendBreakAnimation(hand));
-      player.world.playSound(null, pos, SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.BLOCKS, 0.8f, 1.1f);
+      tool.hurtAndBreak(1, entity, e -> e.broadcastBreakEvent(hand));
+      player.level.playSound(null, pos, SoundEvents.SHEEP_SHEAR, SoundCategory.BLOCKS, 0.8f, 1.1f);
     }
     return ActionResultType.SUCCESS;
   }
@@ -394,20 +394,20 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   private ActionResultType tryPlantSnipping(PlayerEntity player, World world, BlockPos pos, Hand hand, Direction facing, Vector3d hitvec)
   {
     if(!with_shearing) return ActionResultType.PASS;
-    final ItemStack tool = player.getHeldItem(hand);
+    final ItemStack tool = player.getItemInHand(hand);
     if(tool.getItem()!=this) return ActionResultType.PASS;
     final BlockState state = world.getBlockState(pos);
     final Block block = state.getBlock();
     // replace with tag?
-    if((!block.isIn(BlockTags.LEAVES)) && (block != Blocks.COBWEB) && (block != Blocks.GRASS) && (block != Blocks.FERN)
-      && (block != Blocks.DEAD_BUSH) && (block != Blocks.VINE) && (block != Blocks.TRIPWIRE) && (!block.isIn(BlockTags.WOOL))
+    if((!block.is(BlockTags.LEAVES)) && (block != Blocks.COBWEB) && (block != Blocks.GRASS) && (block != Blocks.FERN)
+      && (block != Blocks.DEAD_BUSH) && (block != Blocks.VINE) && (block != Blocks.TRIPWIRE) && (!block.is(BlockTags.WOOL))
     ) return ActionResultType.PASS;
     ItemEntity ie = new ItemEntity(world, pos.getX()+.5, pos.getY()+.5, pos.getZ()+.5, new ItemStack(block.asItem()));
-    ie.setDefaultPickupDelay();
-    world.addEntity(ie);
-    world.setBlockState(pos, Blocks.AIR.getDefaultState(), 1|2|8);
-    tool.damageItem(1, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
-    world.playSound(player, pos, SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.BLOCKS, 0.8f, 1.1f);
+    ie.setDefaultPickUpDelay();
+    world.addFreshEntity(ie);
+    world.setBlock(pos, Blocks.AIR.defaultBlockState(), 1|2|8);
+    tool.hurtAndBreak(1, player, (p)->{p.broadcastBreakEvent(player.getUsedItemHand());});
+    world.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundCategory.BLOCKS, 0.8f, 1.1f);
     return ActionResultType.SUCCESS;
   }
 
@@ -416,14 +416,14 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
     PlayerEntity player = context.getPlayer();
     Hand hand = context.getHand();
     if(!with_torch_placing) return ActionResultType.PASS;
-    for(int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-      ItemStack stack = player.inventory.getStackInSlot(i);
+    for(int i = 0; i < player.inventory.getContainerSize(); ++i) {
+      ItemStack stack = player.inventory.getItem(i);
       if((!stack.isEmpty()) && (stack.getItem() == Blocks.TORCH.asItem())) {
-        ItemStack tool = player.getHeldItem(hand);
-        player.setHeldItem(hand, stack);
-        ItemUseContext torch_context = new ItemUseContext(context.getPlayer(), context.getHand(), new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), context.isInside()));
-        ActionResultType r = stack.getItem().onItemUse(torch_context);
-        player.setHeldItem(hand, tool);
+        ItemStack tool = player.getItemInHand(hand);
+        player.setItemInHand(hand, stack);
+        ItemUseContext torch_context = new ItemUseContext(context.getPlayer(), context.getHand(), new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside()));
+        ActionResultType r = stack.getItem().useOn(torch_context);
+        player.setItemInHand(hand, tool);
         return r;
       }
     }
@@ -433,26 +433,26 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   private ActionResultType tryDigOver(PlayerEntity player, World world, BlockPos pos, Hand hand, Direction facing, Vector3d hitvec)
   {
     if(!with_hoeing) return ActionResultType.PASS;
-    if(world.getTileEntity(pos) != null) return ActionResultType.PASS;
+    if(world.getBlockEntity(pos) != null) return ActionResultType.PASS;
     final BlockState state = world.getBlockState(pos);
     BlockState replaced = state;
     final Block block = state.getBlock();
     if((block instanceof GrassBlock) || (block==Blocks.DIRT)) {
-      replaced = Blocks.FARMLAND.getDefaultState();
+      replaced = Blocks.FARMLAND.defaultBlockState();
     } else if(block instanceof FarmlandBlock) {
-      replaced = Blocks.COARSE_DIRT.getDefaultState();
+      replaced = Blocks.COARSE_DIRT.defaultBlockState();
     } else if(block==Blocks.COARSE_DIRT) {
-      replaced = Blocks.GRASS_PATH.getDefaultState();
+      replaced = Blocks.GRASS_PATH.defaultBlockState();
     } else if(block instanceof GrassPathBlock) {
-      replaced = Blocks.DIRT.getDefaultState();
+      replaced = Blocks.DIRT.defaultBlockState();
     }
     if(replaced != state) {
-      world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 0.8f, 1.1f);
-      if(!world.isRemote)
+      world.playSound(player, pos, SoundEvents.HOE_TILL, SoundCategory.BLOCKS, 0.8f, 1.1f);
+      if(!world.isClientSide)
       {
-        world.setBlockState(pos, replaced,1|2);
-        ItemStack stack = player.getHeldItem(hand);
-        if(stack.getItem() == this) stack.damageItem(1, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
+        world.setBlock(pos, replaced,1|2);
+        ItemStack stack = player.getItemInHand(hand);
+        if(stack.getItem() == this) stack.hurtAndBreak(1, player, (p)->{p.broadcastBreakEvent(player.getUsedItemHand());});
       }
       return ActionResultType.SUCCESS;
     } else {
@@ -464,8 +464,8 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
 
   private boolean tryTreeFelling(World world, BlockState state, BlockPos pos, LivingEntity player)
   {
-    if((!state.isNormalCube(world, pos)) || (state.getMaterial() != Material.WOOD)) return false;
-    if(world.isRemote) return true;
+    if((!state.isRedstoneConductor(world, pos)) || (state.getMaterial() != Material.WOOD)) return false;
+    if(world.isClientSide) return true;
     if(!state.getBlock().getTags().contains(new ResourceLocation("minecraft","logs"))) return false;
     chopTree(world, state, pos, player);
     return true;
@@ -481,9 +481,9 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   {
     ArrayList<BlockPos> to_decay = new ArrayList<BlockPos>();
     for(int y=-1; y<=1; ++y) {
-      final BlockPos layer = centerPos.add(0,y,0);
+      final BlockPos layer = centerPos.offset(0,y,0);
       for(Vector3i v:hoffsets) {
-        BlockPos pos = layer.add(v);
+        BlockPos pos = layer.offset(v);
         if((!checked.contains(pos)) && (world.getBlockState(pos).getBlock()==leaf_type_state.getBlock())) {
           checked.add(pos);
           to_decay.add(pos);
@@ -509,19 +509,19 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
   private void breakBlock(World world, BlockPos pos, LivingEntity entity)
   {
     BlockState state = world.getBlockState(pos);
-    if(entity instanceof PlayerEntity) ((PlayerEntity)entity).addExhaustion(0.005F);
-    Block.spawnDrops(state, world, pos, null, entity, new ItemStack(this));
-    world.setBlockState(pos, world.getFluidState(pos).getBlockState(), 1|2|8);
+    if(entity instanceof PlayerEntity) ((PlayerEntity)entity).causeFoodExhaustion(0.005F);
+    Block.dropResources(state, world, pos, null, entity, new ItemStack(this));
+    world.setBlock(pos, world.getFluidState(pos).createLegacyBlock(), 1|2|8);
   }
 
   private void chopTree(World world, BlockState broken_state, BlockPos startPos, LivingEntity player)
   {
     final Block broken_block = broken_state.getBlock();
-    if(!(broken_block.isIn(BlockTags.LOGS))) return;
-    ItemStack tool = player.getHeldItemMainhand();
-    if(tool.getItem() != this) tool = player.getHeldItemOffhand();
+    if(!(broken_block.is(BlockTags.LOGS))) return;
+    ItemStack tool = player.getMainHandItem();
+    if(tool.getItem() != this) tool = player.getOffhandItem();
     if(tool.getItem() != this) return;
-    final int max_broken_blocks = (tool.getMaxDamage()-tool.getDamage()) * 2/3;
+    final int max_broken_blocks = (tool.getMaxDamage()-tool.getDamageValue()) * 2/3;
     final long ymin = startPos.getY();
     final long max_leaf_distance = 6;
     Set<BlockPos> checked = new HashSet<BlockPos>();
@@ -539,7 +539,7 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
       while(!queue.isEmpty() && (--steps_left >= 0)) {
         final BlockPos pos = queue.removeFirst();
         // Vertical search
-        final BlockPos uppos = pos.up();
+        final BlockPos uppos = pos.above();
         final BlockState upstate = world.getBlockState(uppos);
         if(!checked.contains(uppos)) {
           checked.add(uppos);
@@ -550,11 +550,11 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
             steps_left = 64;
           } else {
             boolean isleaf = isLeaves(upstate);
-            if(isleaf || world.isAirBlock(uppos) || (upstate.getBlock() instanceof VineBlock)) {
+            if(isleaf || world.isEmptyBlock(uppos) || (upstate.getBlock() instanceof VineBlock)) {
               if(isleaf) to_decay.add(uppos);
               // Up is air, check adjacent for diagonal up (e.g. Accacia)
               for(Vector3i v:hoffsets) {
-                final BlockPos p = uppos.add(v);
+                final BlockPos p = uppos.offset(v);
                 if(checked.contains(p)) continue;
                 checked.add(p);
                 final BlockState st = world.getBlockState(p);
@@ -571,10 +571,10 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
         }
         // Lateral search
         for(Vector3i v:hoffsets) {
-          final BlockPos p = pos.add(v);
+          final BlockPos p = pos.offset(v);
           if(checked.contains(p)) continue;
           checked.add(p);
-          if(p.distanceSq(new BlockPos(startPos.getX(), p.getY(), startPos.getZ())) > (3+cutlevel*cutlevel)) continue;
+          if(p.distSqr(new BlockPos(startPos.getX(), p.getY(), startPos.getZ())) > (3+cutlevel*cutlevel)) continue;
           final BlockState st = world.getBlockState(p);
           final Block bl = st.getBlock();
           if(isSameLog(st, broken_state)) {
@@ -615,10 +615,10 @@ public class RediaToolItem extends AxeItem implements ExtendedShapelessRecipe.IR
       // And now the bill.
       int dmg = (to_break.size()*6/5)+(to_decay.size()/10)-1;
       if(dmg < 1) dmg = 1;
-      tool.damageItem(dmg, player, (p)->{p.sendBreakAnimation(player.getActiveHand());});
+      tool.hurtAndBreak(dmg, player, (p)->{p.broadcastBreakEvent(player.getUsedItemHand());});
       if(player instanceof PlayerEntity) {
         float exhaustion = MathHelper.clamp(((float)dmg) / 8, 0.5f, 20f);
-        ((PlayerEntity)player).addExhaustion(exhaustion);
+        ((PlayerEntity)player).causeFoodExhaustion(exhaustion);
       }
     }
   }

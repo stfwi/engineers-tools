@@ -44,6 +44,8 @@ import java.util.Collections;
 import java.util.List;
 
 
+import net.minecraft.block.AbstractBlock;
+
 public class AriadneCoalBlock extends Block
 {
   public static final IntegerProperty ORIENTATION = IntegerProperty.create("orientation", 0, 15);
@@ -51,10 +53,10 @@ public class AriadneCoalBlock extends Block
   final VoxelShape aabbs[];
   final Direction.Axis attachment_axis;
 
-  public AriadneCoalBlock(Block.Properties properties, Direction.Axis axis)
+  public AriadneCoalBlock(AbstractBlock.Properties properties, Direction.Axis axis)
   {
     super(properties);
-    setDefaultState(this.getStateContainer().getBaseState().with(ORIENTATION, 0));
+    registerDefaultState(this.getStateDefinition().any().setValue(ORIENTATION, 0));
     attachment_axis = axis;
     if(axis==Axis.X) {
       aabbs = new VoxelShape[] {
@@ -122,13 +124,13 @@ public class AriadneCoalBlock extends Block
 
   @Override
   @OnlyIn(Dist.CLIENT)
-  public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag)
+  public void appendHoverText(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag)
   { Auxiliaries.Tooltip.addInformation(stack, world, tooltip, flag, true); }
 
   @Override
   @SuppressWarnings("deprecation")
   public VoxelShape getShape(BlockState state, IBlockReader source, BlockPos pos, ISelectionContext selectionContext)
-  { return aabbs[state.get(ORIENTATION)]; }
+  { return aabbs[state.getValue(ORIENTATION)]; }
 
   @Override
   @SuppressWarnings("deprecation")
@@ -136,7 +138,7 @@ public class AriadneCoalBlock extends Block
   { return VoxelShapes.empty(); }
 
   @Override
-  protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+  protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
   { builder.add(ORIENTATION); }
 
 //  @Override
@@ -146,22 +148,22 @@ public class AriadneCoalBlock extends Block
 
   @Override
   @SuppressWarnings("deprecation")
-  public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type)
+  public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type)
   { return true; }
 
   @Override
   @SuppressWarnings("deprecation")
-  public boolean isReplaceable(BlockState state, BlockItemUseContext useContext)
+  public boolean canBeReplaced(BlockState state, BlockItemUseContext useContext)
   { return true; }
 
   @Override
   @SuppressWarnings("deprecation")
-  public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos)
+  public int getLightBlock(BlockState state, IBlockReader worldIn, BlockPos pos)
   { return 0; }
 
   @Override
   @SuppressWarnings("deprecation")
-  public PushReaction getPushReaction(BlockState state)
+  public PushReaction getPistonPushReaction(BlockState state)
   { return PushReaction.DESTROY; }
 
   @Override
@@ -175,22 +177,22 @@ public class AriadneCoalBlock extends Block
 
   @Override
   @SuppressWarnings("deprecation")
-  public void onBlockClicked(BlockState state, World world, BlockPos pos, PlayerEntity player)
+  public void attack(BlockState state, World world, BlockPos pos, PlayerEntity player)
   { world.removeBlock(pos, false); }
 
   @Override
   @SuppressWarnings("deprecation")
   public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving)
   {
-    if(world.isRemote) return;
+    if(world.isClientSide) return;
     Direction facing = Direction.NORTH;
     switch(attachment_axis) {
-      case X: facing = (state.get(ORIENTATION) <= 7) ? Direction.WEST: Direction.EAST; break;
-      case Y: facing = (state.get(ORIENTATION) <= 7) ? Direction.DOWN: Direction.UP; break;
-      case Z: facing = (state.get(ORIENTATION) <= 7) ? Direction.NORTH: Direction.SOUTH; break;
+      case X: facing = (state.getValue(ORIENTATION) <= 7) ? Direction.WEST: Direction.EAST; break;
+      case Y: facing = (state.getValue(ORIENTATION) <= 7) ? Direction.DOWN: Direction.UP; break;
+      case Z: facing = (state.getValue(ORIENTATION) <= 7) ? Direction.NORTH: Direction.SOUTH; break;
     }
-    if(!pos.offset(facing).equals(fromPos)) return;
-    if(Block.doesSideFillSquare(world.getBlockState(fromPos).getCollisionShape(world, fromPos, ISelectionContext.dummy()), facing.getOpposite())) return;
+    if(!pos.relative(facing).equals(fromPos)) return;
+    if(Block.isFaceFull(world.getBlockState(fromPos).getCollisionShape(world, fromPos, ISelectionContext.empty()), facing.getOpposite())) return;
     world.removeBlock(pos, isMoving);
   }
 }

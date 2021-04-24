@@ -16,5 +16,5 @@ import net.minecraft.item.Item;
 public class GritItem extends EtItem
 {
   public GritItem(Item.Properties properties)
-  { super(properties.maxStackSize(64)); }
+  { super(properties.stacksTo(64)); }
 }

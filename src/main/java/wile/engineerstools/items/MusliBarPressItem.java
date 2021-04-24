@@ -59,17 +59,17 @@ public class MusliBarPressItem extends EtItem
   //--------------------------------------------------------------------------------------------------------------------
 
   public MusliBarPressItem(Item.Properties properties)
-  { super(properties.maxStackSize(1)); }
+  { super(properties.stacksTo(1)); }
 
   @Override
-  public ActionResultType onItemUse(ItemUseContext context)
+  public ActionResultType useOn(ItemUseContext context)
   { return ActionResultType.PASS; }
 
   @Override
-  public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand)
+  public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
   {
-    ItemStack stack = player.getHeldItem(hand);
-    if(!world.isRemote()) {
+    ItemStack stack = player.getItemInHand(hand);
+    if(!world.isClientSide()) {
       NetworkHooks.openGui((ServerPlayerEntity) player, new INamedContainerProvider() {
         @Override
         public ITextComponent getDisplayName()
@@ -89,7 +89,7 @@ public class MusliBarPressItem extends EtItem
 
   private static boolean isValidFood(ItemStack stack)
   {
-    if((!stack.getItem().isFood()) || (stack.getItem().getFood()==null)) return false;
+    if((!stack.getItem().isEdible()) || (stack.getItem().getFoodProperties()==null)) return false;
     if(stack.getItem() instanceof MusliBarItem) return false;
     if(stack.getItem().getTags().contains(new ResourceLocation(Auxiliaries.modid(), "musli_bar_food_blacklisted"))) return false;
     return true;
@@ -112,39 +112,39 @@ public class MusliBarPressItem extends EtItem
 
     public static class InputSlot extends Slot
     {
-      private final MusliBarPressContainer container;
+      private final MusliBarPressContainer uicontainer;
 
-      public InputSlot(MusliBarPressContainer container, IInventory inventory, int index, int xpos, int ypos)
-      { super(inventory, index, xpos, ypos); this.container = container; }
+      public InputSlot(MusliBarPressContainer uicontainer, IInventory inventory, int index, int xpos, int ypos)
+      { super(inventory, index, xpos, ypos); this.uicontainer = uicontainer; }
 
       @Override
-      public boolean isItemValid(ItemStack stack)
+      public boolean mayPlace(ItemStack stack)
       { return isValidFood(stack) || isValidSeeds(stack); }
 
       @Override
-      public void onSlotChanged()
+      public void setChanged()
       {
-        inventory.markDirty();
-        container.onSlotsChanged();
+        container.setChanged();
+        uicontainer.onSlotsChanged();
       }
     }
 
     public static class OutputSlot extends Slot
     {
-      private final MusliBarPressContainer container;
+      private final MusliBarPressContainer uicontainer;
 
-      public OutputSlot(MusliBarPressContainer container, IInventory inventory, int index, int xpos, int ypos)
-      { super(inventory, index, xpos, ypos); this.container = container; }
+      public OutputSlot(MusliBarPressContainer uicontainer, IInventory inventory, int index, int xpos, int ypos)
+      { super(inventory, index, xpos, ypos); this.uicontainer = uicontainer; }
 
       @Override
-      public boolean isItemValid(ItemStack stack)
+      public boolean mayPlace(ItemStack stack)
       { return false; }
 
       @Override
-      public void onSlotChanged()
+      public void setChanged()
       {
-        inventory.markDirty();
-        container.onSlotsChanged();
+        container.setChanged();
+        uicontainer.onSlotsChanged();
       }
     }
 
@@ -154,13 +154,13 @@ public class MusliBarPressItem extends EtItem
       { super(inventory, index, xpos, ypos); }
 
       @Override
-      public boolean isItemValid(ItemStack stack)
+      public boolean mayPlace(ItemStack stack)
       { return false; }
 
-      public ItemStack decrStackSize(int amount)
+      public ItemStack remove(int amount)
       { return ItemStack.EMPTY; }
 
-      public boolean canTakeStack(PlayerEntity playerIn)
+      public boolean mayPickup(PlayerEntity playerIn)
       { return false; }
     }
 
@@ -184,20 +184,20 @@ public class MusliBarPressItem extends EtItem
       super(ModContent.CT_MUSLI_BAR_PRESS, cid);
       this.player_inventory = player_inventory;
       this.player = player;
-      if((player_inventory.currentItem < 0) || (player_inventory.currentItem >= player_inventory.getSizeInventory())
-        || (!(player_inventory.getStackInSlot(player_inventory.currentItem).getItem() instanceof MusliBarPressItem))
+      if((player_inventory.selected < 0) || (player_inventory.selected >= player_inventory.getContainerSize())
+        || (!(player_inventory.getItem(player_inventory.selected).getItem() instanceof MusliBarPressItem))
       ) {
         muslipress = new ItemStack(Items.AIR);
         return;
       }
-      muslipress = player_inventory.getStackInSlot(player_inventory.currentItem);
+      muslipress = player_inventory.getItem(player_inventory.selected);
       int i=-1;
       addSlot(new InputSlot(this, inventory_, ++i, 31, 45));
       addSlot(new OutputSlot(this, inventory_, ++i, 92, 45));
       // player slots
       for(int x=0; x<9; ++x) {
         int slot = x;
-        if(player_inventory.currentItem != slot) {
+        if(player_inventory.selected != slot) {
           addSlot(new Slot(player_inventory, slot, 8+x*18, 144)); // player slots: 0..8
         } else {
           addSlot(muslipress_slot_ = new ReadonlySlot(player_inventory, slot, 8+x*18, 144));
@@ -206,7 +206,7 @@ public class MusliBarPressItem extends EtItem
       for(int y=0; y<3; ++y) {
         for(int x=0; x<9; ++x) {
           int slot = x+y*9+9;
-          if(player_inventory.currentItem != slot) {
+          if(player_inventory.selected != slot) {
             addSlot(new Slot(player_inventory, slot, 8+x*18, 86+y*18)); // player slots: 9..35
           } else {
             addSlot(muslipress_slot_ = new ReadonlySlot(player_inventory, slot, 8+x*18, 86+y*18)); // player slots: 9..35
@@ -217,30 +217,30 @@ public class MusliBarPressItem extends EtItem
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player)
+    public boolean stillValid(PlayerEntity player)
     { return player == this.player; }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index)
+    public ItemStack quickMoveStack(PlayerEntity player, int index)
     {
       Slot slot = getSlot(index);
-      if((slot==null) || (!slot.getHasStack())) return ItemStack.EMPTY;
-      ItemStack slot_stack = slot.getStack();
+      if((slot==null) || (!slot.hasItem())) return ItemStack.EMPTY;
+      ItemStack slot_stack = slot.getItem();
       ItemStack transferred = slot_stack.copy();
       if(index==INPUT_SLOTNO) {
-        if(!mergeItemStack(slot_stack, PLAYER_INV_START_SLOTNO, PLAYER_INV_START_SLOTNO+36, true)) return ItemStack.EMPTY;
+        if(!moveItemStackTo(slot_stack, PLAYER_INV_START_SLOTNO, PLAYER_INV_START_SLOTNO+36, true)) return ItemStack.EMPTY;
       } else if(index==OUTPUT_SLOTNO) {
-        if(!mergeItemStack(slot_stack, PLAYER_INV_START_SLOTNO, PLAYER_INV_START_SLOTNO+36, true)) return ItemStack.EMPTY;
+        if(!moveItemStackTo(slot_stack, PLAYER_INV_START_SLOTNO, PLAYER_INV_START_SLOTNO+36, true)) return ItemStack.EMPTY;
       } else if((index >= PLAYER_INV_START_SLOTNO) && (index < PLAYER_INV_START_SLOTNO+36)) {
         if((!isValidFood(slot_stack)) && (!isValidSeeds(slot_stack))) return ItemStack.EMPTY;
-        if(!mergeItemStack(slot_stack, INPUT_SLOTNO, INPUT_SLOTNO+1, true)) return ItemStack.EMPTY;
+        if(!moveItemStackTo(slot_stack, INPUT_SLOTNO, INPUT_SLOTNO+1, true)) return ItemStack.EMPTY;
       } else {
         return ItemStack.EMPTY; // invalid slot
       }
       if(slot_stack.isEmpty()) {
-        slot.putStack(ItemStack.EMPTY);
+        slot.set(ItemStack.EMPTY);
       } else {
-        slot.onSlotChanged();
+        slot.setChanged();
       }
       if(slot_stack.getCount() == transferred.getCount()) return ItemStack.EMPTY;
       slot.onTake(player, slot_stack);
@@ -248,10 +248,10 @@ public class MusliBarPressItem extends EtItem
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity player)
+    public void removed(PlayerEntity player)
     {
-      super.onContainerClosed(player);
-      if(player.world.isRemote()) return;
+      super.removed(player);
+      if(player.level.isClientSide()) return;
       muslipress.setTag(write(muslipress.getTag()));
     }
 
@@ -277,8 +277,8 @@ public class MusliBarPressItem extends EtItem
       if(nbt==null) nbt = new CompoundNBT();
       nbt.putInt("seeds_stored", seeds_stored);
       nbt.putInt("food_stored", food_stored);
-      nbt.put("output_slot", inventory_.getStackInSlot(OUTPUT_SLOTNO).write(new CompoundNBT()));
-      nbt.put("input_slot", inventory_.getStackInSlot(INPUT_SLOTNO).write(new CompoundNBT()));
+      nbt.put("output_slot", inventory_.getItem(OUTPUT_SLOTNO).save(new CompoundNBT()));
+      nbt.put("input_slot", inventory_.getItem(INPUT_SLOTNO).save(new CompoundNBT()));
       return nbt;
     }
 
@@ -287,15 +287,15 @@ public class MusliBarPressItem extends EtItem
       if(nbt==null) return nbt;
       if(nbt.contains("seeds_stored")) seeds_stored = nbt.getInt("seeds_stored");
       if(nbt.contains("food_stored")) food_stored = nbt.getInt("food_stored");
-      if(nbt.contains("output_slot")) inventory_.setInventorySlotContents(OUTPUT_SLOTNO, ItemStack.read(nbt.getCompound("output_slot")));
-      if(nbt.contains("input_slot")) inventory_.setInventorySlotContents(INPUT_SLOTNO, ItemStack.read(nbt.getCompound("input_slot")));
+      if(nbt.contains("output_slot")) inventory_.setItem(OUTPUT_SLOTNO, ItemStack.of(nbt.getCompound("output_slot")));
+      if(nbt.contains("input_slot")) inventory_.setItem(INPUT_SLOTNO, ItemStack.of(nbt.getCompound("input_slot")));
       return nbt;
     }
 
     public void onSlotsChanged()
     {
-      if(player.world.isRemote()) return;
-      ItemStack stack = inventory_.getStackInSlot(INPUT_SLOTNO);
+      if(player.level.isClientSide()) return;
+      ItemStack stack = inventory_.getItem(INPUT_SLOTNO);
       if(isValidSeeds(stack)) {
         seeds_stored += stack.getCount();
         if(seeds_stored > max_seed_storage) {
@@ -305,7 +305,7 @@ public class MusliBarPressItem extends EtItem
           stack = ItemStack.EMPTY;
         }
       } else if(isValidFood(stack)) {
-        final int hunger = stack.getItem().getFood().getHealing();
+        final int hunger = stack.getItem().getFoodProperties().getNutrition();
         if(hunger > 0) {
           food_stored += stack.getCount() * hunger;
           if(food_stored > max_food_storage) {
@@ -316,24 +316,24 @@ public class MusliBarPressItem extends EtItem
           }
         }
       }
-      inventory_.setInventorySlotContents(INPUT_SLOTNO, stack);
-      while(inventory_.getStackInSlot(OUTPUT_SLOTNO).getCount() < 64) {
+      inventory_.setItem(INPUT_SLOTNO, stack);
+      while(inventory_.getItem(OUTPUT_SLOTNO).getCount() < 64) {
         if((food_stored < food_per_bar) || (seeds_stored < seeds_per_bar)) break;
         food_stored -= food_per_bar;
         seeds_stored -= seeds_per_bar;
-        if(inventory_.getStackInSlot(OUTPUT_SLOTNO).isEmpty()) {
-          inventory_.setInventorySlotContents(OUTPUT_SLOTNO, new ItemStack(ModContent.MUSLI_BAR, 1));
+        if(inventory_.getItem(OUTPUT_SLOTNO).isEmpty()) {
+          inventory_.setItem(OUTPUT_SLOTNO, new ItemStack(ModContent.MUSLI_BAR, 1));
         } else {
-          inventory_.getStackInSlot(OUTPUT_SLOTNO).grow(1);
+          inventory_.getItem(OUTPUT_SLOTNO).grow(1);
         }
       }
       // Sync client
       CompoundNBT nbt = write(new CompoundNBT());
       muslipress.setTag(nbt);
-      player_inventory.markDirty();
+      player_inventory.setChanged();
       CompoundNBT pkg_nbt = new CompoundNBT();
       pkg_nbt.put("muslipress", nbt);
-      Networking.PacketContainerSyncServerToClient.sendToPlayer(player, windowId, pkg_nbt);
+      Networking.PacketContainerSyncServerToClient.sendToPlayer(player, containerId, pkg_nbt);
     }
   }
 
@@ -346,47 +346,47 @@ public class MusliBarPressItem extends EtItem
   {
     private static final ResourceLocation BACKGROUND_IMAGE = new ResourceLocation(Auxiliaries.modid(), "textures/gui/musli_bar_press_gui.png");
 
-    public MusliBarPressGui(MusliBarPressContainer container, PlayerInventory player_inventory, ITextComponent title)
-    { super(container, player_inventory, title); }
+    public MusliBarPressGui(MusliBarPressContainer uicontainer, PlayerInventory player_inventory, ITextComponent title)
+    { super(uicontainer, player_inventory, title); }
 
     @Override
     public void render(MatrixStack mx, int mouseX, int mouseY, float partialTicks)
     {
       renderBackground(mx);
       super.render(mx, mouseX, mouseY, partialTicks);
-      renderHoveredTooltip(mx, mouseX, mouseY);
+      renderTooltip(mx, mouseX, mouseY);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void drawGuiContainerBackgroundLayer(MatrixStack mx, float partialTicks, int mouseX, int mouseY)
+    protected void renderBg(MatrixStack mx, float partialTicks, int mouseX, int mouseY)
     {
       RenderSystem.color4f(1f, 1f, 1f, 1f);
-      getMinecraft().getTextureManager().bindTexture(BACKGROUND_IMAGE);
+      getMinecraft().getTextureManager().bind(BACKGROUND_IMAGE);
       final int x0=getGuiLeft(), y0=getGuiTop(), w=getXSize(), h=getYSize();
       blit(mx,x0, y0, 0, 0, w, h);
       blit(mx,x0+48, y0+45, 180, 45, seeds_px(43), 7);
       blit(mx,x0+48, y0+54, 180, 54, food_px(43), 7);
       {
-        final Slot slot = getContainer().muslipress_slot_;
-        if(slot != null) blit(mx,x0+slot.xPos, y0+slot.yPos, 181, 144, 16, 16);
+        final Slot slot = getMenu().muslipress_slot_;
+        if(slot != null) blit(mx,x0+slot.x, y0+slot.y, 181, 144, 16, 16);
       }
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack mx, int x, int y)
+    protected void renderLabels(MatrixStack mx, int x, int y)
     {}
 
     private int seeds_px(int pixels)
     {
-      final int v = MathHelper.clamp(getContainer().seeds_stored, 0, max_seed_storage);
+      final int v = MathHelper.clamp(getMenu().seeds_stored, 0, max_seed_storage);
       if((v <= 0) || (max_seed_storage <= 0)) return 0;
       return Math.max(1,(int)(Math.sqrt(v) / Math.sqrt(max_seed_storage) * pixels)); // -> ln() curve was too steep, so sqrt().
     }
 
     private int food_px(int pixels)
     {
-      final int v = MathHelper.clamp(getContainer().food_stored, 0, max_food_storage);
+      final int v = MathHelper.clamp(getMenu().food_stored, 0, max_food_storage);
       if((v <=0 ) || (max_food_storage <= 0)) return 0;
       return Math.max(1, (int)(Math.sqrt(v) / Math.sqrt(max_food_storage) * pixels));
     }

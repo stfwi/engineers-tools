@@ -20,10 +20,10 @@ import net.minecraft.world.World;
 public class ChargedLapisItem extends EtItem
 {
   public ChargedLapisItem(Item.Properties properties)
-  { super(properties.maxStackSize(64)); }
+  { super(properties.stacksTo(64)); }
 
   @Override
-  public boolean hasEffect(ItemStack stack)
+  public boolean isFoil(ItemStack stack)
   { return true; }
 
   @Override
@@ -35,26 +35,26 @@ public class ChargedLapisItem extends EtItem
   { return false; }
 
   @Override
-  public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand)
+  public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
   {
-    ItemStack stack = player.getHeldItem(hand);
-    onUse(world, player, stack, 1);
-    return ActionResult.func_233538_a_(stack, world.isRemote());
+    ItemStack stack = player.getItemInHand(hand);
+    onUseTick(world, player, stack, 1);
+    return ActionResult.sidedSuccess(stack, world.isClientSide());
   }
 
   @Override
-  public void onUse(World world, LivingEntity entity, ItemStack stack, int count)
+  public void onUseTick(World world, LivingEntity entity, ItemStack stack, int count)
   {
     if(!(entity instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity)entity;
-    if(world.isRemote()) {
+    if(world.isClientSide()) {
       float rnd = (float)(world.getRandom().nextDouble()*.2);
-      for(float pitch: new float[]{0.45f,0.4f,0.5f}) world.playSound(player, player.getPosition(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.05f, pitch+rnd);
+      for(float pitch: new float[]{0.45f,0.4f,0.5f}) world.playSound(player, player.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.05f, pitch+rnd);
     } else {
       stack.shrink(1);
-      player.addExperienceLevel(1);
+      player.giveExperienceLevels(1);
       player.curePotionEffects(new ItemStack(Items.MILK_BUCKET));
-      player.extinguish();
+      player.clearFire();
       player.heal(player.getMaxHealth()/20);
     }
   }

@@ -18,13 +18,13 @@ public class MusliBarItem extends EtItem
 {
   private static int healing_ = 6;
   private static float saturation_ = 1.2f;
-  private static Food musli_bar_food = (new Food.Builder()).hunger(healing_).saturation(saturation_).fastToEat().setAlwaysEdible().build();
+  private static Food musli_bar_food = (new Food.Builder()).nutrition(healing_).saturationMod(saturation_).fast().alwaysEat().build();
 
   public static void on_config(int hunger, double saturation)
   {
     healing_ = MathHelper.clamp(hunger, 1, 8);
     saturation_ = (float)MathHelper.clamp(saturation, 0.2, 2);
-    musli_bar_food = (new Food.Builder()).hunger(healing_).saturation(saturation_).fastToEat().setAlwaysEdible().build();
+    musli_bar_food = (new Food.Builder()).nutrition(healing_).saturationMod(saturation_).fast().alwaysEat().build();
     Auxiliaries.logInfo("Musli Bar: hunger:" + healing_ + ", saturation:" + saturation_);
   }
 
@@ -35,9 +35,9 @@ public class MusliBarItem extends EtItem
   { return saturation_; }
 
   public MusliBarItem(Item.Properties properties)
-  { super(properties.maxStackSize(64).food(musli_bar_food)); }
+  { super(properties.stacksTo(64).food(musli_bar_food)); }
 
   @Override
-  public Food getFood()
+  public Food getFoodProperties()
   { return musli_bar_food; }
 }

@@ -26,22 +26,22 @@ public class CrushingHammerItem extends EtItem
 {
   public CrushingHammerItem(Item.Properties properties)
   { super(properties
-    .maxStackSize(1)
-    .defaultMaxDamage(640)
+    .stacksTo(1)
+    .defaultDurability(640)
     .setNoRepair()
     );
   }
 
   @Override
-  public int getItemEnchantability()
+  public int getEnchantmentValue()
   { return 0; }
 
   @Override
-  public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+  public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair)
   { return false; }
 
   @Override
-  public boolean isDamageable()
+  public boolean canBeDepleted()
   { return true; }
 
   @Override
@@ -64,24 +64,24 @@ public class CrushingHammerItem extends EtItem
   public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity target)
   {
     if(!(target instanceof LivingEntity)) return true;
-    World world = player.getEntityWorld();
-    if(world.isRemote()) return true;
-    boolean hard = (target instanceof MonsterEntity) && (((MonsterEntity)target).getAttackTarget() != null);
-    ((LivingEntity)target).applyKnockback(hard ? 1.2f : 0.3f, Math.sin(Math.PI/180 * player.rotationYaw), -Math.cos(Math.PI/180 * player.rotationYaw));
+    World world = player.getCommandSenderWorld();
+    if(world.isClientSide()) return true;
+    boolean hard = (target instanceof MonsterEntity) && (((MonsterEntity)target).getTarget() != null);
+    ((LivingEntity)target).knockback(hard ? 1.2f : 0.3f, Math.sin(Math.PI/180 * player.yRot), -Math.cos(Math.PI/180 * player.yRot));
     if(hard) {
-      if(world.getRandom().nextInt(1) == 0) stack.damageItem(1, player, p->p.sendBreakAnimation(player.getActiveHand()));
-      world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.BLOCK_ANVIL_PLACE, player.getSoundCategory(), 0.2f, 0.05f); // ITEM_TRIDENT_HIT_GROUND
+      if(world.getRandom().nextInt(1) == 0) stack.hurtAndBreak(1, player, p->p.broadcastBreakEvent(player.getUsedItemHand()));
+      world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ANVIL_PLACE, player.getSoundSource(), 0.2f, 0.05f); // ITEM_TRIDENT_HIT_GROUND
     } else {
-      world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.BLOCK_BAMBOO_HIT, player.getSoundCategory(), 0.5f, 0.3f);
+      world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BAMBOO_HIT, player.getSoundSource(), 0.5f, 0.3f);
     }
     return true;
   }
 
   @Override
-  public boolean onBlockDestroyed(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity player)
+  public boolean mineBlock(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity player)
   {
-    if((world.isRemote()) || (!(player instanceof PlayerEntity))) return true;
-    if(state.getBlockHardness(world, pos) > 0.5) stack.damageItem(1, player, p->p.sendBreakAnimation(player.getActiveHand()));
+    if((world.isClientSide()) || (!(player instanceof PlayerEntity))) return true;
+    if(state.getDestroySpeed(world, pos) > 0.5) stack.hurtAndBreak(1, player, p->p.broadcastBreakEvent(player.getUsedItemHand()));
     return false;
   }
 }

@@ -36,14 +36,14 @@ public class Inventories
 {
 
   public static boolean areItemStacksIdentical(ItemStack a, ItemStack b)
-  { return (a.getItem()==b.getItem()) && ItemStack.areItemStackTagsEqual(a, b); }
+  { return (a.getItem()==b.getItem()) && ItemStack.tagMatches(a, b); }
 
   public static boolean areItemStacksDifferent(ItemStack a, ItemStack b)
-  { return (a.getItem()!=b.getItem()) || (!ItemStack.areItemStackTagsEqual(a, b)); }
+  { return (a.getItem()!=b.getItem()) || (!ItemStack.tagMatches(a, b)); }
 
   public static IItemHandler itemhandler(World world, BlockPos pos, @Nullable Direction side)
   {
-    TileEntity te = world.getTileEntity(pos);
+    TileEntity te = world.getBlockEntity(pos);
     if(te==null) return null;
     IItemHandler ih = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).orElse(null);
     if(ih!=null) return ih;
@@ -122,7 +122,7 @@ public class Inventories
     {
       int n = 0; // ... std::accumulate() the old school way.
       for(int i = start_slot; i < end_slot; ++i) {
-        if(areItemStacksIdentical(ref_stack, inventory.getStackInSlot(i))) ++n;
+        if(areItemStacksIdentical(ref_stack, inventory.getItem(i))) ++n;
       }
       return n;
     }
@@ -131,7 +131,7 @@ public class Inventories
     {
       int n = 0;
       for(int i = start_slot; i < end_slot; ++i) {
-        ItemStack stack = inventory.getStackInSlot(i);
+        ItemStack stack = inventory.getItem(i);
         if(areItemStacksIdentical(ref_stack, stack)) n += stack.getCount();
       }
       return n;
@@ -149,14 +149,14 @@ public class Inventories
     public ItemStack insert(final ItemStack stack_to_move, boolean only_fillup, int limit, boolean reverse, boolean force_group_stacks)
     {
       final ItemStack mvstack = stack_to_move.copy();
-      if((mvstack.isEmpty()) || (start_slot < 0) || (end_slot > inventory.getSizeInventory())) return checked(mvstack);
+      if((mvstack.isEmpty()) || (start_slot < 0) || (end_slot > inventory.getContainerSize())) return checked(mvstack);
       int limit_left = (limit>0) ? (Math.min(limit, mvstack.getMaxStackSize())) : (mvstack.getMaxStackSize());
       boolean matches[] = new boolean[end_slot];
       boolean empties[] = new boolean[end_slot];
       int num_matches = 0;
       for(int i = start_slot; i < end_slot; ++i) {
         final int sno = reverse ? (end_slot-1-i) : (i);
-        final ItemStack stack = inventory.getStackInSlot(sno);
+        final ItemStack stack = inventory.getItem(sno);
         if(stack.isEmpty()) {
           empties[sno] = true;
         } else if(areItemStacksIdentical(stack, mvstack)) {
@@ -168,16 +168,16 @@ public class Inventories
       for(int i = start_slot; i < end_slot; ++i) {
         final int sno = reverse ? (end_slot-1-i) : (i);
         if((empties[sno]) || (!matches[sno])) continue;
-        final ItemStack stack = inventory.getStackInSlot(sno);
+        final ItemStack stack = inventory.getItem(sno);
         int nmax = Math.min(limit_left, stack.getMaxStackSize() - stack.getCount());
         if(mvstack.getCount() <= nmax) {
           stack.setCount(stack.getCount()+mvstack.getCount());
-          inventory.setInventorySlotContents(sno, stack);
+          inventory.setItem(sno, stack);
           return ItemStack.EMPTY;
         } else {
           stack.grow(nmax);
           mvstack.shrink(nmax);
-          inventory.setInventorySlotContents(sno, stack);
+          inventory.setItem(sno, stack);
           limit_left -= nmax;
         }
       }
@@ -199,12 +199,12 @@ public class Inventories
           }
           for(i=insert_start;i < insert_end; ++i) {
             final int sno = reverse ? (end_slot-1-i) : (i);
-            if((!empties[sno]) || (!inventory.isItemValidForSlot(sno, mvstack))) continue;
+            if((!empties[sno]) || (!inventory.canPlaceItem(sno, mvstack))) continue;
             int nmax = Math.min(limit_left, mvstack.getCount());
             ItemStack moved = mvstack.copy();
             moved.setCount(nmax);
             mvstack.shrink(nmax);
-            inventory.setInventorySlotContents(sno, moved);
+            inventory.setItem(sno, moved);
             return checked(mvstack);
           }
         }
@@ -214,12 +214,12 @@ public class Inventories
             final int sno = reverse ? (end_slot-1-i) : (i);
             if(!matches[sno]) continue;
             int ii = (empties[sno-1]) ? (sno-1) : (empties[sno+1] ? (sno+1) : -1);
-            if((ii >= 0) && (inventory.isItemValidForSlot(ii, mvstack))) {
+            if((ii >= 0) && (inventory.canPlaceItem(ii, mvstack))) {
               int nmax = Math.min(limit_left, mvstack.getCount());
               ItemStack moved = mvstack.copy();
               moved.setCount(nmax);
               mvstack.shrink(nmax);
-              inventory.setInventorySlotContents(ii, moved);
+              inventory.setItem(ii, moved);
               return checked(mvstack);
             }
           }
@@ -228,12 +228,12 @@ public class Inventories
       // third iteration: use any empty slots
       for(int i = start_slot; i < end_slot; ++i) {
         final int sno = reverse ? (end_slot-1-i) : (i);
-        if((!empties[sno]) || (!inventory.isItemValidForSlot(sno, mvstack))) continue;
+        if((!empties[sno]) || (!inventory.canPlaceItem(sno, mvstack))) continue;
         int nmax = Math.min(limit_left, mvstack.getCount());
         ItemStack placed = mvstack.copy();
         placed.setCount(nmax);
         mvstack.shrink(nmax);
-        inventory.setInventorySlotContents(sno, placed);
+        inventory.setItem(sno, placed);
         return checked(mvstack);
       }
       return checked(mvstack);
@@ -249,7 +249,7 @@ public class Inventories
       final IInventory inventory = this.inventory;
       List<ItemStack> matches = new ArrayList<>();
       for(int i = start_slot; i < end_slot; ++i) {
-        final ItemStack stack = inventory.getStackInSlot(i);
+        final ItemStack stack = inventory.getItem(i);
         if((!stack.isEmpty()) && (areItemStacksIdentical(stack, request_stack))) {
           if(stack.hasTag()) {
             final CompoundNBT nbt = stack.getTag();
@@ -282,44 +282,44 @@ public class Inventories
     public InventoryRange(IInventory inventory, int offset, int size)
     { this.inventory = inventory; this.offset = offset; this.size = size; }
 
-    public void clear()
-    { inventory.clear(); }
+    public void clearContent()
+    { inventory.clearContent(); }
 
-    public int getSizeInventory()
+    public int getContainerSize()
     { return size; }
 
     public boolean isEmpty()
-    { for(int i=0; i<size; ++i) if(!inventory.getStackInSlot(offset+i).isEmpty()){return false;} return true; }
+    { for(int i=0; i<size; ++i) if(!inventory.getItem(offset+i).isEmpty()){return false;} return true; }
 
-    public ItemStack getStackInSlot(int index)
-    { return inventory.getStackInSlot(offset+index); }
+    public ItemStack getItem(int index)
+    { return inventory.getItem(offset+index); }
 
-    public ItemStack decrStackSize(int index, int count)
-    { return inventory.decrStackSize(offset+index, count); }
+    public ItemStack removeItem(int index, int count)
+    { return inventory.removeItem(offset+index, count); }
 
-    public ItemStack removeStackFromSlot(int index)
-    { return inventory.removeStackFromSlot(offset+index); }
+    public ItemStack removeItemNoUpdate(int index)
+    { return inventory.removeItemNoUpdate(offset+index); }
 
-    public void setInventorySlotContents(int index, ItemStack stack)
-    { inventory.setInventorySlotContents(offset+index, stack); }
+    public void setItem(int index, ItemStack stack)
+    { inventory.setItem(offset+index, stack); }
 
-    public int getInventoryStackLimit()
-    { return inventory.getInventoryStackLimit(); }
+    public int getMaxStackSize()
+    { return inventory.getMaxStackSize(); }
 
-    public void markDirty()
-    { inventory.markDirty(); }
+    public void setChanged()
+    { inventory.setChanged(); }
 
-    public boolean isUsableByPlayer(PlayerEntity player)
-    { return inventory.isUsableByPlayer(player); }
+    public boolean stillValid(PlayerEntity player)
+    { return inventory.stillValid(player); }
 
-    public void openInventory(PlayerEntity player)
-    { inventory.openInventory(player); }
+    public void startOpen(PlayerEntity player)
+    { inventory.startOpen(player); }
 
-    public void closeInventory(PlayerEntity player)
-    { inventory.closeInventory(player); }
+    public void stopOpen(PlayerEntity player)
+    { inventory.stopOpen(player); }
 
-    public boolean isItemValidForSlot(int index, ItemStack stack)
-    { return inventory.isItemValidForSlot(offset+index, stack); }
+    public boolean canPlaceItem(int index, ItemStack stack)
+    { return inventory.canPlaceItem(offset+index, stack); }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

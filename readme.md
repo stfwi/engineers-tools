@@ -5,6 +5,12 @@ A [Minecraft](https://minecraft.net) (Java Edition) mod based on
 [`Forge`](http://www.minecraftforge.net/), adding manual tool items
 for the Engineer's use.
 
+----
+
+***NOTE FOR USERS/MODDERS: The mod is deprecated since MC 1.18. Some of the functionality will be taken over to WilE's Collection***
+
+----
+
 ***Note for coders/modders: Please take a look into the MC version branches to view/clone the source code.***
 
 [Screenshots in the documentation readme here](documentation/readme.md).
